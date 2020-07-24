@@ -46,6 +46,8 @@ group :development do
   gem 'annotate'
   gem 'guard-rspec', require: false
   gem 'pry-rails'
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-rspec', require: false
   gem 'solargraph'
 end
 

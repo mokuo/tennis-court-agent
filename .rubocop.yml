@@ -9,8 +9,13 @@
 #
 # See https://docs.rubocop.org/rubocop/configuration
 
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
 # NOTE: New Cops
 # https://qiita.com/ljourm/items/e6691267af176c98cd6b
+# `The following cops were added to RuboCop, but are not configured. Please set Enabled to either `true` or `false` in your `.rubocop.yml` file`
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
 Layout/SpaceAroundMethodCallOperator:
@@ -56,4 +61,32 @@ Style/RedundantRegexpCharacterClass:
 Style/RedundantRegexpEscape:
   Enabled: true
 Style/SlicingWithRange:
+  Enabled: true
+
+# New Cops of Rails
+Rails/ActiveRecordCallbacksOrder:
+  Enabled: true
+Rails/FindById:
+  Enabled: true
+Rails/Inquiry:
+  Enabled: true
+Rails/MailerName:
+  Enabled: true
+Rails/MatchRoute:
+  Enabled: true
+Rails/NegateInclude:
+  Enabled: true
+Rails/Pluck:
+  Enabled: true
+Rails/PluckId:
+  Enabled: true
+Rails/PluckInWhere:
+  Enabled: true
+Rails/RenderInline:
+  Enabled: true
+Rails/RenderPlainText:
+  Enabled: true
+Rails/ShortI18n:
+  Enabled: true
+Rails/WhereExists:
   Enabled: true

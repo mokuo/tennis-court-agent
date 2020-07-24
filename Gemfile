@@ -46,6 +46,7 @@ group :development do
   gem 'annotate'
   gem 'guard-rspec', require: false
   gem 'pry-rails'
+  gem 'solargraph'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

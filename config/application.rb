@@ -31,5 +31,22 @@ module TennisCourtAgent
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Additional config
+    config.generators do |g|
+      g.assets false
+      g.helper false
+      g.jbuilder false
+      g.test_framework :rspec,
+        view_specs: false,
+        routing_specs: false
+    end
+
+    # NOTE: ActiveSupport::TimeWithZone（ActiveRecordも利用）
+    # https://railsguides.jp/configuring.html#%E3%82%A4%E3%83%8B%E3%82%B7%E3%83%A3%E3%83%A9%E3%82%A4%E3%82%B6
+    config.time_zone = "Tokyo"
+    # NOTE: データベースから日付・時刻を取り出した際のタイムゾーン
+    # https://railsguides.jp/configuring.html#active-record%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B
+    config.active_record.default_timezone = :local
   end
 end

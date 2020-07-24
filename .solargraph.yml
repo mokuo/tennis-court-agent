@@ -1,11 +1,11 @@
 ---
 include:
-- "**/*.rb"
+  - "**/*.rb"
 exclude:
-- spec/**/*
-- test/**/*
-- vendor/**/*
-- ".bundle/**/*"
+  - spec/**/*
+  - test/**/*
+  - vendor/**/*
+  - ".bundle/**/*"
 require: # NOTE: https://github.com/castwide/solargraph/issues/87
   - actioncable
   - actionmailer
@@ -18,8 +18,8 @@ require: # NOTE: https://github.com/castwide/solargraph/issues/87
   - activesupport
 domains: []
 reporters:
-- rubocop
-- require_not_found
+  - rubocop
+  - require_not_found
 require_paths: []
 plugins: []
 max_files: 5000

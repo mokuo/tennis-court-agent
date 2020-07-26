@@ -13,6 +13,15 @@ require:
   - rubocop-rails
   - rubocop-rspec
 
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+Style/Documentation:
+  Enabled: false
+Style/AsciiComments:
+  Enabled: false
+Layout/LineLength:
+  AutoCorrect: true
+
 # NOTE: New Cops
 # https://qiita.com/ljourm/items/e6691267af176c98cd6b
 # `The following cops were added to RuboCop, but are not configured. Please set Enabled to either `true` or `false` in your `.rubocop.yml` file`

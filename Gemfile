@@ -31,6 +31,7 @@ gem "bootsnap", ">= 1.4.2", require: false
 # Capybara
 gem "capybara"
 gem "selenium-webdriver"
+gem "webdrivers", "~> 4.0"
 
 group :development, :test do
   gem "factory_bot_rails"

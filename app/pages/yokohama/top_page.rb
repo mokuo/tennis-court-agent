@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
-require "capybara/dsl"
-require "webdrivers/chromedriver"
-
 module Yokohama
-  class TopPage
-    include Capybara::DSL
-
+  class TopPage < ApplicationPage
     def initialize
       visit("https://yoyaku.city.yokohama.lg.jp")
     end

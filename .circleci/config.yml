@@ -30,7 +30,7 @@ jobs:
       - image: circleci/mysql:8.0.21
         environment: # add POSTGRES environment variables.
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-          MYSQL_DATABASE: "tennis_court_agent_test"
+          MYSQL_DATABASE: "tennis_court_agent_ci"
           MYSQL_HOST: "127.0.0.1"
           MYSQL_ROOT_HOST: "%"
           MYSQL_USER: "root"
@@ -52,6 +52,9 @@ jobs:
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
+      - run:
+          name: Database config setup
+          command: cp -f .circleci/database.ci.yml config/database.yml
       - run:
           name: Database setup
           command: bundle exec rails db:schema:load --trace

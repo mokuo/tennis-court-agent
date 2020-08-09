@@ -28,6 +28,7 @@ jobs:
     docker:
       - image: cimg/ruby:2.7.1-node # this is our primary docker image, where step commands run.
       - image: circleci/mysql:8.0.21
+        command: mysqld --default-authentication-plugin=mysql_native_password
         environment: # add POSTGRES environment variables.
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
           MYSQL_DATABASE: "tennis_court_agent_ci"

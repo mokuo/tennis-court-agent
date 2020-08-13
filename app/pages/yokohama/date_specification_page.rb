@@ -14,7 +14,7 @@ module Yokohama
       if page.has_text?("以降の空き状況は御覧になれません")
         Yokohama::ErrorPage.new
       else
-        new
+        Yokohama::DateSpecificationPage.new
       end
     end
 

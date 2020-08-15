@@ -36,6 +36,7 @@ gem "webdrivers", "~> 4.0"
 # FIXME: https://github.com/chaps-io/gush/pull/76
 gem "gush", git: "https://github.com/chaps-io/gush",
             branch: "master"
+gem "sidekiq"
 
 group :development, :test do
   gem "factory_bot_rails"

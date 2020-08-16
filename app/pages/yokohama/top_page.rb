@@ -2,8 +2,9 @@
 
 module Yokohama
   class TopPage < BasePage
-    def initialize
+    def self.open
       visit("https://yoyaku.city.yokohama.lg.jp")
+      new
     end
 
     def click_check_availability

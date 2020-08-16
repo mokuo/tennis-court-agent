@@ -13,7 +13,7 @@ module Yokohama
     private
 
     def get_available_dates(park_name)
-      current_month_page = Yokohama::TopPage.new
+      current_month_page = Yokohama::TopPage.open
                                             .click_check_availability
                                             .click_sports
                                             .click_tennis_court

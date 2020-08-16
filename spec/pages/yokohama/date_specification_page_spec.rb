@@ -3,7 +3,7 @@
 RSpec.describe Yokohama::DateSpecificationPage, type: :feature do
   describe "#available_dates" do
     subject(:available_dates) do
-      Yokohama::TopPage.new
+      Yokohama::TopPage.open
                        .click_check_availability
                        .click_sports
                        .click_tennis_court
@@ -25,7 +25,7 @@ RSpec.describe Yokohama::DateSpecificationPage, type: :feature do
     subject(:click_next_month) { date_specification_page.click_next_month }
 
     let!(:date_specification_page) do
-      Yokohama::TopPage.new
+      Yokohama::TopPage.open
                        .click_check_availability
                        .click_sports
                        .click_tennis_court

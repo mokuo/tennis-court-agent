@@ -7,6 +7,6 @@ class ApplicationPage
   include Capybara::DSL
 
   def error_page?
-    false
+    page.has_text?("エラー")
   end
 end

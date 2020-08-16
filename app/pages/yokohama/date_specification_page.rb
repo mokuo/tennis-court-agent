@@ -10,12 +10,7 @@ module Yokohama
 
     def click_next_month
       click_button("翌月")
-
-      if page.has_text?("以降の空き状況は御覧になれません")
-        Yokohama::ErrorPage.new
-      else
-        Yokohama::DateSpecificationPage.new
-      end
+      Yokohama::DateSpecificationPage.new
     end
 
     private

@@ -22,26 +22,28 @@ RSpec.describe Yokohama::DateSpecificationPage, type: :feature do
   end
 
   describe "#click_next_month" do
-    subject(:click_next_month) do
+    subject(:click_next_month) { date_specification_page.click_next_month }
+
+    let!(:date_specification_page) do
       Yokohama::TopPage.new
                        .click_check_availability
                        .click_sports
                        .click_tennis_court
                        .click_park("三ツ沢公園")
                        .click_tennis_court
-                       .click_next_month
     end
 
-    # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
-    it "自身のオブジェクトか Yokohama::ErrorPage オブジェクトを返す" do
-      page_object = click_next_month
-
-      if page.has_text?("以降の空き状況は御覧になれません")
-        expect(page_object).to be_a(Yokohama::ErrorPage)
-      else
-        expect(page_object).to be_a(described_class)
-      end
+    it "翌月の表示日指定ページか、エラーページに遷移する" do
+      page_title = click_next_month.error_page? ? "エラー" : "表示日指定"
+      expect(page).to have_content page_title
     end
-    # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
+
+    it "自身のオブジェクトを返す" do
+      expect(click_next_month).to be_a(described_class)
+    end
+
+    it "新しいオブジェクトを返す" do
+      expect(click_next_month).not_to be date_specification_page
+    end
   end
 end

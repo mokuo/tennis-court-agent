@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Yokohama
-  class TopPage < ApplicationPage
+  class TopPage < BasePage
     def initialize
       visit("https://yoyaku.city.yokohama.lg.jp")
     end

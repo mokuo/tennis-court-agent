@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Yokohama
-  class FacilitySelectionPage < ApplicationPage
+  class FacilitySelectionPage < BasePage
     class ParkNotFoundError < StandardError; end
 
     def initialize

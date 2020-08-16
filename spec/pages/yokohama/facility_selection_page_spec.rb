@@ -3,7 +3,7 @@
 RSpec.describe Yokohama::FacilitySelectionPage, type: :feature do
   describe "#click_park" do
     subject(:click_park) do
-      Yokohama::TopPage.new
+      Yokohama::TopPage.open
                        .click_check_availability
                        .click_sports
                        .click_tennis_court

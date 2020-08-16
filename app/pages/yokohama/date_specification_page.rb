@@ -10,7 +10,7 @@ module Yokohama
 
     def click_next_month
       click_button("翌月")
-      Yokohama::DateSpecificationPage.new
+      self.class.new
     end
 
     private

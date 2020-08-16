@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module Yokohama
-  class ErrorPage < ApplicationPage
+  class BasePage < ApplicationPage
     def error_page?
-      true
+      page.has_text?("エラー")
     end
   end
 end

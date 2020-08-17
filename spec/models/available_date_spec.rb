@@ -4,7 +4,7 @@ RSpec.describe AvailableDate, type: :model do
   describe "#check_target?" do
     subject(:check_target?) { available_date.check_target?(date) }
 
-    let!(:available_date) { AvailableDate.new }
+    let!(:available_date) { described_class.new }
 
     context "土曜日の場合" do
       let(:date) { Date.new(2020, 8, 15) }

@@ -33,6 +33,8 @@ gem "capybara"
 gem "selenium-webdriver"
 gem "webdrivers", "~> 4.0"
 
+gem "active_hash"
+
 # FIXME: https://github.com/chaps-io/gush/pull/76
 gem "gush", git: "https://github.com/chaps-io/gush",
             branch: "master"

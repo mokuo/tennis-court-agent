@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Yokohama
-  class DateSpecificationPage < BasePage
+  class DateSelectionPage < BasePage
     def available_dates
       days.map do |day|
         Date.new(year, month, day)

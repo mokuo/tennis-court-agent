@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Yokohama::DateSpecificationPage, type: :feature do
+RSpec.describe Yokohama::DateSelectionPage, type: :feature do
   describe "#available_dates" do
     subject(:available_dates) do
       Yokohama::TopPage.open

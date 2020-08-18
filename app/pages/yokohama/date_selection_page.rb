@@ -13,6 +13,11 @@ module Yokohama
       self.class.new
     end
 
+    def click_date(date)
+      find("input[value='#{date.day}']").click
+      Yokohama::ReservationFrameSelectionPage.new
+    end
+
     private
 
     def year

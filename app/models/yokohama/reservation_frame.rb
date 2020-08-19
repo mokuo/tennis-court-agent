@@ -28,5 +28,23 @@ module Yokohama
             start_date_time: Time.zone.local(year, month, day, start_hour),
             end_date_time: Time.zone.local(year, month, day, end_hour) })
     end
+
+    def date_str
+      start_date_time.strftime("%Y%m%d")
+    end
+
+    def time_str
+      start_date_time.strftime("%H%M") + end_date_time.strftime("%H%M")
+    end
+
+    def eql?(other)
+      tennis_court_name == other.tennis_court_name &&
+        start_date_time == other.start_date_time &&
+        end_date_time == other.end_date_time
+    end
+
+    def hash
+      [tennis_court_name, start_date_time, end_date_time].hash
+    end
   end
 end

@@ -24,4 +24,136 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
       expect(build.end_date_time).to eq Time.zone.local(2020, 8, 31, 17)
     end
   end
+
+  describe "#date_str" do
+    subject(:date_str) { reservation_frame.date_str }
+
+    let!(:reservation_frame) do
+      described_class.new(
+        { tennis_court_name: "テニスコート１",
+          start_date_time: Time.zone.local(2020, 8, 19, 15),
+          end_date_time: Time.zone.local(2020, 8, 19, 17) }
+      )
+    end
+
+    it "YYYYmmdd を返す" do
+      expect(date_str).to eq "20200819"
+    end
+  end
+
+  describe "#time_str" do
+    subject(:date_str) { reservation_frame.time_str }
+
+    let!(:reservation_frame) do
+      described_class.new(
+        { tennis_court_name: "テニスコート１",
+          start_date_time: Time.zone.local(2020, 8, 19, 15),
+          end_date_time: Time.zone.local(2020, 8, 19, 17) }
+      )
+    end
+
+    it "HHMMHHMM を返す" do
+      expect(date_str).to eq "15001700"
+    end
+  end
+
+  describe "eql?" do
+    subject(:eql?) { reservation_frame.eql?(other_reservation_frame) }
+
+    let!(:reservation_frame) do
+      described_class.new(
+        { tennis_court_name: "テニスコート１",
+          start_date_time: Time.zone.local(2020, 8, 19, 15),
+          end_date_time: Time.zone.local(2020, 8, 19, 17) }
+      )
+    end
+
+    context "全ての値が等しい時" do
+      let(:other_reservation_frame) do
+        described_class.new(
+          { tennis_court_name: "テニスコート１",
+            start_date_time: Time.zone.local(2020, 8, 19, 15),
+            end_date_time: Time.zone.local(2020, 8, 19, 17) }
+        )
+      end
+
+      it { is_expected.to be true }
+    end
+
+    context "テニスコート名が違う時" do
+      let(:other_reservation_frame) do
+        described_class.new(
+          { tennis_court_name: "テニスコート２",
+            start_date_time: Time.zone.local(2020, 8, 19, 15),
+            end_date_time: Time.zone.local(2020, 8, 19, 17) }
+        )
+      end
+
+      it { is_expected.to be false }
+    end
+
+    context "開始時刻が違う時" do
+      let(:other_reservation_frame) do
+        described_class.new(
+          { tennis_court_name: "テニスコート１",
+            start_date_time: Time.zone.local(2020, 8, 19, 13),
+            end_date_time: Time.zone.local(2020, 8, 19, 17) }
+        )
+      end
+
+      it { is_expected.to be false }
+    end
+
+    context "終了時刻が違う時" do
+      let(:other_reservation_frame) do
+        described_class.new(
+          { tennis_court_name: "テニスコート１",
+            start_date_time: Time.zone.local(2020, 8, 19, 15),
+            end_date_time: Time.zone.local(2020, 8, 19, 19) }
+        )
+      end
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe "#hash" do
+    subject(:hash) { reservation_frame.hash }
+
+    let!(:reservation_frame) do
+      described_class.new(
+        { tennis_court_name: "テニスコート１",
+          start_date_time: Time.zone.local(2020, 8, 19, 15),
+          end_date_time: Time.zone.local(2020, 8, 19, 17) }
+      )
+    end
+
+    context "eql? の場合" do
+      let(:other_reservation_frame) do
+        described_class.new(
+          { tennis_court_name: "テニスコート１",
+            start_date_time: Time.zone.local(2020, 8, 19, 15),
+            end_date_time: Time.zone.local(2020, 8, 19, 17) }
+        )
+      end
+
+      it "ハッシュ値も一致する" do
+        expect(hash).to eq other_reservation_frame.hash
+      end
+    end
+
+    context "not eql? の場合" do
+      let(:other_reservation_frame) do
+        described_class.new(
+          { tennis_court_name: "テニスコート２",
+            start_date_time: Time.zone.local(2020, 8, 19, 15),
+            end_date_time: Time.zone.local(2020, 8, 19, 17) }
+        )
+      end
+
+      it "ハッシュ値も一致しない" do
+        expect(hash).not_to eq other_reservation_frame.hash
+      end
+    end
+  end
 end

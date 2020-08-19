@@ -32,8 +32,19 @@ module Yokohama
       result
     end
 
-    def click_reservation_frame(_date_time)
-      # TODO: date_time のボタンをクリック
+    def click_reservation_frame(reservation_frame)
+      table_row_elements = all("table#tbl_time tr")
+      tennis_court_row_elements = table_row_elements.drop(1) # テーブルのヘッダーを取り除く
+      tennis_court_row_elements.pop # 空行を取り除く
+      tennis_court_row_element = tennis_court_row_elements.find do |e|
+        e.find("td:first-child").text == reservation_frame.tennis_court_name
+      end
+      # NOTE: 部分一致
+      input_element = tennis_court_row_element.find(
+        "td input[onclick*='\\'#{reservation_frame.date_str}\\',\\'#{reservation_frame.time_str}\\'']"
+      )
+      input_element.click
+
       self.class.new
     end
 

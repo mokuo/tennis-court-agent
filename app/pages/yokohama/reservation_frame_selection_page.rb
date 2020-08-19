@@ -20,8 +20,8 @@ module Yokohama
           # NOTE: `reservation_frame_element.has_button?` で探すことも可能だが遅い
           next if unavailable?(reservation_frame_element.text)
 
-          js_onclick_str = reservation_frame_element.find("input")[:onclick]
-          reservation_frame = Yokohama::ReservationFrame.build(tennis_court_name, js_onclick_str)
+          onclick_attr_str = reservation_frame_element.find("input")[:onclick]
+          reservation_frame = Yokohama::ReservationFrame.build(tennis_court_name, onclick_attr_str)
           result.push(reservation_frame)
         end
       end

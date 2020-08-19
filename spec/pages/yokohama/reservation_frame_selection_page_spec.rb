@@ -48,8 +48,8 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
 
       tennis_court_row_element = reservation_frame_selection_page.find_tennis_court_row_element(tennis_court_name)
       selected_input_element = tennis_court_row_element.find("td.waku_sentaku input")
-      js_onclick_str = selected_input_element[:onclick]
-      selected_reservation_frame = Yokohama::ReservationFrame.build(tennis_court_name, js_onclick_str)
+      onclick_attr_str = selected_input_element[:onclick]
+      selected_reservation_frame = Yokohama::ReservationFrame.build(tennis_court_name, onclick_attr_str)
 
       expect(selected_reservation_frame).to eql reservation_frame
     end

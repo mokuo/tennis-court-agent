@@ -2,9 +2,9 @@
 
 RSpec.describe Yokohama::ReservationFrame, type: :model do
   describe ".build" do
-    subject(:build) { described_class.build("テニスコート１", js_onclick_str) }
+    subject(:build) { described_class.build("テニスコート１", onclick_attr_str) }
 
-    let!(:js_onclick_str) do
+    let!(:onclick_attr_str) do
       "javascript:return fcRSGK306ClickSubmit(FRM_RSGK306,'SEARCH_CHANGE','rsv.bean.RSGK306BusinessClick','RSGK306','150','1500','20200831','15001700','0','','1','4');"
     end
 

@@ -68,5 +68,34 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
     end
   end
 
-  describe "#click_next"
+  describe "#click_next" do
+    subject(:click_next) do
+      reservation_frame = reservation_frame_selection_page.reservation_frames.first
+      reservation_frame_selection_page
+        .click_reservation_frame(reservation_frame)
+        .click_next
+    end
+
+    let!(:reservation_frame_selection_page) do
+      date_selection_page = Yokohama::TopPage.open
+                                             .login
+                                             .click_check_availability
+                                             .click_sports
+                                             .click_tennis_court
+                                             .click_park("三ツ沢公園")
+                                             .click_tennis_court
+      available_dates = date_selection_page.available_dates
+      # NOTE: 最初の日付だと、前日のため予約できない場合が多い
+      date_selection_page.click_date(available_dates.last)
+    end
+
+    it "予約内容確認ページに遷移する" do
+      click_next
+      expect(page).to have_content "予約内容確認"
+    end
+
+    it "Yokohama::ReservationConfirmationPage オブジェクトを返す" do
+      expect(click_next).to be_a(Yokohama::ReservationConfirmationPage)
+    end
+  end
 end

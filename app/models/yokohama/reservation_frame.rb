@@ -12,6 +12,10 @@ module Yokohama
     attribute :start_date_time, :time
     attribute :end_date_time, :time
 
+    validates :tennis_court_name, presence: true
+    validates :start_date_time, presence: true
+    validates :end_date_time, presence: true
+
     def self.build(tennis_court_name, js_onclick_str)
       a = js_onclick_str.split("','")
       date_str = a[5]

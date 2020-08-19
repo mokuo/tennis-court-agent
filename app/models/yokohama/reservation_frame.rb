@@ -16,6 +16,7 @@ module Yokohama
     validates :start_date_time, presence: true
     validates :end_date_time, presence: true
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def self.build(tennis_court_name, onclick_attr_str)
       a = onclick_attr_str.split("','")
       date_str = a[5]
@@ -32,6 +33,7 @@ module Yokohama
             start_date_time: Time.zone.local(year, month, day, start_hour),
             end_date_time: Time.zone.local(year, month, day, end_hour) })
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def date_str
       start_date_time.strftime("%Y%m%d")

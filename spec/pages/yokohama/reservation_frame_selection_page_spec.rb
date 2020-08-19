@@ -38,10 +38,11 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
                                              .click_tennis_court
       available_dates = date_selection_page.available_dates
       # NOTE: 最初の日付だと、前日のため予約できない場合が多い
-      reservation_frame_selection_page = date_selection_page.click_date(available_dates.last)
+      date_selection_page.click_date(available_dates.last)
     end
     let!(:reservation_frame) { reservation_frame_selection_page.reservation_frames.first }
 
+    # rubocop:disable RSpec/ExampleLength
     it "渡された予約枠を選択する" do
       click_reservation_frame
       tennis_court_name = reservation_frame.tennis_court_name
@@ -53,6 +54,7 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
 
       expect(selected_reservation_frame).to eql reservation_frame
     end
+    # rubocop:enable RSpec/ExampleLength
 
     it "予約枠指定ページに留まる" do
       click_reservation_frame

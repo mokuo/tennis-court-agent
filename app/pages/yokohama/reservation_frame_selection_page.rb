@@ -8,6 +8,7 @@ module Yokohama
       check_page_status!
     end
 
+    # rubocop:disable Metrics/MethodLength
     def reservation_frames
       result = []
 
@@ -28,6 +29,7 @@ module Yokohama
 
       result
     end
+    # rubocop:enable Metrics/MethodLength
 
     def click_reservation_frame(reservation_frame)
       tennis_court_row_element = find_tennis_court_row_element(reservation_frame.tennis_court_name)

@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+
+module Yokohama
+  class ReservationFrame
+    include ActiveModel::Model
+    include ActiveModel::Attributes
+
+    # NOTE: RubyとRailsにおけるTime, Date, DateTime, TimeWithZoneの違い - Qiita
+    ## https://qiita.com/jnchito/items/cae89ee43c30f5d6fa2c
+    # https://github.com/rails/rails/blob/master/activemodel/lib/active_model/type.rb
+    attribute :tennis_court_name, :string
+    attribute :start_date_time, :time
+    attribute :end_date_time, :time
+
+    def self.build(tennis_court_name, js_onclick_str)
+      a = js_onclick_str.split("','")
+      date_str = a[5]
+      time_str = a[6]
+
+      year = date_str[0, 4].to_i
+      month = date_str[4, 2].to_i
+      day = date_str[6, 2].to_i
+
+      start_hour = time_str[0, 2].to_i
+      end_hour = time_str[4, 2].to_i
+
+      new({ tennis_court_name: tennis_court_name,
+            start_date_time: Time.zone.local(year, month, day, start_hour),
+            end_date_time: Time.zone.local(year, month, day, end_hour) })
+    end
+  end
+end

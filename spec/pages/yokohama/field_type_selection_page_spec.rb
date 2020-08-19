@@ -16,8 +16,8 @@ RSpec.describe Yokohama::FieldTypeSelectionPage, type: :feature do
       expect(page).to have_content "表示日指定"
     end
 
-    it "Yokohama::DateSpecificationPage オブジェクトを返す" do
-      expect(click_tennis_court).to be_a(Yokohama::DateSpecificationPage)
+    it "Yokohama::DateSelectionPage オブジェクトを返す" do
+      expect(click_tennis_court).to be_a(Yokohama::DateSelectionPage)
     end
   end
 end

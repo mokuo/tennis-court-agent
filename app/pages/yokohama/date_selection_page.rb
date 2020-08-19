@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Yokohama
-  class DateSpecificationPage < BasePage
+  class DateSelectionPage < BasePage
     def available_dates
       days.map do |day|
         Date.new(year, month, day)
@@ -11,6 +11,11 @@ module Yokohama
     def click_next_month
       click_button("翌月")
       self.class.new
+    end
+
+    def click_date(date)
+      find("input[value='#{date.day}']").click
+      Yokohama::ReservationFrameSelectionPage.new
     end
 
     private

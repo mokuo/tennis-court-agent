@@ -9,11 +9,8 @@ module Yokohama
     end
 
     def reservation_frames
-      table_row_elements = all("table#tbl_time tr")
-      tennis_court_row_elements = table_row_elements.drop(1) # テーブルのヘッダーを取り除く
-      tennis_court_row_elements.pop # 空行を取り除く
-
       result = []
+
       tennis_court_row_elements.each do |tennis_court_row_element|
         columns = tennis_court_row_element.all("td")
         tennis_court_name = columns[0].text
@@ -33,12 +30,7 @@ module Yokohama
     end
 
     def click_reservation_frame(reservation_frame)
-      table_row_elements = all("table#tbl_time tr")
-      tennis_court_row_elements = table_row_elements.drop(1) # テーブルのヘッダーを取り除く
-      tennis_court_row_elements.pop # 空行を取り除く
-      tennis_court_row_element = tennis_court_row_elements.find do |e|
-        e.find("td:first-child").text == reservation_frame.tennis_court_name
-      end
+      tennis_court_row_element = find_tennis_court_row_element(reservation_frame.tennis_court_name)
       # NOTE: 部分一致
       input_element = tennis_court_row_element.find(
         "td input[onclick*='\\'#{reservation_frame.date_str}\\',\\'#{reservation_frame.time_str}\\'']"
@@ -53,6 +45,12 @@ module Yokohama
       Yokohama::ReservationConfirmationPage.new
     end
 
+    def find_tennis_court_row_element(tennis_court_name)
+      tennis_court_row_elements.find do |e|
+        e.find("td:first-child").text == tennis_court_name
+      end
+    end
+
     private
 
     def check_page_status!
@@ -61,6 +59,13 @@ module Yokohama
 
     def unavailable?(text)
       %w[予約済 ×].include?(text)
+    end
+
+    def tennis_court_row_elements
+      table_row_elements = all("table#tbl_time tr")
+      result = table_row_elements.drop(1) # テーブルのヘッダーを取り除く
+      result.pop # 空行を取り除く
+      result
     end
   end
 end

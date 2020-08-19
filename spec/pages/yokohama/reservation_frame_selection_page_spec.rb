@@ -44,15 +44,9 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
 
     it "渡された予約枠を選択する" do
       click_reservation_frame
-
       tennis_court_name = reservation_frame.tennis_court_name
 
-      table_row_elements = all("table#tbl_time tr")
-      tennis_court_row_elements = table_row_elements.drop(1) # テーブルのヘッダーを取り除く
-      tennis_court_row_elements.pop # 空行を取り除く
-      tennis_court_row_element = tennis_court_row_elements.find do |e|
-        e.find("td:first-child").text == tennis_court_name
-      end
+      tennis_court_row_element = reservation_frame_selection_page.find_tennis_court_row_element(tennis_court_name)
       selected_input_element = tennis_court_row_element.find("td.waku_sentaku input")
       js_onclick_str = selected_input_element[:onclick]
       selected_reservation_frame = Yokohama::ReservationFrame.build(tennis_court_name, js_onclick_str)

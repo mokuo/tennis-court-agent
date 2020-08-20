@@ -5,6 +5,7 @@ module Yokohama
     def perform
       park_name = params[:park_name]
       available_dates = get_available_dates(park_name)
+
       workflow = next_workflow_class.create(park_name, available_dates)
       workflow.start!
       workflow

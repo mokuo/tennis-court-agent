@@ -43,6 +43,7 @@ module Yokohama
     end
 
     def click_next
+      # TODO: 予約枠が選択されていることをチェック！
       click_button("次へ")
       Yokohama::ReservationConfirmationPage.new
     end

@@ -49,16 +49,30 @@ RSpec.describe Yokohama::DateSelectionPage, type: :feature do
 
   describe "#click_date" do
     subject(:click_date) do
-      date_selection_page = Yokohama::TopPage.open
-                                             .login
-                                             .click_check_availability
-                                             .click_sports
-                                             .click_tennis_court
-                                             .click_park("三ツ沢公園")
-                                             .click_tennis_court
-      available_dates = date_selection_page.available_dates
+      Yokohama::TopPage.open
+                       .login
+                       .click_check_availability
+                       .click_sports
+                       .click_tennis_court
+                       .click_park("三ツ沢公園")
+                       .click_tennis_court
+                       .click_date(available_date)
+    end
+
+    let!(:available_date) do
+      current_month_page = Yokohama::TopPage.open
+                                            .login
+                                            .click_check_availability
+                                            .click_sports
+                                            .click_tennis_court
+                                            .click_park("三ツ沢公園")
+                                            .click_tennis_court
+
+      available_dates = current_month_page.available_dates
+      next_month_page = current_month_page.click_next_month
+
       # NOTE: 最初の日付だと、前日のため予約できない場合が多い
-      date_selection_page.click_date(available_dates.last)
+      next_month_page.error_page? ? available_dates.last : next_month_page.available_dates.last
     end
 
     it "予約枠指定ページに遷移する" do

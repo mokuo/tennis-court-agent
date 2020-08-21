@@ -47,7 +47,7 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
       click_reservation_frame
       tennis_court_name = reservation_frame.tennis_court_name
 
-      tennis_court_row_element = reservation_frame_selection_page.find_tennis_court_row_element(tennis_court_name)
+      tennis_court_row_element = reservation_frame_selection_page.find_tennis_court_tr_element(tennis_court_name)
       selected_input_element = tennis_court_row_element.find("td.waku_sentaku input")
       onclick_attr_str = selected_input_element[:onclick]
       selected_reservation_frame = Yokohama::ReservationFrame.build(tennis_court_name, onclick_attr_str)

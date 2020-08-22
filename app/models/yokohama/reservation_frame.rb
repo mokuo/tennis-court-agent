@@ -57,5 +57,31 @@ module Yokohama
     def hash
       [tennis_court_name, start_date_time, end_date_time].hash
     end
+
+    def to_human
+      "#{tennis_court_name} #{date_time_to_human} #{now_to_human}"
+    end
+
+    private
+
+    def date_time_to_human
+      "#{date_to_human} #{time_to_human}"
+    end
+
+    def date_to_human
+      date.strftime("%Y/%m/%d（#{ja_wday[date.wday]}）")
+    end
+
+    def time_to_human
+      "#{start_date_time.strftime('%H:%M')}~#{end_date_time.strftime('%H:%M')}"
+    end
+
+    def now_to_human
+      now ? "今すぐ予約可能" : "翌日７時に予約可能"
+    end
+
+    def ja_wday
+      %w[日 月 火 水 木 金 土]
+    end
   end
 end

@@ -156,4 +156,34 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
       end
     end
   end
+
+  describe "#to_human" do
+    subject(:to_human) { reservation_frame.to_human }
+
+    context "今すぐ予約可能な場合" do
+      let(:reservation_frame) do
+        described_class.new(
+          { tennis_court_name: "テニスコート１",
+            start_date_time: Time.zone.local(2020, 8, 22, 15),
+            end_date_time: Time.zone.local(2020, 8, 22, 17),
+            now: true }
+        )
+      end
+
+      it { is_expected.to eq "テニスコート１ 2020/08/22（土） 15:00~17:00 今すぐ予約可能" }
+    end
+
+    context "翌日７時に予約可能な場合" do
+      let(:reservation_frame) do
+        described_class.new(
+          { tennis_court_name: "テニスコート１",
+            start_date_time: Time.zone.local(2020, 8, 22, 15),
+            end_date_time: Time.zone.local(2020, 8, 22, 17),
+            now: false }
+        )
+      end
+
+      it { is_expected.to eq "テニスコート１ 2020/08/22（土） 15:00~17:00 翌日７時に予約可能" }
+    end
+  end
 end

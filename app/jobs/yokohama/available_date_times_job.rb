@@ -27,5 +27,10 @@ module Yokohama
     def next_workflow_class
       params[:next_workflow_class] || ReservationStatusCheckWorkflow
     end
+
+    def available_date
+      # NOTE: Gush::Workflow の params として渡ってくる時点で YYYY-mm-dd の string になる
+      Date.parse(params[:available_date])
+    end
   end
 end

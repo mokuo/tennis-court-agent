@@ -24,14 +24,15 @@ RSpec.describe Yokohama::AvailableDateTimesJob, type: :feature do
 
     let!(:park_name) { "三ツ沢公園" }
     let!(:available_date) do
-      Yokohama::TopPage.open
-                       .click_check_availability
-                       .click_sports
-                       .click_tennis_court
-                       .click_park(park_name)
-                       .click_tennis_court
-                       .available_dates
-                       .last # NOTE: 最初の日付だと、前日のため予約できない場合が多い
+      available_date = Yokohama::TopPage.open
+                                        .click_check_availability
+                                        .click_sports
+                                        .click_tennis_court
+                                        .click_park(park_name)
+                                        .click_tennis_court
+                                        .available_dates
+                                        .last # NOTE: 最初の日付だと、前日のため予約できない場合が多い
+      available_date.strftime("%Y-%m-%d")
     end
     let!(:params) do
       { params: { park_name: park_name, available_date: available_date, next_workflow_class: TestWorkflow } }

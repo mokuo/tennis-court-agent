@@ -6,7 +6,10 @@ module Yokohama
       park_name = params[:park_name]
       available_dates = get_available_dates(park_name)
 
-      workflow = next_workflow_class.create(park_name, available_dates)
+      available_date = AvailableDate.new
+      filtered_available_dates = available_dates.filter { |d| available_date.check_target?(d) }
+
+      workflow = next_workflow_class.create(park_name, filtered_available_dates)
       workflow.start!
       workflow
     end

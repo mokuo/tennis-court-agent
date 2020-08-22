@@ -11,6 +11,7 @@ module Yokohama
     attribute :tennis_court_name, :string
     attribute :start_date_time, :time
     attribute :end_date_time, :time
+    attribute :now, :boolean
 
     validates :tennis_court_name, presence: true
     validates :start_date_time, presence: true
@@ -41,6 +42,10 @@ module Yokohama
 
     def time_str
       start_date_time.strftime("%H%M") + end_date_time.strftime("%H%M")
+    end
+
+    def date
+      start_date_time.to_date
     end
 
     def eql?(other)

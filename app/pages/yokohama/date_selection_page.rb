@@ -14,7 +14,10 @@ module Yokohama
     end
 
     def click_date(date)
+      return click_next_month.click_date(date) if (month + 1) == date.month
+
       find("input[value='#{date.day}']").click
+
       Yokohama::ReservationFrameSelectionPage.new
     end
 

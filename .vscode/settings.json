@@ -2,5 +2,8 @@
   "solargraph.useBundler": true,
   "solargraph.diagnostics": true,
   "solargraph.formatting": true,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "plantuml.exportOutDir": "./",
+  "plantuml.exportSubFolder": false,
+  "plantuml.exportFormat": "png"
 }

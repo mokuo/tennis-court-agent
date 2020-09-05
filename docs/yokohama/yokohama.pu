@@ -1,0 +1,125 @@
+@startuml start
+title start
+
+-> "a Controller"
+activate "a Controller"
+  "a Controller" -> TreeEventPath: build
+  activate TreeEventPath
+    note over TreeEventPath
+      ex) "/2020-09-06T14:03:10+09:00/yokohama"
+      using Time.zone.now.to_s(:iso8601)
+    end note
+  "a Controller" <-- TreeEventPath
+  deactivate TreeEventPath
+
+  "a Controller" -> Parks: all
+  activate Parks
+  "a Controller" <-- Parks
+  deactivate Parks
+
+  "a Controller" -> AvailabilityCheckStarted: publish(path, planned_children)
+  activate AvailabilityCheckStarted
+    AvailabilityCheckStarted -> TreeEventSubscribers: all(self)
+    activate TreeEventSubscribers
+    AvailabilityCheckStarted <-- TreeEventSubscribers
+    deactivate TreeEventSubscribers
+
+    note over "AvailabilityCheckStarted"
+      for each subscriber
+    end note
+
+    AvailabilityCheckStarted -> "a Subscriber(Proc)": call(path, planed_children)
+    activate "a Subscriber(Proc)"
+      "a Subscriber(Proc)" ->
+      "a Subscriber(Proc)" <--
+    AvailabilityCheckStarted <-- "a Subscriber(Proc)"
+    deactivate "a Subscriber(Proc)"
+  "a Controller" <-- AvailabilityCheckStarted
+  deactivate AvailabilityCheckStarted
+<-- "a Controller"
+deactivate "a Controller"
+@enduml
+
+
+@startuml job
+title Job(Subscriber)
+
+-> "a Subscriber(Proc)"
+activate "a Subscriber(Proc)"
+  "a Subscriber(Proc)" -> Job: perform_jobs_later(path, planed_children)
+  note over Job
+    for each planed_child
+  end note
+  Job -> Job: perform_later(path, planed_child)
+  "a Subscriber(Proc)" <-- Job
+<-- "a Subscriber(Proc)"
+deactivate "a Subscriber(Proc)"
+...
+
+-> Job: perform(path, planed_child)
+activate Job
+  Job -> "a PageObject": Scraping Request
+  activate "a PageObject"
+  "a PageObject" --> Job
+  deactivate "a PageObject"
+
+  Job -> "a TreeEvent": publish(path, planned_children)
+  activate "a TreeEvent"
+    "a TreeEvent" -> TreeEventSubscribers: all(self)
+    activate TreeEventSubscribers
+    "a TreeEvent" <-- TreeEventSubscribers
+    deactivate TreeEventSubscribers
+
+    note over "a TreeEvent"
+      for each subscriber
+    end note
+
+    "a TreeEvent" -> "other Subscriber(Proc)": call(path, planed_children)
+    activate "other Subscriber(Proc)"
+      "other Subscriber(Proc)" ->
+      "other Subscriber(Proc)" <--
+    "a TreeEvent" <-- "other Subscriber(Proc)"
+    deactivate "other Subscriber(Proc)"
+  Job <-- "a TreeEvent"
+  deactivate "a TreeEvent"
+deactivate Job
+@enduml
+
+
+
+@startuml event_store
+title a EventStore(Subscriber)
+
+"a Subscriber(Proc)" -> "TreeEvent": create!(path, planed_children)
+"a Subscriber(Proc)" <-- "TreeEvent"
+@enduml
+
+
+
+@startuml status_checker
+title a StatusChecker(Subscriber)
+
+-> "a Subscriber(Proc)": call
+activate "a Subscriber(Proc)"
+  "a Subscriber(Proc)" -> "a StatusChecker": check(path, planed_children)
+  activate "a StatusChecker"
+    note over "a StatusChecker"
+      if all event finished
+    end note
+    "a StatusChecker" -> AvailabilityCheckFinished: publish
+    activate AvailabilityCheckFinished
+      AvailabilityCheckFinished -> DomainEventSubscribers: all(self)
+      AvailabilityCheckFinished <-- DomainEventSubscribers
+      note over "AvailabilityCheckFinished"
+        for each subscriber
+      end note
+      AvailabilityCheckFinished -> "NotificationJob(Subscriber)": perform_later
+      "NotificationJob(Subscriber)" ->: enqueue
+      AvailabilityCheckFinished <-- "NotificationJob(Subscriber)"
+    "a StatusChecker" <-- AvailabilityCheckFinished
+    deactivate AvailabilityCheckFinished
+  "a Subscriber(Proc)" <-- "a StatusChecker"
+  deactivate "a StatusChecker"
+<-- "a Subscriber(Proc)"
+deactivate "a Subscriber(Proc)"
+@enduml

@@ -17,13 +17,14 @@ module Yokohama
     private
 
     def get_available_dates(park_name)
-      Yokohama::TopPage.open
-                       .click_check_availability
-                       .click_sports
-                       .click_tennis_court
-                       .click_park(park_name)
-                       .click_tennis_court
-                       .available_dates
+      available_dates, _page = Yokohama::TopPage.open
+                                                .click_check_availability
+                                                .click_sports
+                                                .click_tennis_court
+                                                .click_park(park_name)
+                                                .click_tennis_court
+                                                .available_dates
+      available_dates
     end
 
     def next_workflow_class

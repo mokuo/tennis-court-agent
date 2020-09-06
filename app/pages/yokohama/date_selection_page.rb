@@ -29,13 +29,13 @@ module Yokohama
     private
 
     def year
-      within("select[name='LST_JUMPNEN']") do
+      @year ||= within("select[name='LST_JUMPNEN']") do
         find("option[selected]").value.to_i
       end
     end
 
     def month
-      within("select[name='LST_JUMPGETU']") do
+      @month ||= within("select[name='LST_JUMPGETU']") do
         find("option[selected]").value.to_i
       end
     end
@@ -47,6 +47,8 @@ module Yokohama
     end
 
     def click_next_month
+      @year = nil
+      @month = nil
       click_button("翌月")
     end
 

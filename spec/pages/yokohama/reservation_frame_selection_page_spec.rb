@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
+  let!(:park_name) { "三ツ沢公園" }
+  let!(:available_dates) do
+    Yokohama::TopPage.open
+                     .login
+                     .click_check_availability
+                     .click_sports
+                     .click_tennis_court
+                     .click_park(park_name)
+                     .click_tennis_court
+                     .available_dates
+  end
+
   describe "#reservation_frames" do
     subject(:reservation_frames) do
       date_selection_page = Yokohama::TopPage.open
@@ -8,9 +20,8 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
                                              .click_check_availability
                                              .click_sports
                                              .click_tennis_court
-                                             .click_park("三ツ沢公園")
+                                             .click_park(park_name)
                                              .click_tennis_court
-      available_dates = date_selection_page.available_dates
       # NOTE: 最初の日付だと、前日のため予約できない場合が多い
       date_selection_page.click_date(available_dates.last)
                          .reservation_frames
@@ -34,9 +45,8 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
                                              .click_check_availability
                                              .click_sports
                                              .click_tennis_court
-                                             .click_park("三ツ沢公園")
+                                             .click_park(park_name)
                                              .click_tennis_court
-      available_dates = date_selection_page.available_dates
       # NOTE: 最初の日付だと、前日のため予約できない場合が多い
       date_selection_page.click_date(available_dates.last)
     end
@@ -84,9 +94,8 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
                                              .click_check_availability
                                              .click_sports
                                              .click_tennis_court
-                                             .click_park("三ツ沢公園")
+                                             .click_park(park_name)
                                              .click_tennis_court
-      available_dates = date_selection_page.available_dates
       # NOTE: 最初の日付だと、前日のため予約できない場合が多い
       date_selection_page.click_date(available_dates.last)
     end

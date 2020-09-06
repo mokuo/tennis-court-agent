@@ -60,6 +60,8 @@ jobs:
             bundle exec rails db:schema:load --trace
       # Run rspec in parallel
       - ruby/rspec-test
+      - store_artifacts:
+          path: tmp/capybara/
 
 # We use workflows to orchestrate the jobs that we declared above.
 workflows:

@@ -58,7 +58,8 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
         expect(page).to have_content("選択した枠はキャンセル枠のため、現在予約できません。")
       else
         tennis_court_name = reservation_frame.tennis_court_name
-        tennis_court_row_element = selected_reservation_frame_selection_page.find_tennis_court_tr_element(tennis_court_name)
+        tennis_court_row_element = selected_reservation_frame_selection_page
+                                   .find_tennis_court_tr_element(tennis_court_name)
         selected_input_element = tennis_court_row_element.find("td.waku_sentaku input")
         onclick_attr_str = selected_input_element[:onclick]
         selected_reservation_frame = Yokohama::ReservationFrame.build(tennis_court_name, onclick_attr_str)

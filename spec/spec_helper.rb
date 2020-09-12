@@ -93,6 +93,10 @@ RSpec.configure do |config|
   #   # test failures related to randomization by passing the same `--seed` value
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
+
+  config.after do |example|
+    page.save_screenshot("#{example.location}.png") if (example.metadata[:type] == :feature) && example.exception
+  end
 end
 
 require "capybara/rspec"

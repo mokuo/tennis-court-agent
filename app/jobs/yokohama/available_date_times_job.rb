@@ -13,6 +13,8 @@ module Yokohama
     private
 
     def get_reservation_frames(params)
+      date = Date.parse(params[:available_date])
+
       Yokohama::TopPage.open
                        .login
                        .click_check_availability
@@ -20,12 +22,17 @@ module Yokohama
                        .click_tennis_court
                        .click_park(params[:park_name])
                        .click_tennis_court
-                       .click_date(params[:available_date])
+                       .click_date(date)
                        .reservation_frames
     end
 
     def next_workflow_class
       params[:next_workflow_class] || ReservationStatusCheckWorkflow
+    end
+
+    def available_date
+      # NOTE: Gush::Workflow の params として渡ってくる時点で YYYY-mm-dd の string になる
+      Date.parse(params[:available_date])
     end
   end
 end

@@ -10,12 +10,12 @@ module Yokohama
     TENNIS_COURT = %r{(?<tennis_court>[^/]+)}.freeze # ex) テニスコート１
     REGEX = %r{/#{TIMESTAMP}(/#{ORGANIZATION})?(/#{PARK})?(/#{DATE})?(/#{TIME})?(/#{TENNIS_COURT})?}.freeze
 
-    def initialize(path_str)
-      @path_str = path_str
-    end
-
     def self.build
       "/#{Time.zone.now.to_s(:iso8601)}/yokohama"
+    end
+
+    def self.parse(path_str)
+      @path_str = path_str
     end
 
     def timestamp

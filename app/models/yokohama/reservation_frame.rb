@@ -51,11 +51,12 @@ module Yokohama
     def eql?(other)
       tennis_court_name == other.tennis_court_name &&
         start_date_time == other.start_date_time &&
-        end_date_time == other.end_date_time
+        end_date_time == other.end_date_time &&
+        now == other.now
     end
 
     def hash
-      [tennis_court_name, start_date_time, end_date_time].hash
+      [tennis_court_name, start_date_time, end_date_time, now].hash
     end
 
     def to_human

@@ -4,76 +4,94 @@ RSpec.describe Yokohama::TreeEventPath, type: :model do
   describe ".build"
 
   describe "TreeEventPath attributes" do
-    using RSpec::Parameterized::TableSyntax
-
     let!(:time) { Time.zone.now }
-    let!(:timestamp) { now.to_s(:iso8601) }
-
-    # where(:organization, :park, :date, :time, :tennis_court, :path_excluding_timestamp) do
-    #   nil | nil | nil | nil | nil | ""
-    #   "yokohama" | nil | nil | nil | nil | "/yokohama"
-    #   "yokohama" | "富岡西公園" | nil | nil | nil | "/yokohama/富岡西公園"
-    #   "yokohama" | "富岡西公園" | "2020-09-13" | nil | nil | "/yokohama/富岡西公園/2020-09-13"
-    #   "yokohama" | "富岡西公園" | "2020-09-13" | "11:00~13:00" | nil | "/yokohama/富岡西公園/2020-09-13/11:00~13:00"
-    #   "yokohama" | "富岡西公園" | "2020-09-13" | "11:00~13:00" | "テニスコート１" | "/yokohama/富岡西公園/2020-09-13/11:00~13:00/テニスコート１"
-    # end
+    let!(:timestamp) { time.to_s(:iso8601) }
+    let!(:organization) { "yokohama" }
+    let!(:park) { "富岡西公園" }
+    let!(:date) { Date.current }
+    let!(:reservation_frame_s) { "11:00~13:00_テニスコート１" }
 
     before do
       travel_to(time)
     end
 
-    context "First step" do
-      let!(:path) { described_class.parse("/#{timestamp}/yokohama") }
+    context "depth 0" do
+      let!(:path) { described_class.parse("/#{timestamp}") }
 
-      it { expect(path.timestamp).to eq time }
-      it { expect(path.organization).to eq "yokohama" }
+      it { expect(path.timestamp).to eq timestamp }
+      it { expect(path.organization).to eq nil }
       it { expect(path.park).to eq nil }
       it { expect(path.date).to eq nil }
-      it { expect(path.time).to eq nil }
-      it { expect(path.tennis_court).to eq nil }
+      it { expect(path.reservation_frame).to eq nil }
     end
 
-    context "First step" do
-      let!(:path) { described_class.parse("/#{timestamp}/yokohama") }
+    context "depth 1" do
+      let!(:path) { described_class.parse("/#{timestamp}/#{organization}") }
 
-      it { expect(path.timestamp).to eq time }
-      it { expect(path.organization).to eq "yokohama" }
+      it { expect(path.timestamp).to eq timestamp }
+      it { expect(path.organization).to eq organization }
       it { expect(path.park).to eq nil }
       it { expect(path.date).to eq nil }
-      it { expect(path.time).to eq nil }
-      it { expect(path.tennis_court).to eq nil }
+      it { expect(path.reservation_frame).to eq nil }
     end
 
-    # with_them do
-    #   it "#timestamp" do
-    #     path = described_class.new("/#{timestamp}#{path_excluding_timestamp}")
-    #     expect(path.timestamp).to eq timestamp
-    #   end
+    context "depth 2" do
+      let!(:path) { described_class.parse("/#{timestamp}/#{organization}/#{park}") }
 
-    #   it "#organization" do
-    #     path = described_class.new("/#{timestamp}#{path_excluding_timestamp}")
-    #     expect(path.organization).to eq organization
-    #   end
+      it { expect(path.timestamp).to eq timestamp }
+      it { expect(path.organization).to eq organization }
+      it { expect(path.park).to eq park }
+      it { expect(path.date).to eq nil }
+      it { expect(path.reservation_frame).to eq nil }
+    end
 
-    #   it "#park" do
-    #     path = described_class.new("/#{timestamp}#{path_excluding_timestamp}")
-    #     expect(path.park).to eq park
-    #   end
+    context "depth 3" do
+      let!(:path) { described_class.parse("/#{timestamp}/#{organization}/#{park}/#{date}") }
 
-    #   it "#date" do
-    #     path = described_class.new("/#{timestamp}#{path_excluding_timestamp}")
-    #     expect(path.date).to eq date
-    #   end
+      it { expect(path.timestamp).to eq timestamp }
+      it { expect(path.organization).to eq organization }
+      it { expect(path.park).to eq park }
+      it { expect(path.date).to eq date }
+      it { expect(path.reservation_frame).to eq nil }
+    end
 
-    #   it "#time" do
-    #     path = described_class.new("/#{timestamp}#{path_excluding_timestamp}")
-    #     expect(path.time).to eq time
-    #   end
+    context "depth 4" do
+      let!(:reservation_frame) do
+        Yokohama::ReservationFrame.new(
+          {
+            start_date_time: Time.zone.parse("#{date} 11:00"),
+            end_date_time: Time.zone.parse("#{date} 13:00"),
+            tennis_court_name: "テニスコート１"
+          }
+        )
+      end
+      let!(:path) { described_class.parse("/#{timestamp}/#{organization}/#{park}/#{date}/#{reservation_frame_s}") }
 
-    #   it "#tennis_court" do
-    #     path = described_class.new("/#{timestamp}#{path_excluding_timestamp}")
-    #     expect(path.tennis_court).to eq tennis_court
-    #   end
-    # end
+      it { expect(path.timestamp).to eq timestamp }
+      it { expect(path.organization).to eq organization }
+      it { expect(path.park).to eq park }
+      it { expect(path.date).to eq date }
+      it { expect(path.reservation_frame.eql?(reservation_frame)).to be true }
+    end
+
+    context "depth 5" do
+      let!(:reservation_frame) do
+        Yokohama::ReservationFrame.new(
+          {
+            start_date_time: Time.zone.parse("#{date} 11:00"),
+            end_date_time: Time.zone.parse("#{date} 13:00"),
+            tennis_court_name: "テニスコート１",
+            now: true
+          }
+        )
+      end
+      let!(:path) { described_class.parse("/#{timestamp}/#{organization}/#{park}/#{date}/#{reservation_frame_s}/true") }
+
+      it { expect(path.timestamp).to eq timestamp }
+      it { expect(path.organization).to eq organization }
+      it { expect(path.park).to eq park }
+      it { expect(path.date).to eq date }
+      it { expect(path.reservation_frame.eql?(reservation_frame)).to be true }
+    end
   end
 end

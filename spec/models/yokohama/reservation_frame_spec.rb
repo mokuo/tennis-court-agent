@@ -64,7 +64,8 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
       described_class.new(
         { tennis_court_name: "テニスコート１",
           start_date_time: Time.zone.local(2020, 8, 19, 15),
-          end_date_time: Time.zone.local(2020, 8, 19, 17) }
+          end_date_time: Time.zone.local(2020, 8, 19, 17),
+          now: true }
       )
     end
 
@@ -73,7 +74,8 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
         described_class.new(
           { tennis_court_name: "テニスコート１",
             start_date_time: Time.zone.local(2020, 8, 19, 15),
-            end_date_time: Time.zone.local(2020, 8, 19, 17) }
+            end_date_time: Time.zone.local(2020, 8, 19, 17),
+            now: true }
         )
       end
 
@@ -85,7 +87,8 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
         described_class.new(
           { tennis_court_name: "テニスコート２",
             start_date_time: Time.zone.local(2020, 8, 19, 15),
-            end_date_time: Time.zone.local(2020, 8, 19, 17) }
+            end_date_time: Time.zone.local(2020, 8, 19, 17),
+            now: true }
         )
       end
 
@@ -97,7 +100,8 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
         described_class.new(
           { tennis_court_name: "テニスコート１",
             start_date_time: Time.zone.local(2020, 8, 19, 13),
-            end_date_time: Time.zone.local(2020, 8, 19, 17) }
+            end_date_time: Time.zone.local(2020, 8, 19, 17),
+            now: true }
         )
       end
 
@@ -109,7 +113,21 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
         described_class.new(
           { tennis_court_name: "テニスコート１",
             start_date_time: Time.zone.local(2020, 8, 19, 15),
-            end_date_time: Time.zone.local(2020, 8, 19, 19) }
+            end_date_time: Time.zone.local(2020, 8, 19, 19),
+            now: true }
+        )
+      end
+
+      it { is_expected.to be false }
+    end
+
+    context "今すぐ予約可能かどうかが違う時" do
+      let(:other_reservation_frame) do
+        described_class.new(
+          { tennis_court_name: "テニスコート１",
+            start_date_time: Time.zone.local(2020, 8, 19, 15),
+            end_date_time: Time.zone.local(2020, 8, 19, 17),
+            now: false }
         )
       end
 
@@ -124,7 +142,8 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
       described_class.new(
         { tennis_court_name: "テニスコート１",
           start_date_time: Time.zone.local(2020, 8, 19, 15),
-          end_date_time: Time.zone.local(2020, 8, 19, 17) }
+          end_date_time: Time.zone.local(2020, 8, 19, 17),
+          now: false }
       )
     end
 
@@ -133,7 +152,8 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
         described_class.new(
           { tennis_court_name: "テニスコート１",
             start_date_time: Time.zone.local(2020, 8, 19, 15),
-            end_date_time: Time.zone.local(2020, 8, 19, 17) }
+            end_date_time: Time.zone.local(2020, 8, 19, 17),
+            now: false }
         )
       end
 
@@ -147,7 +167,8 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
         described_class.new(
           { tennis_court_name: "テニスコート２",
             start_date_time: Time.zone.local(2020, 8, 19, 15),
-            end_date_time: Time.zone.local(2020, 8, 19, 17) }
+            end_date_time: Time.zone.local(2020, 8, 19, 17),
+            now: true }
         )
       end
 

@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe Yokohama::TreeEventPath, type: :model do
-  describe ".build"
+  describe "#append" do
+    let!(:timestamp) { Time.zone.now.to_s(:iso8601) }
+
+    context "when depth 1" do
+      let!(:path) { described_class.parse("/#{timestamp}/yokohama") }
+      let!(:expected_path) { described_class.parse("/#{timestamp}/yokohama/富岡西公園") }
+
+      it { expect(path.append("富岡西公園").eql?(expected_path)).to be true }
+    end
+  end
 
   describe "TreeEventPath attributes" do
-    let!(:time) { Time.zone.now }
-    let!(:timestamp) { time.to_s(:iso8601) }
+    let!(:timestamp) { Time.zone.now.to_s(:iso8601) }
     let!(:organization) { "yokohama" }
     let!(:park) { "富岡西公園" }
     let!(:date) { Date.current }
     let!(:reservation_frame_s) { "11:00~13:00_テニスコート１" }
-
-    before do
-      travel_to(time)
-    end
 
     context "depth 0" do
       let!(:path) { described_class.parse("/#{timestamp}") }

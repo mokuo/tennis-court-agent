@@ -3,6 +3,7 @@
 class DomainTreeEvent
   include ActiveModel::Model
   include ActiveModel::Attributes
+  include ActiveModel::GlobalIdentification
 
   attribute :path
   attribute :planed_children

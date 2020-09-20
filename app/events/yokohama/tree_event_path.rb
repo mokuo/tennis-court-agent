@@ -2,6 +2,8 @@
 
 module Yokohama
   class TreeEventPath
+    include ActiveModel::GlobalIdentification
+
     TIMESTAMP = %r{(?<timestamp>[^/]+)}.freeze # ex) 2020-09-06T14:03:10+09:00
     ORGANIZATION = %r{(?<organization>[^/]+)}.freeze # ex) yokohama
     PARK = %r{(?<park>[^/]+)}.freeze # ex) 公園名
@@ -9,6 +11,8 @@ module Yokohama
     RESERVATION_FRAME = %r{(?<reservation_frame>[^/]+)}.freeze # ex) テニスコート１_11:00~13:00
     NOW = %r{(?<now>[^/]+)}.freeze # true / false（今すぐ予約可）
     REGEX = %r{/#{TIMESTAMP}(/#{ORGANIZATION})?(/#{PARK})?(/#{DATE})?(/#{RESERVATION_FRAME})?(/#{NOW})?}.freeze
+
+    delegate :hash, to: :path_str
 
     def initialize(path_str)
       @path_str = path_str
@@ -18,12 +22,24 @@ module Yokohama
       "/#{Time.zone.now.to_s(:iso8601)}/yokohama"
     end
 
-    def timestamp
-      match_data[:timestamp]
-    end
-
     def self.parse(path_str)
       new(path_str)
+    end
+
+    def append(str)
+      self.class.new("#{path_str}/#{str}")
+    end
+
+    def to_s
+      path_str
+    end
+
+    def eql?(other)
+      to_s == other.to_s
+    end
+
+    def timestamp
+      match_data[:timestamp]
     end
 
     def organization

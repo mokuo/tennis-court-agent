@@ -6,10 +6,10 @@ class DomainTreeEvent
   include ActiveModel::GlobalIdentification
 
   attribute :path
-  attribute :planed_children
+  attribute :children
 
   validates :path, presence: true
-  validates :planed_children, presence: true
+  validates :children, presence: true
 
   def publish
     subscribers.each { |s| s.call(self) }
@@ -23,7 +23,7 @@ class DomainTreeEvent
 
   def default_subscribers
     [
-      ->(event) { EventPersistJob.perform_later(event.path, event.planed_children) }
+      ->(event) { EventPersistJob.perform_later(event.path, event.children) }
     ]
   end
 

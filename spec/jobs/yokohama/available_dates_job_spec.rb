@@ -1,23 +1,5 @@
 # frozen_string_literal: true
 
-class TestWorkflow
-  attr_reader :park_name, :available_dates, :started
-
-  def initialize(park_name, available_dates)
-    @park_name = park_name
-    @available_dates = available_dates
-    @started = false
-  end
-
-  def self.create(park_name, available_dates)
-    new(park_name, available_dates)
-  end
-
-  def start!
-    @started = true
-  end
-end
-
 RSpec.describe Yokohama::AvailableDatesJob, type: :feature do
   describe "#perform" do
     subject(:collect_available_dates) { job.perform }

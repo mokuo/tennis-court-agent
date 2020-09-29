@@ -4,7 +4,7 @@ module Yokohama
   class AvailableDatesFound < DomainTreeEvent
     def register_subscribers
       [
-        ->(event) { ReservationFramesJob.perform_jobs_later(event) }
+        ->(event) { AvailableDate.filter(event.path, event.children) }
       ]
     end
   end

@@ -1,20 +1,11 @@
 # frozen_string_literal: true
 
-class TestWorkflow
-  attr_reader :park_name, :available_dates, :started
-
-  def initialize(park_name, available_dates)
-    @park_name = park_name
-    @available_dates = available_dates
-    @started = false
-  end
-
-  def self.create(park_name, available_dates)
-    new(park_name, available_dates)
-  end
-
-  def start!
-    @started = true
+require Rails.root.join("domain/models/available_date")
+class MockService
+  def available_dates(_park_name)
+    [
+      Yokohama::AvailableDate.new
+    ]
   end
 end
 

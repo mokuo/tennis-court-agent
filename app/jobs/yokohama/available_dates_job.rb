@@ -6,38 +6,10 @@ module Yokohama
   class AvailableDatesJob < ApplicationJob
     queue_as :yokohama
 
-    # HACK: 一時的に既存の spec を通しただけ
-    def initialize(params)
-      @params = params
-    end
-
-    def perform
-      park_name = params[:park_name]
-      available_dates = get_available_dates(park_name)
-
-      filtered_available_dates = available_dates.filter { |d| AvailableDate.new(d).check_target? }
-
-      workflow = next_workflow_class(params).create(park_name, filtered_available_dates)
-      workflow.start!
-      workflow
-    end
-
-    private
-
-    attr_reader :params
-
-    def get_available_dates(park_name)
-      Yokohama::TopPage.open
-                       .click_check_availability
-                       .click_sports
-                       .click_tennis_court
-                       .click_park(park_name)
-                       .click_tennis_court
-                       .available_dates
-    end
-
-    def next_workflow_class(params)
-      params[:next_workflow_class] || AvailableDateTimesWorkflow
+    def perform(park_name, service = ScrapingService.new)
+      available_dates = service.available_dates(park_name)
+      event = AvailableDatesFound.new(park_name, available_dates)
+      event.publish!
     end
   end
 end

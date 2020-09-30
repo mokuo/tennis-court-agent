@@ -11,6 +11,10 @@ class AvailableDate
       japanese_holiday?
   end
 
+  def to_json(*_args)
+    date
+  end
+
   private
 
   attr_reader :date

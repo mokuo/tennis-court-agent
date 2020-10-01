@@ -13,6 +13,7 @@ class NotificationJob < Gush::Job
     params[:notification] || Notification.new
   end
 
+  # TODO: Domain::NotificationService に移動したので削除
   def build_message(park_name, reservation_frames)
     msg = "横浜市のテニスコートの空き状況です。\n\n"
 

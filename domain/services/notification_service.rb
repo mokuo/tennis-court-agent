@@ -14,6 +14,7 @@ class NotificationService
 
   attr_reader :client
 
+  # TODO: ReservationStatusChecked イベントの attributes から取る？
   def build_message(reservation_frames)
     r = reservation_frames.first
 

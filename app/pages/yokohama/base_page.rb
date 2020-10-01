@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/pages/domain_page")
+
 module Yokohama
   class BasePage < ApplicationPage
     def error_page?

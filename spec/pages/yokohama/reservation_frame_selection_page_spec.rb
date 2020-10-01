@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/pages/yokohama/reservation_frame_selection_page")
+
 RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
   let!(:park_name) { "三ツ沢公園" }
   let!(:available_dates) do

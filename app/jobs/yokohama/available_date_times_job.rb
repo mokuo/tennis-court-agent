@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/pages/yokohama/top_page")
+
 module Yokohama
   class AvailableDateTimesJob < Gush::Job
     def perform

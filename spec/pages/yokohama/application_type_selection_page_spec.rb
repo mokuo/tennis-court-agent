@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/pages/yokohama/application_type_selection_page")
+
 RSpec.describe Yokohama::ApplicationTypeSelectionPage, type: :feature do
   describe "#click_tennis_court" do
     subject(:click_tennis_court) do

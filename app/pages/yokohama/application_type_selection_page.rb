@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/pages/yokohama/base_page")
+
 module Yokohama
   class ApplicationTypeSelectionPage < BasePage
     def click_tennis_court

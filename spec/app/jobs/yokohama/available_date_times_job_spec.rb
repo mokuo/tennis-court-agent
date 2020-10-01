@@ -35,7 +35,7 @@ RSpec.describe Yokohama::AvailableDateTimesJob, type: :feature do
       available_dates.last.strftime("%Y-%m-%d")
     end
     let!(:params) do
-      { params: { park_name: park_name, available_date: available_date, next_workflow_class: TestWorkflow } }
+      { park_name: park_name, available_date: available_date, next_workflow_class: TestWorkflow }
     end
 
     it "指定された公園の予約枠を見に行く" do

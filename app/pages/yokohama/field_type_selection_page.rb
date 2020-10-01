@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require Rails.root.join("domain/pages/yokohama/base_page")
+require Rails.root.join("domain/pages/yokohama/date_selection_page")
 
 module Yokohama
   class FieldTypeSelectionPage < BasePage

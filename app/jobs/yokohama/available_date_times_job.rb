@@ -3,7 +3,12 @@
 require Rails.root.join("domain/pages/yokohama/top_page")
 
 module Yokohama
-  class AvailableDateTimesJob < Gush::Job
+  class AvailableDateTimesJob < ApplicationJob
+    # HACK: 一時的に既存の spec を通しただけ
+    def initialize(params)
+      @params = params
+    end
+
     def perform
       reservation_frames = get_reservation_frames(params)
 
@@ -13,6 +18,8 @@ module Yokohama
     end
 
     private
+
+    attr_reader :params
 
     def get_reservation_frames(params)
       date = Date.parse(params[:available_date])

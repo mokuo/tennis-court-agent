@@ -23,7 +23,7 @@ RSpec.describe Yokohama::AvailableDatesJob, type: :feature do
     subject(:collect_available_dates) { job.perform }
 
     let!(:params) do
-      { params: { park_name: "富岡西公園", next_workflow_class: TestWorkflow } }
+      { park_name: "富岡西公園", next_workflow_class: TestWorkflow }
     end
     let!(:job) { described_class.new(params) }
 

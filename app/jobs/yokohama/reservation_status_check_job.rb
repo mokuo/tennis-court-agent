@@ -3,7 +3,12 @@
 require Rails.root.join("domain/pages/yokohama/top_page")
 
 module Yokohama
-  class ReservationStatusCheckJob < Gush::Job
+  class ReservationStatusCheckJob < ApplicationJob
+    # HACK: 一時的に既存の spec を通しただけ
+    def initialize(params)
+      @params = params
+    end
+
     def perform
       reservation_frame = params[:reservation_frame]
       reservation_frame.now = reservatable?(params[:park_name], reservation_frame)
@@ -11,6 +16,8 @@ module Yokohama
     end
 
     private
+
+    attr_reader :params
 
     def reservatable?(park_name, reservation_frame) # rubocop:disable Metrics/MethodLength
       Yokohama::TopPage.open

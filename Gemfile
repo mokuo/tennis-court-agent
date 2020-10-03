@@ -34,12 +34,8 @@ gem "selenium-webdriver"
 gem "webdrivers", "~> 4.0"
 
 gem "active_hash"
-gem "slack-ruby-client"
-
-# FIXME: https://github.com/chaps-io/gush/pull/76
-gem "gush", git: "https://github.com/chaps-io/gush",
-            branch: "master"
 gem "sidekiq"
+gem "slack-ruby-client"
 
 group :development, :test do
   gem "factory_bot_rails"

@@ -18,7 +18,7 @@ class TestWorkflow
   end
 end
 
-RSpec.describe Yokohama::AvailableDateTimesJob, type: :feature do
+RSpec.describe Yokohama::ReservationFramesJob, type: :feature do
   describe "#perform" do
     subject(:get_reservation_frames) { described_class.new(params).perform }
 

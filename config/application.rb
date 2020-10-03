@@ -50,5 +50,8 @@ module TennisCourtAgent
     # NOTE: データベースから日付・時刻を取り出した際のタイムゾーン
     # https://railsguides.jp/configuring.html#active-record%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B
     config.active_record.default_timezone = :local
+
+    # ActiveJob
+    config.active_job.queue_adapter = :sidekiq
   end
 end

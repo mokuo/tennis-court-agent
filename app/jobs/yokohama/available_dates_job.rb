@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/models/available_date")
+
 module Yokohama
   class AvailableDatesJob < ApplicationJob
     queue_as :yokohama

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/models/yokohama/reservation_frame")
+
 class NotificationMock
   attr_reader :message
 

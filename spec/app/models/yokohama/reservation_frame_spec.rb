@@ -25,6 +25,10 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
     end
   end
 
+  describe "#organization_name_ja" do
+    it { expect(described_class.new.organization_name_ja).to eq "横浜市" }
+  end
+
   describe "#date_str" do
     subject(:date_str) { reservation_frame.date_str }
 

@@ -58,6 +58,11 @@ jobs:
           command: |
             cp -f .circleci/database.ci.yml config/database.yml
             bundle exec rails db:schema:load --trace
+      - run:
+          name: Install Japanese Font
+          command: |
+            sudo apt-get update
+            sudo apt-get install 'fonts-takao-*'
       # Run rspec in parallel
       - ruby/rspec-test
       - store_artifacts:

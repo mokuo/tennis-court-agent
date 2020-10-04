@@ -36,6 +36,10 @@ module Yokohama
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
+    def organization_name_ja
+      "横浜市"
+    end
+
     def date_str
       start_date_time.strftime("%Y%m%d")
     end

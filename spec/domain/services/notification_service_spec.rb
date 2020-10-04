@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require Rails.root.join("domain/services/notification_service")
+require Rails.root.join("domain/models/yokohama/reservation_frame")
 
 class ClientMock
   attr_reader :message_sent

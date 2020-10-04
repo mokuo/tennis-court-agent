@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/models/available_date")
+
 module Yokohama
   class AvailableDatesJob < ApplicationJob
     queue_as :yokohama
@@ -13,8 +15,7 @@ module Yokohama
       park_name = params[:park_name]
       available_dates = get_available_dates(park_name)
 
-      available_date = AvailableDate.new
-      filtered_available_dates = available_dates.filter { |d| available_date.check_target?(d) }
+      filtered_available_dates = available_dates.filter { |d| AvailableDate.new(d).check_target? }
 
       workflow = next_workflow_class(params).create(park_name, filtered_available_dates)
       workflow.start!

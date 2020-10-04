@@ -15,16 +15,15 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
 
   describe "#reservation_frames" do
     subject(:reservation_frames) do
-      date_selection_page = Yokohama::TopPage.open
-                                             .login
-                                             .click_check_availability
-                                             .click_sports
-                                             .click_tennis_court
-                                             .click_park(park_name)
-                                             .click_tennis_court
-      # NOTE: 最初の日付だと、前日のため予約できない場合が多い
-      date_selection_page.click_date(available_dates.last)
-                         .reservation_frames
+      Yokohama::TopPage.open
+                       .login
+                       .click_check_availability
+                       .click_sports
+                       .click_tennis_court
+                       .click_park(park_name)
+                       .click_tennis_court
+                       .click_date(available_dates.last) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
+                       .reservation_frames
     end
 
     it "利用可能な日時を取得する" do

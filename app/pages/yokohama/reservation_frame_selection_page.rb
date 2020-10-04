@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require Rails.root.join("domain/pages/yokohama/base_page")
-require Rails.root.join("domain/pages/yokohama/reservation_confirmation_page")
-
 module Yokohama
   class ReservationFrameSelectionPage < BasePage
     class MissingSelectButtonError < StandardError; end

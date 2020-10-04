@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require Rails.root.join("domain/pages/yokohama/top_page")
-
 module Yokohama
   class ReservationFramesJob < ApplicationJob
     # HACK: 一時的に既存の spec を通しただけ

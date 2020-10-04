@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require Rails.root.join("domain/pages/yokohama/date_selection_page")
-
 RSpec.describe Yokohama::DateSelectionPage, type: :feature do
   describe "#available_dates" do
     subject(:available_dates) do

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require Rails.root.join("domain/pages/yokohama/base_page")
-require Rails.root.join("domain/pages/yokohama/reservation_frame_selection_page")
-
 module Yokohama
   class DateSelectionPage < BasePage
     class InfiniteLoopError < StandardError; end

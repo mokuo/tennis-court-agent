@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require Rails.root.join("domain/pages/yokohama/top_page")
-
 RSpec.describe Yokohama::TopPage, type: :feature do
   describe ".open" do
     subject(:open) { described_class.open }

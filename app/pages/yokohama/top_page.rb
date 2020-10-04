@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require Rails.root.join("domain/pages/yokohama/base_page")
-require Rails.root.join("domain/pages/yokohama/facility_type_selection_page")
-
 module Yokohama
   class TopPage < BasePage
     def self.open

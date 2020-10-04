@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require Rails.root.join("domain/pages/yokohama/base_page")
-require Rails.root.join("domain/pages/yokohama/field_type_selection_page")
-
 module Yokohama
   class FacilitySelectionPage < BasePage
     class ParkNotFoundError < StandardError; end

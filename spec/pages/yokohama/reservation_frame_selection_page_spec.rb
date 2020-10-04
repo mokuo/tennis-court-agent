@@ -69,10 +69,15 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
     end
     # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
 
-    it "予約枠指定ページに留まる" do
-      click_reservation_frame
-      expect(page).to have_content("予約枠指定") | have_content("エラー")
+    # rubocop: disable RSpec/MultipleExpectations
+    it "予約枠指定ページに留まるか、エラーページに遷移する" do
+      if click_reservation_frame.error_page?
+        expect(page).to have_content("エラー")
+      else
+        expect(page).to have_content("予約枠指定")
+      end
     end
+    # rubocop: enable RSpec/MultipleExpectations
 
     it "自身のオブジェクトを返す" do
       expect(click_reservation_frame).to be_a(described_class)

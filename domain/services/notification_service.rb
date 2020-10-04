@@ -5,8 +5,8 @@ class NotificationService
     @client = client
   end
 
-  def send_availabilities(reservation_frames)
-    message = build_message(reservation_frames)
+  def send_availabilities(organization_name, park_name, reservation_frames)
+    message = build_message(organization_name, park_name, reservation_frames)
     client.send(message)
   end
 
@@ -15,13 +15,11 @@ class NotificationService
   attr_reader :client
 
   # TODO: ReservationStatusChecked イベントの attributes から取る？
-  def build_message(reservation_frames)
-    r = reservation_frames.first
-
-    msg = "#{r.organization_name_ja}のテニスコートの空き状況です。\n\n"
+  def build_message(organization_name, park_name, reservation_frames)
+    msg = "#{organization_name}のテニスコートの空き状況です。\n\n"
 
     reservation_frames.each do |reservation_frame|
-      msg += "- #{reservation_frame.to_human}\n"
+      msg += "- #{park_name} #{reservation_frame.to_human}\n"
     end
 
     msg

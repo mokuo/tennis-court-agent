@@ -46,7 +46,7 @@ RSpec.describe NotificationService do
     it "テニスコートの空いている予約枠を通知する" do
       client_mock = ClientMock.new
       notification_service = described_class.new(client_mock)
-      notification_service.send_availabilities("横浜市")
+      notification_service.send_availabilities("横浜市", "富岡西公園", reservation_frames)
       expect(client_mock.message_sent).to eq expected_message
     end
   end

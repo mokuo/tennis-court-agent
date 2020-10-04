@@ -4,19 +4,15 @@ module Yokohama
   class DateSelectionPage < BasePage
     class InfiniteLoopError < StandardError; end
 
-    def initialize
-      @available_dates = []
-      @retry_count = 0
+    def available_dates
+      days.map do |day|
+        Date.new(year, month, day)
+      end
     end
 
-    def available_dates
-      raise InfiniteLoopError if @retry_count >= 5
-
-      set_available_dates_and_click_next_month
-      return @available_dates if error_page?
-
-      @retry_count += 1
-      available_dates
+    def click_next_month
+      click_button("翌月")
+      self.class.new
     end
 
     def click_date(date)
@@ -45,22 +41,9 @@ module Yokohama
     end
 
     def days
-      within("table#calendar") do
+      @days = within("table#calendar") do
         all("input[type='button']").map { |input| input.value.to_i }
       end
-    end
-
-    def click_next_month
-      @year = nil
-      @month = nil
-      click_button("翌月")
-    end
-
-    def set_available_dates_and_click_next_month
-      @available_dates += days.map do |day|
-        Date.new(year, month, day)
-      end
-      click_next_month
     end
   end
 end

@@ -25,14 +25,14 @@ end
 RSpec.describe DomainEvent do
   describe "#publish!" do
     context "正常系" do
-      let!(:time) { Time.zone.now }
+      let!(:time) { Time.current }
       let(:event) do
         SomeDomainEvent.new({ availability_check_identifier: AvailabilityCheckIdentifier.build })
       end
 
       before { travel_to(time) }
 
-      it "各サブスクライバーに自身のインスタンスを渡す" do
+      it "各サブスクライバー（Proc）に自身のインスタンスを渡して call する" do
         event.publish!
         expect(event.log).to eq(
           [

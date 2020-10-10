@@ -20,7 +20,7 @@ RSpec.describe PersistEventJob, type: :job do
       TestDomainEvent.new(
         {
           availability_check_identifier: identifier,
-          published_at: Time.zone.now,
+          published_at: Time.current,
           some_attribute: "hoge"
         }
       )

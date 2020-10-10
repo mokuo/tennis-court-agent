@@ -6,7 +6,7 @@ RSpec.describe AvailabilityCheckIdentifier do
   describe ".build" do
     subject(:build) { described_class.build }
 
-    let!(:now) { Time.zone.now }
+    let!(:now) { Time.current }
 
     before { travel_to(now) }
 

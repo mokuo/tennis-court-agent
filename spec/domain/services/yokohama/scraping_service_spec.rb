@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 require Rails.root.join("domain/services/yokohama/scraping_service")
+require Rails.root.join("domain/models/available_date")
 
 RSpec.describe Yokohama::ScrapingService do
   describe "#available_dates" do
     subject(:available_dates) { described_class.new.available_dates("三ツ沢公園") }
 
-    it "Date 型の配列を返す" do
-      expect(available_dates).to all(be_a(Date))
+    it "AvailableDate の配列を返す" do
+      expect(available_dates).to all(be_a(AvailableDate))
     end
   end
 
@@ -20,7 +21,7 @@ RSpec.describe Yokohama::ScrapingService do
                        .click_tennis_court
                        .click_park("三ツ沢公園")
                        .click_tennis_court
-                       .click_date(available_dates.last) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
+                       .click_date(available_dates.last.to_date) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
                        .reservation_frames
     end
 
@@ -61,7 +62,7 @@ RSpec.describe Yokohama::ScrapingService do
                        .click_tennis_court
                        .click_park("三ツ沢公園")
                        .click_tennis_court
-                       .click_date(available_dates.last) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
+                       .click_date(available_dates.last.to_date) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
     end
     let!(:reservation_frame) { reservation_frame_selection_page.reservation_frames.first }
 

@@ -4,13 +4,15 @@ require Rails.root.join("domain/events/domain_event")
 
 module Yokohama
   class AvailabilityCheckStarted < DomainEvent
-    attribute :service, default: JobDispatchService.new
+    attribute :park_names
+
+    validates :park_names, presence: true
 
     private
 
     def subscribers
       [
-        ->(e) { service.dispatch_available_dates_jobs(e) }
+        ->(e) { AvailableDatesJob.dispatch_jobs(e.identifier, e.park_names) }
       ]
     end
   end

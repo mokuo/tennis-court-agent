@@ -6,20 +6,18 @@ class AvailableDate
   end
 
   def check_target?
-    date.saturday? ||
-      date.sunday? ||
+    @date.saturday? ||
+      @date.sunday? ||
       japanese_holiday?
   end
 
-  def to_json(*_args)
-    date
+  def to_date
+    @date
   end
 
   private
 
-  attr_reader :date
-
   def japanese_holiday?
-    JapaneseHoliday.find_by(date: date).present?
+    JapaneseHoliday.find_by(date: @date).present?
   end
 end

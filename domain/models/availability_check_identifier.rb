@@ -6,7 +6,7 @@ class AvailabilityCheckIdentifier
   end
 
   def self.build
-    identifier = Time.zone.now.to_s(:number) # => ex) 20201010104420
+    identifier = Time.current.to_s(:number) # => ex) 20201010104420
     new(identifier)
   end
 

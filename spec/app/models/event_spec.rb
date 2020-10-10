@@ -42,7 +42,7 @@ RSpec.describe Event, type: :model do
         }
       )
     end
-    let!(:time) { Time.zone.now }
+    let!(:time) { Time.current }
 
     before { travel_to(time) }
 

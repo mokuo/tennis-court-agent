@@ -20,6 +20,6 @@ FactoryBot.define do
     availability_check_identifier { AvailabilityCheckIdentifier.build }
     contents { |n| { some_attribute: "hoge#{n}" } }
     sequence(:name) { |n| "event#{n}" }
-    published_at { Time.zone.now }
+    published_at { Time.current }
   end
 end

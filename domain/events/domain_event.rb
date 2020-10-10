@@ -11,7 +11,7 @@ class DomainEvent
   validates :published_at, presence: true
 
   def publish!
-    self.published_at = Time.zone.now
+    self.published_at = Time.current
     validate!
     domain_event_subscribers.each { |s| s.call(self) }
   end

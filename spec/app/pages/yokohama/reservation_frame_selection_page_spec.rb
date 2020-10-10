@@ -22,7 +22,7 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
                        .click_tennis_court
                        .click_park(park_name)
                        .click_tennis_court
-                       .click_date(available_dates.last) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
+                       .click_date(available_dates.last.to_date) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
                        .reservation_frames
     end
 
@@ -46,11 +46,11 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
                        .click_tennis_court
                        .click_park(park_name)
                        .click_tennis_court
-                       .click_date(available_dates.last) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
+                       .click_date(available_dates.last.to_date) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
     end
     let!(:reservation_frame) { reservation_frame_selection_page.reservation_frames.first }
 
-    # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
+    # rubocop:disable RSpec/ExampleLength
     it "渡された予約枠を選択する" do
       selected_reservation_frame_selection_page = click_reservation_frame
       if selected_reservation_frame_selection_page.error_page?
@@ -66,9 +66,8 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
         expect(selected_reservation_frame).to eql reservation_frame
       end
     end
-    # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
+    # rubocop:enable RSpec/ExampleLength
 
-    # rubocop: disable RSpec/MultipleExpectations
     it "予約枠指定ページに留まるか、エラーページに遷移する" do
       if click_reservation_frame.error_page?
         expect(page).to have_content("エラー")
@@ -76,7 +75,6 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
         expect(page).to have_content("予約枠指定")
       end
     end
-    # rubocop: enable RSpec/MultipleExpectations
 
     it "自身のオブジェクトを返す" do
       expect(click_reservation_frame).to be_a(described_class)
@@ -96,11 +94,10 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
                        .click_tennis_court
                        .click_park(park_name)
                        .click_tennis_court
-                       .click_date(available_dates.last) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
+                       .click_date(available_dates.last.to_date) # NOTE: 最初の日付だと、前日のため予約できない場合が多い
     end
     let!(:reservation_frame) { reservation_frame_selection_page.reservation_frames.first }
 
-    # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
     it "予約内容確認ページに遷移する" do
       selected_reservation_frame_selection_page = reservation_frame_selection_page
                                                   .click_reservation_frame(reservation_frame)
@@ -111,9 +108,8 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
         expect(page).to have_content "予約内容確認"
       end
     end
-    # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
+    # rubocop:enable
 
-    # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
     it "Yokohama::ReservationConfirmationPage オブジェクトを返す" do
       selected_reservation_frame_selection_page = reservation_frame_selection_page
                                                   .click_reservation_frame(reservation_frame)
@@ -123,6 +119,6 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
         expect(selected_reservation_frame_selection_page.click_next).to be_a(Yokohama::ReservationConfirmationPage)
       end
     end
-    # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
+    # rubocop:enable
   end
 end

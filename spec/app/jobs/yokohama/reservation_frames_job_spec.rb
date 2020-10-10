@@ -32,7 +32,7 @@ RSpec.describe Yokohama::ReservationFramesJob, type: :feature do
                                          .click_tennis_court
                                          .available_dates
       # NOTE: 最初の日付だと、前日のため予約できない場合が多い
-      available_dates.last.strftime("%Y-%m-%d")
+      available_dates.last.to_date.strftime("%Y-%m-%d")
     end
     let!(:params) do
       { park_name: park_name, available_date: available_date, next_workflow_class: TestWorkflow }

@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/models/available_date")
+
 module Yokohama
   class DateSelectionPage < BasePage
     class InfiniteLoopError < StandardError; end
 
     def available_dates
       days.map do |day|
-        Date.new(year, month, day)
+        date = Date.new(year, month, day)
+        AvailableDate.new(date)
       end
     end
 

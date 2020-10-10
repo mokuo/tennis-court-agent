@@ -1,51 +1,55 @@
 # frozen_string_literal: true
 
-class TestWorkflow
-  attr_reader :park_name, :available_dates, :started
+require Rails.root.join("domain/models/available_date")
+require Rails.root.join("domain/models/availability_check_identifier")
 
-  def initialize(park_name, available_dates)
+class MockEvent
+  attr_reader :availability_check_identifier, :park_name, :available_dates, :published
+
+  def initialize(availability_check_identifier:, park_name:, available_dates:)
+    @availability_check_identifier = availability_check_identifier
     @park_name = park_name
     @available_dates = available_dates
-    @started = false
+    @published = false
   end
 
-  def self.create(park_name, available_dates)
-    new(park_name, available_dates)
-  end
-
-  def start!
-    @started = true
+  def publish!
+    @published = true
+    self
   end
 end
 
-RSpec.describe Yokohama::AvailableDatesJob, type: :feature do
+RSpec.describe Yokohama::AvailableDatesJob, type: :job do
+  describe ".dispatch_jobs" do
+    subject(:dispatch_jobs) { described_class.dispatch_jobs(identifier, %w[公園１ 公園２]) }
+
+    let!(:identifier) { AvailabilityCheckIdentifier.build }
+
+    before { ActiveJob::Base.queue_adapter = :test }
+
+    it "ジョブをキューに入れる" do
+      dispatch_jobs
+      expect(described_class).to have_been_enqueued.with(identifier.to_s, "公園１").once
+      expect(described_class).to have_been_enqueued.with(identifier.to_s, "公園２").once
+    end
+  end
+
   describe "#perform" do
-    subject(:collect_available_dates) { job.perform }
+    let!(:now) { Date.current }
+    let!(:available_date) { AvailableDate.new(now) }
+    let!(:mock_service) { instance_double("mock_scraping_service") }
+    let!(:identifier) { AvailabilityCheckIdentifier.build }
 
-    let!(:params) do
-      { park_name: "富岡西公園", next_workflow_class: TestWorkflow }
-    end
-    let!(:job) { described_class.new(params) }
+    it "利用可能日を取得して、ドメインイベントを発行する" do
+      expect(mock_service).to receive(:available_dates).with("公園１").and_return([available_date])
+      published_event = described_class.perform_now(identifier.to_s, "公園１", mock_service, MockEvent)
 
-    it "指定された公園の利用可能日を取得する" do
-      test_workflow = collect_available_dates
-      expect(test_workflow.park_name).to eq "富岡西公園"
-    end
-
-    it "利用可能日が取得できている" do
-      # NOTE: 平日も含めれば、一日も空きがないということはないだろう
-      test_workflow = collect_available_dates
-      expect(test_workflow.available_dates.count).to be > 0
-    end
-
-    it "Date 型の配列を返す" do
-      test_workflow = collect_available_dates
-      expect(test_workflow.available_dates).to all be_a(Date)
-    end
-
-    it "AvailableDateTimesWorkflow をスタートする" do
-      test_workflow = collect_available_dates
-      expect(test_workflow.started).to be true
+      expect(published_event).to have_attributes(
+        availability_check_identifier: identifier.to_s,
+        park_name: "公園１",
+        available_dates: [available_date],
+        published: true
+      )
     end
   end
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/models/available_date")
+
 RSpec.describe Yokohama::DateSelectionPage, type: :feature do
   describe "#available_dates" do
     subject(:available_dates) do
@@ -16,8 +18,8 @@ RSpec.describe Yokohama::DateSelectionPage, type: :feature do
       expect(available_dates.size).to be > 0
     end
 
-    it "Date 型の配列を返す" do
-      expect(available_dates).to all(be_a(Date))
+    it "AvailableDate の配列を返す" do
+      expect(available_dates).to all(be_a(AvailableDate))
     end
   end
 
@@ -30,7 +32,7 @@ RSpec.describe Yokohama::DateSelectionPage, type: :feature do
                        .click_tennis_court
                        .click_park("三ツ沢公園")
                        .click_tennis_court
-                       .click_date(available_date)
+                       .click_date(available_date.to_date)
     end
 
     let!(:available_date) do

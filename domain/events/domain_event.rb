@@ -27,6 +27,14 @@ class DomainEvent
     attr
   end
 
+  def to_hash
+    raise NotImplementedError, "You must implement #{self.class}##{__method__}."
+  end
+
+  def self.from_hash
+    raise NotImplementedError, "You must implement #{self.class}##{__method__}."
+  end
+
   private
 
   def domain_event_subscribers
@@ -35,7 +43,7 @@ class DomainEvent
 
   def default_subscribers
     [
-      ->(e) { PersistEventJob.perform_later(e) }
+      ->(e) { PersistEventJob.perform_later(e.to_hash) }
     ]
   end
 

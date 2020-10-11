@@ -10,13 +10,8 @@ RSpec.describe AvailabilityCheckIdentifier do
 
     before { travel_to(now) }
 
-    it "自身のインスタンスを返す" do
-      expect(build).to be_a(described_class)
-    end
-
     it "%Y%m%d%H%M%S フォーマットで identifier を生成する" do
-      identifier = build
-      expect(identifier.to_s).to eq now.to_s(:number)
+      expect(build).to eq now.to_s(:number)
     end
   end
 end

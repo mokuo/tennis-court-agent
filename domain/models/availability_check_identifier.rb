@@ -1,16 +1,7 @@
 # frozen_string_literal: true
 
 class AvailabilityCheckIdentifier
-  def initialize(identifier)
-    @identifier = identifier
-  end
-
   def self.build
-    identifier = Time.current.to_s(:number) # => ex) 20201010104420
-    new(identifier)
-  end
-
-  def to_s
-    @identifier
+    Time.current.to_s(:number) # => ex) 20201010104420
   end
 end

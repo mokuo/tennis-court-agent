@@ -29,8 +29,8 @@ RSpec.describe Yokohama::AvailableDatesJob, type: :job do
 
     it "ジョブをキューに入れる" do
       dispatch_jobs
-      expect(described_class).to have_been_enqueued.with(identifier.to_s, "公園１").once
-      expect(described_class).to have_been_enqueued.with(identifier.to_s, "公園２").once
+      expect(described_class).to have_been_enqueued.with(identifier, "公園１").once
+      expect(described_class).to have_been_enqueued.with(identifier, "公園２").once
     end
   end
 
@@ -42,10 +42,10 @@ RSpec.describe Yokohama::AvailableDatesJob, type: :job do
 
     it "利用可能日を取得して、ドメインイベントを発行する" do
       expect(mock_service).to receive(:available_dates).with("公園１").and_return([available_date])
-      published_event = described_class.perform_now(identifier.to_s, "公園１", mock_service, MockEvent)
+      published_event = described_class.perform_now(identifier, "公園１", mock_service, MockEvent)
 
       expect(published_event).to have_attributes(
-        availability_check_identifier: identifier.to_s,
+        availability_check_identifier: identifier,
         park_name: "公園１",
         available_dates: [available_date],
         published: true

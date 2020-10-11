@@ -50,7 +50,7 @@ RSpec.describe Event, type: :model do
       described_class.persist!(domain_event)
       event = described_class.last
       expect(event).to have_attributes(
-        availability_check_identifier: identifier.to_s,
+        availability_check_identifier: identifier,
         name: "TestDomainEvent",
         contents: { some_attribute: "hoge" }.stringify_keys,
         published_at: time.floor

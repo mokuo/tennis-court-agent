@@ -8,7 +8,7 @@ module Yokohama
     queue_as :yokohama
 
     def self.dispatch_jobs(identifier, park_names)
-      park_names.each { |park_name| perform_later(identifier.to_s, park_name) }
+      park_names.each { |park_name| perform_later(identifier, park_name) }
     end
 
     def perform(identifier, park_name, service = ScrapingService.new, event_class = AvailableDatesFound)

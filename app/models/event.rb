@@ -22,7 +22,7 @@ class Event < ApplicationRecord
 
   def self.persist!(domain_event)
     create!(
-      availability_check_identifier: domain_event.availability_check_identifier,
+      availability_check_identifier: domain_event.availability_check_identifier.to_s,
       contents: domain_event.contents,
       name: domain_event.name,
       published_at: domain_event.published_at

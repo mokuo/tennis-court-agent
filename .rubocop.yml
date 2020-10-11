@@ -27,7 +27,7 @@ Metrics/BlockLength:
 RSpec/ContextWording:
   Enabled: false # 日本語が想定されていないため
 RSpec/ExampleLength:
-  Max: 8
+  Max: 10
 RSpec/MultipleExpectations:
   Max: 2
 RSpec/MessageSpies:

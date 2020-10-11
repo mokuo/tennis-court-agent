@@ -6,15 +6,15 @@ module Yokohama
   class FilterAvailableDatesJob < ApplicationJob
     queue_as :yokohama
 
-    def self.dispatch_jobs(identifier, park_name, dates)
+    def perform(identifier, park_name, dates)
       available_dates = dates.map { |date| AvailableDate.new(date) }
-      Rails.logger.info(
-        {
-          identifier: identifier,
-          park_name: park_name,
-          available_dates: available_dates
-        }
-      )
+      service.filter_available_dates(identifier, park_name, available_dates)
+    end
+
+    private
+
+    def service
+      YokohamaService.new
     end
   end
 end

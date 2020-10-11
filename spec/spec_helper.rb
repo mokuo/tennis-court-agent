@@ -112,4 +112,9 @@ RSpec.configure do |config|
   config.around :each, type: :feature do |ex|
     ex.run_with_retry retry: 3
   end
+
+  # ActiveJob
+  config.before :each, type: :job do |_example|
+    ActiveJob::Base.queue_adapter = :test
+  end
 end

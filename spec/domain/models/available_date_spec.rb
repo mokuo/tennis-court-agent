@@ -44,4 +44,22 @@ RSpec.describe AvailableDate, type: :model do
       expect(to_date).to be_a(Date)
     end
   end
+
+  describe "eql?" do
+    subject { available_date.eql?(other_available_date) }
+
+    let!(:available_date) { described_class.new(Date.current) }
+
+    context "同じ日付の時" do
+      let(:other_available_date) { described_class.new(Date.current) }
+
+      it { is_expected.to be true }
+    end
+
+    context "違う日付の時" do
+      let(:other_available_date) { described_class.new(Date.tomorrow) }
+
+      it { is_expected.to be false }
+    end
+  end
 end

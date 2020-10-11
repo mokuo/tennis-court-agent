@@ -15,6 +15,14 @@ class AvailableDate
     @date
   end
 
+  def eql?(other)
+    to_date == other.to_date
+  end
+
+  def hash
+    @date.hash
+  end
+
   private
 
   def japanese_holiday?

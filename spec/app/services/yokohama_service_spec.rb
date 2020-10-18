@@ -120,7 +120,7 @@ RSpec.describe YokohamaService, type: :job do
       )
     end
 
-    it "次のジョブがキューに入る" do
+    xit "次のジョブがキューに入る" do
       reservation_frames
 
       expect(Yokohama::ReservationStatusJob).to have_been_enqueued.with(identifier, "公園１", reservation_frame.to_hash)

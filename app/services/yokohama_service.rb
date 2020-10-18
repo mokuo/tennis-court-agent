@@ -2,8 +2,8 @@
 
 require Rails.root.join("domain/services/yokohama/scraping_service")
 require Rails.root.join("domain/models/available_date")
-require Rails.root.join("domain/events/yokohama/available_dates_found")
-require Rails.root.join("domain/events/yokohama/available_dates_filtered")
+require Rails.root.join("domain/models/yokohama/available_dates_found")
+require Rails.root.join("domain/models/yokohama/available_dates_filtered")
 
 class YokohamaService
   def initialize(scraping_service = Yokohama::ScrapingService.new)

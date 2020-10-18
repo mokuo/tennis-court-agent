@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require Rails.root.join("domain/events/domain_event")
+require Rails.root.join("domain/models/domain_event")
 require Rails.root.join("domain/models/available_date")
 
 module Yokohama
-  class AvailableDatesFound < DomainEvent
+  class AvailableDatesFiltered < DomainEvent
     attribute :park_name, :string
     attribute :available_dates
 
@@ -14,7 +14,7 @@ module Yokohama
     def subscribers
       [
         lambda do |e|
-          FilterAvailableDatesJob.perform_later(
+          ReservationFramesJob.dispatch_jobs(
             e.availability_check_identifier,
             e.park_name,
             e.available_dates.map(&:to_date)

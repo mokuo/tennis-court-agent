@@ -12,7 +12,7 @@
 #  global_event_id :string(255)      not null
 #
 
-require Rails.root.join("domain/events/domain_event")
+require Rails.root.join("domain/models/domain_event")
 require Rails.root.join("domain/models/availability_check_identifier")
 
 class TestDomainEvent < DomainEvent

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require Rails.root.join("domain/events/domain_event")
+require Rails.root.join("domain/models/domain_event")
 
 class SomeDomainEvent < DomainEvent
   attr_reader :log

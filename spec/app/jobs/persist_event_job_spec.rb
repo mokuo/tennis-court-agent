@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require Rails.root.join("domain/models/availability_check_identifier")
-require Rails.root.join("domain/events/domain_event")
+require Rails.root.join("domain/models/domain_event")
 
 class TestDomainEvent < DomainEvent
   attribute :some_attribute, :string

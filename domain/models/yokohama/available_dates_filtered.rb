@@ -33,7 +33,7 @@ module Yokohama
     def self.from_hash(hash)
       new(
         availability_check_identifier: hash[:availability_check_identifier],
-        published_at: hash[:availability_check_identifier],
+        published_at: hash[:published_at],
         park_name: hash[:park_name],
         available_dates: hash[:available_date].map { |date| AvailableDate.new(date) }
       )

@@ -7,6 +7,10 @@ module Yokohama
       @params = params
     end
 
+    def self.dispatch_jobs(identifier, park_name, reservation_frames)
+      # TODO: 実装
+    end
+
     def perform
       reservation_frame = params[:reservation_frame]
       reservation_frame.now = reservatable?(params[:park_name], reservation_frame)

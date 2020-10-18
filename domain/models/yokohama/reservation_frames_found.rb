@@ -4,20 +4,22 @@ require Rails.root.join("domain/models/domain_event")
 require Rails.root.join("domain/models/available_date")
 
 module Yokohama
-  class AvailableDatesFound < DomainEvent
+  class ReservationFramesFound < DomainEvent
     attribute :park_name, :string
-    attribute :available_dates
+    attribute :available_date
+    attribute :reservation_frames
 
     validates :park_name, presence: true
-    validates :available_dates, presence: true
+    validates :available_date, presence: true
+    validates :reservation_frames, presence: true
 
     def subscribers
       [
         lambda do |e|
-          FilterAvailableDatesJob.perform_later(
+          ReservationStatusJob.dispatch_jobs(
             e.availability_check_identifier,
             e.park_name,
-            e.available_dates.map(&:to_date)
+            e.reservation_frames
           )
         end
       ]
@@ -26,7 +28,8 @@ module Yokohama
     def to_hash
       attributes.symbolize_keys.merge(
         name: self.class.to_s,
-        available_dates: available_dates.map(&:to_date)
+        available_date: available_date.to_date,
+        reservation_frames: reservation_frames.map(&:to_hash)
       )
     end
 
@@ -35,7 +38,8 @@ module Yokohama
         availability_check_identifier: hash[:availability_check_identifier],
         published_at: hash[:published_at],
         park_name: hash[:park_name],
-        available_dates: hash[:available_date].map { |date| AvailableDate.new(date) }
+        available_date: AvailableDate.new(hash[:available_date]),
+        reservation_frames: hash[:reservation_frames].map { |r| ReservationFrame.from_hash(r) }
       )
     end
   end

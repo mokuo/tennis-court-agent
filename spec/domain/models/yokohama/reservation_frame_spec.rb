@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/models/yokohama/reservation_frame")
+
 RSpec.describe Yokohama::ReservationFrame, type: :model do
   describe ".build" do
     subject(:build) { described_class.build("テニスコート１", onclick_attr_str) }
@@ -188,6 +190,19 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
       end
 
       it { is_expected.to eq "テニスコート１ 2020/08/22（土） 15:00~17:00 翌日７時に予約可能" }
+    end
+  end
+
+  describe "#to_hash & .from_hash" do
+    it "Hash に変換 & インスタンスを再構築できる" do
+      current = Time.current
+      reservation_frame = described_class.new(
+        tennis_court_name: "公園１",
+        start_date_time: current,
+        end_date_time: current.change(hour: current.hour + 2)
+      )
+      rebuild_reservation_frame = described_class.from_hash(reservation_frame.to_hash)
+      expect(rebuild_reservation_frame.eql?(reservation_frame)).to be true
     end
   end
 end

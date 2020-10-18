@@ -2,8 +2,9 @@
 
 require Rails.root.join("domain/services/yokohama/scraping_service")
 require Rails.root.join("domain/models/available_date")
-require Rails.root.join("domain/events/yokohama/available_dates_found")
-require Rails.root.join("domain/events/yokohama/available_dates_filtered")
+require Rails.root.join("domain/models/yokohama/available_dates_found")
+require Rails.root.join("domain/models/yokohama/available_dates_filtered")
+require Rails.root.join("domain/models/yokohama/reservation_frames_found")
 
 class YokohamaService
   def initialize(scraping_service = Yokohama::ScrapingService.new)
@@ -26,6 +27,17 @@ class YokohamaService
       availability_check_identifier: identifier,
       park_name: park_name,
       available_dates: filtered_available_dates
+    )
+    event.publish!
+  end
+
+  def reservation_frames(identifier, park_name, available_date)
+    reservation_frames = @scraping_service.reservation_frames(park_name, available_date.to_date)
+    event = Yokohama::ReservationFramesFound.new(
+      availability_check_identifier: identifier,
+      park_name: park_name,
+      available_date: available_date,
+      reservation_frames: reservation_frames
     )
     event.publish!
   end

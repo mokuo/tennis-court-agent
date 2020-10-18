@@ -20,7 +20,7 @@ RSpec.describe Yokohama::AvailableDatesJob, type: :job do
     let!(:identifier) { AvailabilityCheckIdentifier.build }
 
     it "利用可能日を収集する" do
-      mock_service = instance_double("MockService")
+      mock_service = instance_double("YokohamaService")
       expect(mock_service).to receive(:available_dates).with(identifier, "公園１")
 
       job = described_class.new

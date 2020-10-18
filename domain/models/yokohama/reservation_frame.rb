@@ -54,8 +54,9 @@ module Yokohama
 
     def eql?(other)
       tennis_court_name == other.tennis_court_name &&
-        start_date_time == other.start_date_time &&
-        end_date_time == other.end_date_time
+        start_date_time.to_s == other.start_date_time.to_s &&
+        end_date_time.to_s == other.end_date_time.to_s &&
+        now == other.now
     end
 
     def hash
@@ -64,6 +65,24 @@ module Yokohama
 
     def to_human
       "#{tennis_court_name} #{date_time_to_human} #{now_to_human}"
+    end
+
+    def to_hash
+      {
+        tennis_court_name: tennis_court_name,
+        start_date_time: start_date_time.to_s,
+        end_date_time: end_date_time.to_s,
+        now: now
+      }
+    end
+
+    def self.from_hash(hash)
+      new(
+        tennis_court_name: hash[:tennis_court_name],
+        start_date_time: Time.zone.parse(hash[:start_date_time]),
+        end_date_time: Time.zone.parse(hash[:end_date_time]),
+        now: hash[:now]
+      )
     end
 
     private

@@ -1,63 +1,42 @@
 # frozen_string_literal: true
 
-class TestWorkflow
-  attr_reader :park_name, :reservation_frames, :started
+require Rails.root.join("domain/models/availability_check_identifier")
 
-  def initialize(park_name, reservation_frames)
+class MockService
+  attr_reader :identifier, :park_name, :available_date
+
+  def reservation_frames(identifier, park_name, available_date)
+    @identifier = identifier
     @park_name = park_name
-    @reservation_frames = reservation_frames
-    @started = false
-  end
-
-  def self.create(park_name, reservation_frames)
-    new(park_name, reservation_frames)
-  end
-
-  def start!
-    @started = true
+    @available_date = available_date
   end
 end
 
-RSpec.describe Yokohama::ReservationFramesJob, type: :feature do
+RSpec.describe Yokohama::ReservationFramesJob, type: :job do
+  describe ".dispatch_jobs" do
+    let!(:identifier) { AvailabilityCheckIdentifier.build }
+    let!(:today) { Date.current }
+    let!(:tomorrow) { Date.tomorrow }
+
+    it "ジョブをキューに入れる" do
+      described_class.dispatch_jobs(identifier, "公園１", [today, tomorrow])
+      expect(described_class).to have_been_enqueued.with(identifier, "公園１", today).once
+      expect(described_class).to have_been_enqueued.with(identifier, "公園１", tomorrow).once
+    end
+  end
+
   describe "#perform" do
-    subject(:get_reservation_frames) { described_class.new(params).perform }
+    let!(:identifier) { AvailabilityCheckIdentifier.build }
+    let!(:date) { Date.current }
 
-    let!(:park_name) { "三ツ沢公園" }
-    let!(:available_date) do
-      available_dates = Yokohama::TopPage.open
-                                         .click_check_availability
-                                         .click_sports
-                                         .click_tennis_court
-                                         .click_park(park_name)
-                                         .click_tennis_court
-                                         .available_dates
-      # NOTE: 最初の日付だと、前日のため予約できない場合が多い
-      available_dates.last.to_date.strftime("%Y-%m-%d")
-    end
-    let!(:params) do
-      { park_name: park_name, available_date: available_date, next_workflow_class: TestWorkflow }
-    end
+    it "予約枠を取得する" do
+      mock_service = MockService.new
+      job = described_class.new
+      allow(job).to receive(:service).and_return(mock_service)
+      job.perform(identifier, "公園１", date)
 
-    it "指定された公園の予約枠を見に行く" do
-      test_workflow = get_reservation_frames
-      expect(test_workflow.park_name).to eq "三ツ沢公園"
-    end
-
-    # TODO: ワークフローへの依存を無くしたら修正する
-    xit "予約枠を取得する" do
-      test_workflow = get_reservation_frames
-      expect(test_workflow.reservation_frames.count).to be > 0
-    end
-
-    # TODO: ワークフローへの依存を無くしたら修正する
-    xit "Yokohama::ReservationFrame 型の配列を返す" do
-      test_workflow = get_reservation_frames
-      expect(test_workflow.reservation_frames).to all be_a(Yokohama::ReservationFrame)
-    end
-
-    it "ReservationStatusCheckWorkflow をスタートする" do
-      test_workflow = get_reservation_frames
-      expect(test_workflow.started).to be true
+      expect(mock_service).to have_attributes(identifier: identifier, park_name: "公園１")
+      expect(mock_service.available_date.eql?(AvailableDate.new(date))).to be true
     end
   end
 end

@@ -20,12 +20,12 @@ class Event < ApplicationRecord
   validates :name, presence: true
   validates :published_at, presence: true
 
-  def self.persist!(domain_event)
+  def self.persist!(domain_event_hash)
     create!(
-      availability_check_identifier: domain_event.availability_check_identifier.to_s,
-      contents: domain_event.contents,
-      name: domain_event.name,
-      published_at: domain_event.published_at
+      availability_check_identifier: domain_event_hash[:availability_check_identifier],
+      contents: domain_event_hash.to_hash,
+      name: domain_event_hash[:name],
+      published_at: domain_event_hash[:published_at]
     )
   end
 end

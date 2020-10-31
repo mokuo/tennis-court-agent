@@ -47,12 +47,17 @@ RSpec.describe Event, type: :model do
     before { travel_to(time) }
 
     it "DomainEvent を永続化する" do
-      described_class.persist!(domain_event)
+      described_class.persist!(domain_event.to_hash)
       event = described_class.last
       expect(event).to have_attributes(
         availability_check_identifier: identifier,
         name: "TestDomainEvent",
-        contents: { some_attribute: "hoge" }.stringify_keys,
+        contents: {
+          name: "TestDomainEvent",
+          some_attribute: "hoge",
+          availability_check_identifier: identifier,
+          published_at: time.iso8601(3)
+        }.stringify_keys,
         published_at: time.floor
       )
     end

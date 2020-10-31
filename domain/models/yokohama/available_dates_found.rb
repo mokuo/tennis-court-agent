@@ -24,10 +24,7 @@ module Yokohama
     end
 
     def to_hash
-      attributes.symbolize_keys.merge(
-        name: self.class.to_s,
-        available_dates: available_dates.map(&:to_date)
-      )
+      super.merge(available_dates: available_dates.map(&:to_date))
     end
 
     def self.from_hash(hash)

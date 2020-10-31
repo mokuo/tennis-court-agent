@@ -69,11 +69,4 @@ RSpec.describe DomainEvent do
       expect(SomeDomainEvent.new.name).to eq "SomeDomainEvent"
     end
   end
-
-  describe "#contents" do
-    it "イベント内容を返す" do
-      event = SomeDomainEvent.new({ some_attribute: "hoge" })
-      expect(event.contents).to eq({ some_attribute: "hoge" })
-    end
-  end
 end

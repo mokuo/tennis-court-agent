@@ -11,13 +11,13 @@ class TestDomainEvent < DomainEvent
   end
 
   def to_hash
-    attributes.symbolize_keys.merge(name: self.class.to_s)
+    super.merge(some_attribute: some_attribute)
   end
 
   def self.from_hash(hash)
     new(
       availability_check_identifier: hash[:availability_check_identifier],
-      published_at: hash[:availability_check_identifier],
+      published_at: hash[:published_at],
       some_attribute: hash[:some_attribute]
     )
   end

@@ -4,6 +4,7 @@ require Rails.root.join("domain/models/available_date")
 require Rails.root.join("domain/models/availability_check_identifier")
 require Rails.root.join("domain/models/yokohama/reservation_frame")
 require Rails.root.join("domain/models/yokohama/reservation_frames_found")
+require Rails.root.join("domain/models/yokohama/reservation_status_checked")
 
 RSpec.describe YokohamaService, type: :job do
   describe "#available_dates" do
@@ -120,10 +121,51 @@ RSpec.describe YokohamaService, type: :job do
       )
     end
 
-    xit "次のジョブがキューに入る" do
+    it "次のジョブがキューに入る" do
       reservation_frames
 
       expect(Yokohama::ReservationStatusJob).to have_been_enqueued.with(identifier, "公園１", reservation_frame.to_hash)
+    end
+  end
+
+  describe "#reservation_status" do
+    subject(:reservation_status) do
+      described_class.new(mock_scraping_service).reservation_status(identifier, "公園１", reservation_frame)
+    end
+
+    let!(:identifier) { AvailabilityCheckIdentifier.build }
+    let!(:now) { Time.current }
+    let!(:mock_scraping_service) { instance_double("Yokohama::ScrapingService") }
+    let!(:reservation_frame) do
+      Yokohama::ReservationFrame.new(
+        tennis_court_name: "テニスコート１",
+        start_date_time: now.next_day,
+        end_date_time: now.next_day.change(hour: now.hour + 2)
+      )
+    end
+
+    before do
+      travel_to(now)
+      allow(mock_scraping_service).to receive(:reservation_status).and_return(true)
+    end
+
+    it "今すぐ予約できるかどうかを確認する" do
+      expect(mock_scraping_service).to receive(:reservation_status).with("公園１", reservation_frame)
+
+      reservation_status
+    end
+
+    it "ドメインイベントを発行し、永続化する" do
+      reservation_status
+      reservation_frame.now = true
+
+      expect(PersistEventJob).to have_been_enqueued.with(
+        availability_check_identifier: identifier,
+        park_name: "公園１",
+        reservation_frame: reservation_frame.to_hash,
+        name: "Yokohama::ReservationStatusChecked",
+        published_at: now
+      )
     end
   end
 end

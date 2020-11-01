@@ -20,15 +20,8 @@ class DomainEvent
     self.class.name
   end
 
-  def contents
-    attr = attributes.symbolize_keys
-    attr.delete(:availability_check_identifier)
-    attr.delete(:published_at)
-    attr
-  end
-
   def to_hash
-    raise NotImplementedError, "You must implement #{self.class}##{__method__}."
+    attributes.symbolize_keys.merge(name: self.class.to_s)
   end
 
   def self.from_hash

@@ -1,38 +1,24 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/models/yokohama/reservation_frame")
+
 module Yokohama
   class ReservationStatusJob < ApplicationJob
-    # HACK: 一時的に既存の spec を通しただけ
-    def initialize(params)
-      @params = params
-    end
-
     def self.dispatch_jobs(identifier, park_name, reservation_frames)
-      # TODO: 実装
+      reservation_frames.each do |reservation_frame|
+        perform_later(identifier, park_name, reservation_frame.to_hash)
+      end
     end
 
-    def perform
-      reservation_frame = params[:reservation_frame]
-      reservation_frame.now = reservatable?(params[:park_name], reservation_frame)
-      output({ reservation_frame: reservation_frame })
+    def perform(identifier, park_name, reservation_frame_hash)
+      reservation_frame = Yokohama::ReservationFrame.from_hash(reservation_frame_hash)
+      service.reservation_status(identifier, park_name, reservation_frame)
     end
 
     private
 
-    attr_reader :params
-
-    def reservatable?(park_name, reservation_frame) # rubocop:disable Metrics/MethodLength
-      Yokohama::TopPage.open
-                       .login
-                       .click_check_availability
-                       .click_sports
-                       .click_tennis_court
-                       .click_park(park_name)
-                       .click_tennis_court
-                       .click_date(reservation_frame.date)
-                       .click_reservation_frame(reservation_frame)
-                       .click_next
-                       .reservatable?
+    def service
+      YokohamaService.new
     end
   end
 end

@@ -53,4 +53,10 @@ class YokohamaService
     )
     event.publish!
   end
+
+  def availability_check_finished?(identifier)
+    events = Event.where(availability_check_identifier: identifier)
+    domain_events = events.map(&:to_domain_event)
+    domain_events.all? { |e| e.children_finished?(domain_events) }
+  end
 end

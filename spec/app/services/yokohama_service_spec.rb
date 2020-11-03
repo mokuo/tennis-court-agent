@@ -3,6 +3,9 @@
 require Rails.root.join("domain/models/available_date")
 require Rails.root.join("domain/models/availability_check_identifier")
 require Rails.root.join("domain/models/yokohama/reservation_frame")
+require Rails.root.join("domain/models/yokohama/availability_check_started")
+require Rails.root.join("domain/models/yokohama/available_dates_found")
+require Rails.root.join("domain/models/yokohama/available_dates_filtered")
 require Rails.root.join("domain/models/yokohama/reservation_frames_found")
 require Rails.root.join("domain/models/yokohama/reservation_status_checked")
 
@@ -166,6 +169,125 @@ RSpec.describe YokohamaService, type: :job do
         name: "Yokohama::ReservationStatusChecked",
         published_at: now
       )
+    end
+  end
+
+  describe "#availability_check_finished?" do
+    subject(:availability_check_finished?) { described_class.new.availability_check_finished?(identifier) }
+
+    context "全イベントが完了している時" do
+      let!(:identifier) { AvailabilityCheckIdentifier.build }
+
+      before do
+        availability_check_started = Yokohama::AvailabilityCheckStarted.new(
+          availability_check_identifier: identifier,
+          published_at: Time.current,
+          park_names: ["公園１"]
+        )
+        available_dates_found = Yokohama::AvailableDatesFound.new(
+          availability_check_identifier: identifier,
+          published_at: Time.current,
+          park_name: "公園１",
+          available_dates: [AvailableDate.new(Date.tomorrow)]
+        )
+        available_dates_filtered = Yokohama::AvailableDatesFiltered.new(
+          availability_check_identifier: identifier,
+          published_at: Time.current,
+          park_name: "公園１",
+          available_dates: [AvailableDate.new(Date.tomorrow)]
+        )
+        reservation_frames_found = Yokohama::ReservationFramesFound.new(
+          availability_check_identifier: identifier,
+          published_at: Time.current,
+          park_name: "公園１",
+          available_date: AvailableDate.new(Date.tomorrow),
+          reservation_frames: [
+            Yokohama::ReservationFrame.new(
+              tennis_court_name: "テニスコート１",
+              start_date_time: Time.current,
+              end_date_time: Time.current.next_day
+            )
+          ]
+        )
+        reservation_status_checked = Yokohama::ReservationStatusChecked.new(
+          availability_check_identifier: identifier,
+          published_at: Time.current,
+          park_name: "公園１",
+          reservation_frame: Yokohama::ReservationFrame.new(
+            tennis_court_name: "テニスコート１",
+            start_date_time: Time.current,
+            end_date_time: Time.current.next_day,
+            now: true
+          )
+        )
+        Event.persist!(availability_check_started.to_hash)
+        Event.persist!(available_dates_found.to_hash)
+        Event.persist!(available_dates_filtered.to_hash)
+        Event.persist!(reservation_frames_found.to_hash)
+        Event.persist!(reservation_status_checked.to_hash)
+      end
+
+      it { is_expected.to be true }
+    end
+
+    context "全イベントが完了していない時" do
+      let!(:identifier) { AvailabilityCheckIdentifier.build }
+
+      before do
+        availability_check_started = Yokohama::AvailabilityCheckStarted.new(
+          availability_check_identifier: identifier,
+          published_at: Time.current,
+          park_names: ["公園１"]
+        )
+        available_dates_found = Yokohama::AvailableDatesFound.new(
+          availability_check_identifier: identifier,
+          published_at: Time.current,
+          park_name: "公園１",
+          available_dates: [AvailableDate.new(Date.tomorrow)]
+        )
+        available_dates_filtered = Yokohama::AvailableDatesFiltered.new(
+          availability_check_identifier: identifier,
+          published_at: Time.current,
+          park_name: "公園１",
+          available_dates: [AvailableDate.new(Date.tomorrow)]
+        )
+        reservation_frames_found = Yokohama::ReservationFramesFound.new(
+          availability_check_identifier: identifier,
+          published_at: Time.current,
+          park_name: "公園１",
+          available_date: AvailableDate.new(Date.tomorrow),
+          reservation_frames: [
+            Yokohama::ReservationFrame.new(
+              tennis_court_name: "テニスコート１",
+              start_date_time: Time.current,
+              end_date_time: Time.current.next_day
+            ),
+            Yokohama::ReservationFrame.new(
+              tennis_court_name: "テニスコート２",
+              start_date_time: Time.current,
+              end_date_time: Time.current.next_day
+            )
+          ]
+        )
+        reservation_status_checked = Yokohama::ReservationStatusChecked.new(
+          availability_check_identifier: identifier,
+          published_at: Time.current,
+          park_name: "公園１",
+          reservation_frame: Yokohama::ReservationFrame.new(
+            tennis_court_name: "テニスコート１",
+            start_date_time: Time.current,
+            end_date_time: Time.current.next_day,
+            now: true
+          )
+        )
+        Event.persist!(availability_check_started.to_hash)
+        Event.persist!(available_dates_found.to_hash)
+        Event.persist!(available_dates_filtered.to_hash)
+        Event.persist!(reservation_frames_found.to_hash)
+        Event.persist!(reservation_status_checked.to_hash)
+      end
+
+      it { is_expected.to be false }
     end
   end
 end

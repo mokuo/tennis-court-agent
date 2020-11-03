@@ -13,18 +13,6 @@ module Yokohama
     validates :available_date, presence: true
     validates :reservation_frames, presence: true
 
-    def subscribers
-      [
-        lambda do |e|
-          ReservationStatusJob.dispatch_jobs(
-            e.availability_check_identifier,
-            e.park_name,
-            e.reservation_frames
-          )
-        end
-      ]
-    end
-
     def to_hash
       attributes.symbolize_keys.merge(
         name: self.class.to_s,
@@ -41,6 +29,28 @@ module Yokohama
         available_date: AvailableDate.new(hash[:available_date]),
         reservation_frames: hash[:reservation_frames].map { |r| ReservationFrame.from_hash(r) }
       )
+    end
+
+    def children_finished?(domain_events)
+      children = domain_events.find_all do |e|
+        e.availability_check_identifier == availability_check_identifier &&
+          e.name == "Yokohama::ReservationStatusChecked"
+      end
+      reservation_frames.size == children.size
+    end
+
+    private
+
+    def subscribers
+      [
+        lambda do |e|
+          ReservationStatusJob.dispatch_jobs(
+            e.availability_check_identifier,
+            e.park_name,
+            e.reservation_frames
+          )
+        end
+      ]
     end
   end
 end

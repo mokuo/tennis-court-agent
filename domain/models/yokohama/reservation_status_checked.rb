@@ -12,18 +12,6 @@ module Yokohama
     validates :park_name, presence: true
     validates :reservation_frame, presence: true
 
-    def subscribers
-      [
-        # lambda do |e|
-        #   XXXJob.dispatch_jobs(
-        #     e.availability_check_identifier,
-        #     e.park_name,
-        #     e.reservation_frames
-        #   )
-        # end
-      ]
-    end
-
     def to_hash
       super.merge(reservation_frame: reservation_frame.to_hash)
     end
@@ -35,6 +23,20 @@ module Yokohama
         park_name: hash[:park_name],
         reservation_frame: ReservationFrame.from_hash(hash[:reservation_frame])
       )
+    end
+
+    def children_finished?(_domain_events)
+      true
+    end
+
+    private
+
+    def subscribers
+      [
+        lambda do |e|
+          InspectEventsJob.perform_later(e.availability_check_identifier)
+        end
+      ]
     end
   end
 end

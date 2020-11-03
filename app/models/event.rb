@@ -23,9 +23,15 @@ class Event < ApplicationRecord
   def self.persist!(domain_event_hash)
     create!(
       availability_check_identifier: domain_event_hash[:availability_check_identifier],
-      contents: domain_event_hash.to_hash,
+      contents: domain_event_hash,
       name: domain_event_hash[:name],
       published_at: domain_event_hash[:published_at]
     )
+  end
+
+  def to_domain_event
+    domain_event_hash = contents
+    domain_event_hash.delete("name")
+    name.constantize.new(domain_event_hash)
   end
 end

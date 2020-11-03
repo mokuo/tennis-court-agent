@@ -170,10 +170,16 @@ RSpec.describe YokohamaService, type: :job do
         published_at: now
       )
     end
+
+    it "次のジョブがキューに入る" do
+      reservation_status
+
+      expect(Yokohama::InspectEventsJob).to have_been_enqueued.with(identifier)
+    end
   end
 
-  describe "#availability_check_finished?" do
-    subject(:availability_check_finished?) { described_class.new.availability_check_finished?(identifier) }
+  describe "#inspect_events" do
+    subject(:inspect_events) { described_class.new.inspect_events(identifier) }
 
     context "全イベントが完了している時" do
       let!(:identifier) { AvailabilityCheckIdentifier.build }
@@ -227,7 +233,17 @@ RSpec.describe YokohamaService, type: :job do
         Event.persist!(reservation_status_checked.to_hash)
       end
 
-      it { is_expected.to be true }
+      it "ドメインイベントを発行し、永続化する" do
+        now = Time.current
+        travel_to(now)
+        inspect_events
+
+        expect(PersistEventJob).to have_been_enqueued.with(
+          name: "Yokohama::AvailabilityCheckFinished",
+          availability_check_identifier: identifier,
+          published_at: now
+        )
+      end
     end
 
     context "全イベントが完了していない時" do
@@ -287,7 +303,11 @@ RSpec.describe YokohamaService, type: :job do
         Event.persist!(reservation_status_checked.to_hash)
       end
 
-      it { is_expected.to be false }
+      it "ドメインイベントを発行しない" do
+        inspect_events
+
+        expect(PersistEventJob).not_to have_been_enqueued
+      end
     end
   end
 end

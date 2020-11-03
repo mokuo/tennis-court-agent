@@ -6,6 +6,7 @@ require Rails.root.join("domain/models/yokohama/available_dates_found")
 require Rails.root.join("domain/models/yokohama/available_dates_filtered")
 require Rails.root.join("domain/models/yokohama/reservation_frames_found")
 require Rails.root.join("domain/models/yokohama/reservation_status_checked")
+require Rails.root.join("domain/models/yokohama/availability_check_finished")
 
 class YokohamaService
   def initialize(scraping_service = Yokohama::ScrapingService.new)
@@ -54,9 +55,14 @@ class YokohamaService
     event.publish!
   end
 
-  def availability_check_finished?(identifier)
+  def inspect_events(identifier)
     events = Event.where(availability_check_identifier: identifier)
     domain_events = events.map(&:to_domain_event)
-    domain_events.all? { |e| e.children_finished?(domain_events) }
+    return unless domain_events.all? { |e| e.children_finished?(domain_events) }
+
+    event = Yokohama::AvailabilityCheckFinished.new(
+      availability_check_identifier: identifier
+    )
+    event.publish!
   end
 end

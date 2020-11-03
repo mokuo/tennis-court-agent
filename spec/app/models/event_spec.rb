@@ -18,6 +18,10 @@ require Rails.root.join("domain/models/availability_check_identifier")
 class TestDomainEvent < DomainEvent
   attribute :some_attribute
 
+  def to_hash
+    super.merge(some_attribute: some_attribute)
+  end
+
   private
 
   def subscribers
@@ -59,6 +63,35 @@ RSpec.describe Event, type: :model do
           published_at: time.iso8601(3)
         }.stringify_keys,
         published_at: time.floor
+      )
+    end
+  end
+
+  describe "#to_domain_event" do
+    let!(:identifier) { AvailabilityCheckIdentifier.build }
+    let!(:domain_event) do
+      TestDomainEvent.new(
+        {
+          availability_check_identifier: identifier,
+          some_attribute: "hoge",
+          published_at: now
+        }
+      )
+    end
+    let!(:now) { Time.current }
+
+    before do
+      described_class.persist!(domain_event.to_hash)
+    end
+
+    it "ドメインイベントを返す" do
+      event = described_class.last
+      domain_event = event.to_domain_event
+      expect(domain_event.published_at.floor).to eq now.floor
+      expect(domain_event).to have_attributes(
+        name: "TestDomainEvent",
+        availability_check_identifier: identifier,
+        some_attribute: "hoge"
       )
     end
   end

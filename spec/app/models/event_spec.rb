@@ -87,7 +87,7 @@ RSpec.describe Event, type: :model do
     it "ドメインイベントを返す" do
       event = described_class.last
       domain_event = event.to_domain_event
-      expect(domain_event.published_at.floor).to eq now.to_time.floor
+      expect(domain_event.published_at.floor).to eq now.floor
       expect(domain_event).to have_attributes(
         name: "TestDomainEvent",
         availability_check_identifier: identifier,

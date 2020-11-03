@@ -11,28 +11,27 @@ RSpec.describe Yokohama::ReservationFramesFound do
     subject(:children_finished?) { domain_event.children_finished?(domain_events) }
 
     let!(:identifier) { AvailabilityCheckIdentifier.build }
-    let!(:now) { Time.current }
     let!(:domain_event) do
       described_class.new(
         park_name: "公園１",
         available_date: AvailableDate.new(Date.tomorrow),
         reservation_frames: [reservation_frame_1, reservation_frame_2],
         availability_check_identifier: identifier,
-        published_at: now
+        published_at: Time.current
       )
     end
     let!(:reservation_frame_1) do
       Yokohama::ReservationFrame.new(
         tennis_court_name: "テニスコート１",
-        start_date_time: now,
-        end_date_time: now.next_day
+        start_date_time: Time.current,
+        end_date_time: Time.current.next_day
       )
     end
     let!(:reservation_frame_2) do
       Yokohama::ReservationFrame.new(
         tennis_court_name: "テニスコート１",
-        start_date_time: now,
-        end_date_time: now.next_day
+        start_date_time: Time.current,
+        end_date_time: Time.current.next_day
       )
     end
 
@@ -43,13 +42,13 @@ RSpec.describe Yokohama::ReservationFramesFound do
           Yokohama::ReservationStatusChecked.new(
             park_name: "公園１",
             availability_check_identifier: identifier,
-            published_at: now,
+            published_at: Time.current,
             reservation_frame: reservation_frame_1.now = true
           ),
           Yokohama::ReservationStatusChecked.new(
             park_name: "公園１",
             availability_check_identifier: identifier,
-            published_at: now,
+            published_at: Time.current,
             reservation_frame: reservation_frame_2.now = false
           )
         ]
@@ -65,7 +64,7 @@ RSpec.describe Yokohama::ReservationFramesFound do
           Yokohama::ReservationStatusChecked.new(
             park_name: "公園１",
             availability_check_identifier: identifier,
-            published_at: now,
+            published_at: Time.current,
             reservation_frame: reservation_frame_1.now = true
           )
         ]

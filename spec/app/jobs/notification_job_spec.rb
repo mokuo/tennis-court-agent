@@ -1,76 +1,45 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/models/availability_check_identifier")
 require Rails.root.join("domain/models/yokohama/reservation_frame")
 
-class NotificationMock
-  attr_reader :message
+class NotificationServiceMock
+  attr_reader :organization_name, :reservation_frames
 
-  def send(message)
-    @message = message
+  def send_availabilities(organization_name, reservation_frames)
+    @organization_name = organization_name
+    @reservation_frames = reservation_frames
   end
 end
 
 RSpec.describe NotificationJob, type: :job do
-  # TODO: NotificationService を使う
-  xdescribe "#perform" do
-    subject(:notify) { job.perform }
-
-    let!(:params) do
-      { params: { park_name: "富岡西公園", notification: notification } }
-    end
-    let!(:job) { described_class.new(params) }
-    let!(:notification) { NotificationMock.new }
-    let(:reservation_frame1) do
+  describe "#perform" do
+    let!(:query_service_mock) { instance_double("QueryService") }
+    let!(:notification_service_mock) { NotificationServiceMock.new }
+    let!(:identifier) { AvailabilityCheckIdentifier.build }
+    let!(:reservation_frame) do
       Yokohama::ReservationFrame.new(
-        {
-          tennis_court_name: "テニスコート１",
-          start_date_time: Time.zone.local(2020, 8, 22, 11),
-          end_date_time: Time.zone.local(2020, 8, 22, 13),
-          now: true
-        }
+        park_name: "公園１",
+        tennis_court_name: "テニスコート１",
+        start_date_time: Time.current,
+        end_date_time: Time.current.next_day,
+        now: true
       )
     end
-    let(:reservation_frame2) do
-      Yokohama::ReservationFrame.new(
-        {
-          tennis_court_name: "テニスコート２",
-          start_date_time: Time.zone.local(2020, 8, 22, 13),
-          end_date_time: Time.zone.local(2020, 8, 22, 15),
-          now: false
-        }
-      )
-    end
-    let(:expected_message) do
-      <<~MSG
-        横浜市のテニスコートの空き状況です。
-
-        - 富岡西公園 テニスコート１ 2020/08/22（土） 11:00~13:00 今すぐ予約可能
-        - 富岡西公園 テニスコート２ 2020/08/22（土） 13:00~15:00 翌日７時に予約可能
-      MSG
-    end
+    let!(:job) { described_class.new }
 
     before do
-      job.payloads = [
-        {
-          id: "xxx",
-          class: "Yokohama::ReservationStatusCheckJob",
-          output: {
-            reservation_frame: reservation_frame1
-          }
-        },
-        {
-          id: "xxx",
-          class: "Yokohama::ReservationStatusCheckJob",
-          output: {
-            reservation_frame: reservation_frame2
-          }
-        }
-      ]
+      allow(job).to receive(:query_service).and_return(query_service_mock)
+      allow(job).to receive(:notification_service).and_return(notification_service_mock)
     end
+  
+    it "空き状況を通知する" do
+      expect(query_service_mock).to receive(:reservation_frames).with(identifier).and_return([reservation_frame])
+      
+      job.perform(identifier)
 
-    it "テニスコートの利用可能な日時を通知する" do
-      notify
-      expect(notification.message).to eq expected_message
+      expect(notification_service_mock.organization_name).to eq "横浜市"
+      expect(notification_service_mock.reservation_frames.first.eql?(reservation_frame)).to be true
     end
   end
 end

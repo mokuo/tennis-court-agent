@@ -23,15 +23,15 @@ module Yokohama
         availability_check_identifier: hash[:availability_check_identifier],
         published_at: hash[:published_at],
         park_name: hash[:park_name],
-        available_dates: hash[:available_date].map { |date| AvailableDate.new(date) }
+        available_dates: hash[:available_dates].map { |date| AvailableDate.new(date) }
       )
     end
 
     def children_finished?(domain_events)
       children = domain_events.find_all do |e|
-        availability_check_identifier == e.availability_check_identifier &&
-          e.name == "Yokohama::ReservationFramesFound" &&
-          park_name == e.park_name
+        (e.availability_check_identifier == availability_check_identifier) &&
+          (e.name == "Yokohama::ReservationFramesFound") &&
+          (e.reservation_frames.first.park_name == park_name)
       end
 
       available_dates.map(&:to_date) == children.map { |c| c.available_date.to_date }

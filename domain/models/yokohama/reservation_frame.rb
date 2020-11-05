@@ -8,11 +8,13 @@ module Yokohama
     # NOTE: RubyとRailsにおけるTime, Date, DateTime, TimeWithZoneの違い - Qiita
     ## https://qiita.com/jnchito/items/cae89ee43c30f5d6fa2c
     # https://github.com/rails/rails/blob/master/activemodel/lib/active_model/type.rb
+    attribute :park_name, :string
     attribute :tennis_court_name, :string
     attribute :start_date_time, :time
     attribute :end_date_time, :time
     attribute :now, :boolean
 
+    validates :park_name, presence: true
     validates :tennis_court_name, presence: true
     validates :start_date_time, presence: true
     validates :end_date_time, presence: true
@@ -53,22 +55,24 @@ module Yokohama
     end
 
     def eql?(other)
-      tennis_court_name == other.tennis_court_name &&
+      park_name == other.park_name &&
+        tennis_court_name == other.tennis_court_name &&
         start_date_time.to_s == other.start_date_time.to_s &&
         end_date_time.to_s == other.end_date_time.to_s &&
         now == other.now
     end
 
     def hash
-      [tennis_court_name, start_date_time, end_date_time].hash
+      [park_name, tennis_court_name, start_date_time, end_date_time].hash
     end
 
     def to_human
-      "#{tennis_court_name} #{date_time_to_human} #{now_to_human}"
+      "#{park_name} #{tennis_court_name} #{date_time_to_human} #{now_to_human}"
     end
 
     def to_hash
       {
+        park_name: park_name,
         tennis_court_name: tennis_court_name,
         start_date_time: start_date_time.to_s,
         end_date_time: end_date_time.to_s,
@@ -77,7 +81,9 @@ module Yokohama
     end
 
     def self.from_hash(hash)
+      hash = hash.symbolize_keys
       new(
+        park_name: hash[:park_name],
         tennis_court_name: hash[:tennis_court_name],
         start_date_time: Time.zone.parse(hash[:start_date_time]),
         end_date_time: Time.zone.parse(hash[:end_date_time]),

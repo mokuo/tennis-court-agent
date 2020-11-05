@@ -32,6 +32,6 @@ class Event < ApplicationRecord
   def to_domain_event
     domain_event_hash = contents
     domain_event_hash.delete("name")
-    name.constantize.new(domain_event_hash)
+    name.constantize.from_hash(domain_event_hash.symbolize_keys)
   end
 end

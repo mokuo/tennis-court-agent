@@ -243,6 +243,12 @@ RSpec.describe YokohamaService, type: :job do
           published_at: now
         )
       end
+
+      it "次のジョブがキューに入る" do
+        inspect_events
+
+        expect(NotificationJob).to have_been_enqueued.with(identifier)
+      end
     end
 
     context "全イベントが完了していない時" do

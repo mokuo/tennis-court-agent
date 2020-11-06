@@ -116,7 +116,6 @@ RSpec.describe YokohamaService, type: :job do
 
       expect(PersistEventJob).to have_been_enqueued.with(
         availability_check_identifier: identifier,
-        park_name: "公園１",
         available_date: date,
         reservation_frames: [reservation_frame.to_hash],
         name: "Yokohama::ReservationFramesFound",
@@ -127,13 +126,13 @@ RSpec.describe YokohamaService, type: :job do
     it "次のジョブがキューに入る" do
       reservation_frames
 
-      expect(Yokohama::ReservationStatusJob).to have_been_enqueued.with(identifier, "公園１", reservation_frame.to_hash)
+      expect(Yokohama::ReservationStatusJob).to have_been_enqueued.with(identifier, reservation_frame.to_hash)
     end
   end
 
   describe "#reservation_status" do
     subject(:reservation_status) do
-      described_class.new(mock_scraping_service).reservation_status(identifier, "公園１", reservation_frame)
+      described_class.new(mock_scraping_service).reservation_status(identifier, reservation_frame)
     end
 
     let!(:identifier) { AvailabilityCheckIdentifier.build }
@@ -141,6 +140,7 @@ RSpec.describe YokohamaService, type: :job do
     let!(:mock_scraping_service) { instance_double("Yokohama::ScrapingService") }
     let!(:reservation_frame) do
       Yokohama::ReservationFrame.new(
+        park_name: "公園１",
         tennis_court_name: "テニスコート１",
         start_date_time: now.next_day,
         end_date_time: now.next_day.change(hour: now.hour + 2)
@@ -153,7 +153,7 @@ RSpec.describe YokohamaService, type: :job do
     end
 
     it "今すぐ予約できるかどうかを確認する" do
-      expect(mock_scraping_service).to receive(:reservation_status).with("公園１", reservation_frame)
+      expect(mock_scraping_service).to receive(:reservation_status).with(reservation_frame)
 
       reservation_status
     end
@@ -164,7 +164,6 @@ RSpec.describe YokohamaService, type: :job do
 
       expect(PersistEventJob).to have_been_enqueued.with(
         availability_check_identifier: identifier,
-        park_name: "公園１",
         reservation_frame: reservation_frame.to_hash,
         name: "Yokohama::ReservationStatusChecked",
         published_at: now
@@ -205,10 +204,10 @@ RSpec.describe YokohamaService, type: :job do
         reservation_frames_found = Yokohama::ReservationFramesFound.new(
           availability_check_identifier: identifier,
           published_at: Time.current,
-          park_name: "公園１",
           available_date: AvailableDate.new(Date.tomorrow),
           reservation_frames: [
             Yokohama::ReservationFrame.new(
+              park_name: "公園１",
               tennis_court_name: "テニスコート１",
               start_date_time: Time.current,
               end_date_time: Time.current.next_day
@@ -218,8 +217,8 @@ RSpec.describe YokohamaService, type: :job do
         reservation_status_checked = Yokohama::ReservationStatusChecked.new(
           availability_check_identifier: identifier,
           published_at: Time.current,
-          park_name: "公園１",
           reservation_frame: Yokohama::ReservationFrame.new(
+            park_name: "公園１",
             tennis_court_name: "テニスコート１",
             start_date_time: Time.current,
             end_date_time: Time.current.next_day,
@@ -243,6 +242,12 @@ RSpec.describe YokohamaService, type: :job do
           availability_check_identifier: identifier,
           published_at: now
         )
+      end
+
+      it "次のジョブがキューに入る" do
+        inspect_events
+
+        expect(NotificationJob).to have_been_enqueued.with(identifier)
       end
     end
 
@@ -270,15 +275,16 @@ RSpec.describe YokohamaService, type: :job do
         reservation_frames_found = Yokohama::ReservationFramesFound.new(
           availability_check_identifier: identifier,
           published_at: Time.current,
-          park_name: "公園１",
           available_date: AvailableDate.new(Date.tomorrow),
           reservation_frames: [
             Yokohama::ReservationFrame.new(
+              park_name: "公園１",
               tennis_court_name: "テニスコート１",
               start_date_time: Time.current,
               end_date_time: Time.current.next_day
             ),
             Yokohama::ReservationFrame.new(
+              park_name: "公園１",
               tennis_court_name: "テニスコート２",
               start_date_time: Time.current,
               end_date_time: Time.current.next_day
@@ -288,8 +294,8 @@ RSpec.describe YokohamaService, type: :job do
         reservation_status_checked = Yokohama::ReservationStatusChecked.new(
           availability_check_identifier: identifier,
           published_at: Time.current,
-          park_name: "公園１",
           reservation_frame: Yokohama::ReservationFrame.new(
+            park_name: "公園１",
             tennis_court_name: "テニスコート１",
             start_date_time: Time.current,
             end_date_time: Time.current.next_day,

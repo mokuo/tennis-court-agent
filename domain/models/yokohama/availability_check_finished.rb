@@ -14,7 +14,9 @@ module Yokohama
     private
 
     def subscribers
-      []
+      [
+        ->(e) { NotificationJob.perform_later(e.availability_check_identifier) }
+      ]
     end
   end
 end

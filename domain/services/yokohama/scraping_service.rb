@@ -15,13 +15,17 @@ module Yokohama
     end
 
     def reservation_frames(park_name, date)
-      date_selection_page(park_name)
-        .click_date(date)
-        .reservation_frames
+      reservation_frames = date_selection_page_with_login(park_name)
+                           .click_date(date)
+                           .reservation_frames
+      reservation_frames.map do |rf|
+        rf.park_name = park_name
+        rf
+      end
     end
 
-    def reservation_status(park_name, reservation_frame)
-      result_page = date_selection_page_with_login(park_name)
+    def reservation_status(reservation_frame)
+      result_page = date_selection_page_with_login(reservation_frame.park_name)
                     .click_date(reservation_frame.date)
                     .click_reservation_frame(reservation_frame)
       !result_page.error_page?

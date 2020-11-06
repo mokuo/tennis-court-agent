@@ -23,7 +23,7 @@ module Yokohama
         availability_check_identifier: hash[:availability_check_identifier],
         published_at: hash[:published_at],
         park_name: hash[:park_name],
-        available_dates: hash[:available_date].map { |date| AvailableDate.new(date) }
+        available_dates: hash[:available_dates].map { |date| AvailableDate.new(date) }
       )
     end
 

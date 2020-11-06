@@ -4,6 +4,7 @@ require Rails.root.join("domain/models/availability_check_identifier")
 require Rails.root.join("domain/models/available_date")
 require Rails.root.join("domain/models/yokohama/available_dates_filtered")
 require Rails.root.join("domain/models/yokohama/reservation_frames_found")
+require Rails.root.join("domain/models/yokohama/reservation_frame")
 
 RSpec.describe Yokohama::AvailableDatesFiltered do
   describe "#children_finished?" do
@@ -28,17 +29,31 @@ RSpec.describe Yokohama::AvailableDatesFiltered do
         [
           domain_event,
           Yokohama::ReservationFramesFound.new(
-            park_name: "公園１",
             availability_check_identifier: identifier,
             available_date: AvailableDate.new(Date.current),
-            reservation_frames: [],
+            reservation_frames: [
+              Yokohama::ReservationFrame.new(
+                park_name: "公園１",
+                tennis_court_name: "テニスコート１",
+                start_date_time: Time.current,
+                end_date_time: Time.current.next_day,
+                now: true
+              )
+            ],
             published_at: now
           ),
           Yokohama::ReservationFramesFound.new(
-            park_name: "公園１",
             availability_check_identifier: identifier,
             available_date: AvailableDate.new(Date.tomorrow),
-            reservation_frames: [],
+            reservation_frames: [
+              Yokohama::ReservationFrame.new(
+                park_name: "公園１",
+                tennis_court_name: "テニスコート１",
+                start_date_time: Time.current,
+                end_date_time: Time.current.next_day,
+                now: true
+              )
+            ],
             published_at: now
           )
         ]
@@ -52,10 +67,17 @@ RSpec.describe Yokohama::AvailableDatesFiltered do
         [
           domain_event,
           Yokohama::ReservationFramesFound.new(
-            park_name: "公園１",
             availability_check_identifier: identifier,
             available_date: AvailableDate.new(Date.current),
-            reservation_frames: [],
+            reservation_frames: [
+              Yokohama::ReservationFrame.new(
+                park_name: "公園１",
+                tennis_court_name: "テニスコート１",
+                start_date_time: Time.current,
+                end_date_time: Time.current.next_day,
+                now: true
+              )
+            ],
             published_at: now
           )
         ]

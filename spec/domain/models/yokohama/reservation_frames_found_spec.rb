@@ -13,7 +13,6 @@ RSpec.describe Yokohama::ReservationFramesFound do
     let!(:identifier) { AvailabilityCheckIdentifier.build }
     let!(:domain_event) do
       described_class.new(
-        park_name: "公園１",
         available_date: AvailableDate.new(Date.tomorrow),
         reservation_frames: [reservation_frame_1, reservation_frame_2],
         availability_check_identifier: identifier,
@@ -22,6 +21,7 @@ RSpec.describe Yokohama::ReservationFramesFound do
     end
     let!(:reservation_frame_1) do
       Yokohama::ReservationFrame.new(
+        park_name: "公園１",
         tennis_court_name: "テニスコート１",
         start_date_time: Time.current,
         end_date_time: Time.current.next_day
@@ -29,7 +29,8 @@ RSpec.describe Yokohama::ReservationFramesFound do
     end
     let!(:reservation_frame_2) do
       Yokohama::ReservationFrame.new(
-        tennis_court_name: "テニスコート１",
+        park_name: "公園１",
+        tennis_court_name: "テニスコート２",
         start_date_time: Time.current,
         end_date_time: Time.current.next_day
       )
@@ -40,13 +41,11 @@ RSpec.describe Yokohama::ReservationFramesFound do
         [
           domain_event,
           Yokohama::ReservationStatusChecked.new(
-            park_name: "公園１",
             availability_check_identifier: identifier,
             published_at: Time.current,
             reservation_frame: reservation_frame_1.now = true
           ),
           Yokohama::ReservationStatusChecked.new(
-            park_name: "公園１",
             availability_check_identifier: identifier,
             published_at: Time.current,
             reservation_frame: reservation_frame_2.now = false
@@ -62,7 +61,6 @@ RSpec.describe Yokohama::ReservationFramesFound do
         [
           domain_event,
           Yokohama::ReservationStatusChecked.new(
-            park_name: "公園１",
             availability_check_identifier: identifier,
             published_at: Time.current,
             reservation_frame: reservation_frame_1.now = true

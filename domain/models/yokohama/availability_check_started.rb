@@ -32,7 +32,7 @@ module Yokohama
 
     def subscribers
       [
-        ->(e) { AvailableDatesJob.dispatch_jobs(e.identifier, e.park_names) }
+        ->(e) { AvailableDatesJob.dispatch_jobs(e.availability_check_identifier, e.park_names) }
       ]
     end
   end

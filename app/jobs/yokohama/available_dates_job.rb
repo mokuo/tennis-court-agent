@@ -4,7 +4,7 @@ require Rails.root.join("domain/models/available_date")
 
 module Yokohama
   class AvailableDatesJob < ApplicationJob
-    queue_as :yokohama
+    queue_as :default
 
     def self.dispatch_jobs(identifier, park_names)
       park_names.each { |park_name| perform_later(identifier, park_name) }

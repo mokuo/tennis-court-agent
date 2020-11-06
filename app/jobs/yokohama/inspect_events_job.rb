@@ -2,7 +2,7 @@
 
 module Yokohama
   class InspectEventsJob < ApplicationJob
-    queue_as :yokohama
+    queue_as :default
 
     def perform(identifier)
       service.inspect_events(identifier)

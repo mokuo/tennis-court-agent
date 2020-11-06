@@ -16,8 +16,8 @@ module Yokohama
 
     def reservation_frames(park_name, date)
       reservation_frames = date_selection_page_with_login(park_name)
-                            .click_date(date)
-                            .reservation_frames
+                           .click_date(date)
+                           .reservation_frames
       reservation_frames.map do |rf|
         rf.park_name = park_name
         rf

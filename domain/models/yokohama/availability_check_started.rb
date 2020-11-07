@@ -6,7 +6,8 @@ module Yokohama
   class AvailabilityCheckStarted < DomainEvent
     attribute :park_names
 
-    validates :park_names, presence: true
+    # HACK: 空配列だとバリデーションエラーになるので、一旦バリデーションをかけない
+    # validates :park_names, presence: true
 
     def to_hash
       super.merge(park_names: park_names)

@@ -9,7 +9,8 @@ module Yokohama
     attribute :reservation_frames
 
     validates :available_date, presence: true
-    validates :reservation_frames, presence: true
+    # HACK: 空配列だとバリデーションエラーになるので、一旦バリデーションをかけない
+    # validates :reservation_frames, presence: true
 
     def to_hash
       attributes.symbolize_keys.merge(

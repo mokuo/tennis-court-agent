@@ -265,6 +265,8 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
+    sidekiq-limit_fetch (3.4.0)
+      sidekiq (>= 4)
     slack-ruby-client (0.15.1)
       faraday (>= 1.0)
       faraday_middleware
@@ -349,6 +351,7 @@ DEPENDENCIES
   sass-rails (>= 6)
   selenium-webdriver
   sidekiq
+  sidekiq-limit_fetch
   slack-ruby-client
   solargraph
   spring

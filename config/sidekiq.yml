@@ -1,0 +1,9 @@
+---
+:queues:
+  - persist_event
+  - yokohama
+  - notification
+:limits:
+  persist_event: 1
+  yokohama: 1
+  notification: 1

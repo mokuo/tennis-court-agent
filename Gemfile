@@ -35,6 +35,7 @@ gem "webdrivers", "~> 4.0"
 
 gem "active_hash"
 gem "sidekiq"
+gem "sidekiq-limit_fetch"
 gem "slack-ruby-client"
 
 group :development, :test do

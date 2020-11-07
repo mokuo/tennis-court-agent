@@ -32,7 +32,7 @@ module Yokohama
       children = domain_events.find_all do |e|
         e.availability_check_identifier == availability_check_identifier &&
           e.name == "Yokohama::ReservationFramesFound" &&
-          e.reservation_frames.first.park_name == park_name
+          e.reservation_frames.first&.park_name == park_name
       end
 
       available_dates.map(&:to_date) == children.map { |c| c.available_date.to_date }

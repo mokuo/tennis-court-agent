@@ -63,7 +63,9 @@ module Yokohama
     end
 
     def unavailable?(text)
-      %w[予約済 ×].include?(text)
+      # 空き枠が翌日の場合は、予約ボタンも表示されない => 空文字になる
+      # 予約ボタンがある枠は、半角スペースが入ってくる
+      ["予約済", "×", ""].include?(text)
     end
 
     def tennis_court_tr_elements

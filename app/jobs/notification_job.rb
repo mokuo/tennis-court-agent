@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NotificationJob < ApplicationJob
-  queue_as :default
+  queue_as :notification
 
   def perform(identifier)
     reservation_frames = query_service.reservation_frames(identifier)

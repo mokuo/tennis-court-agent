@@ -4,7 +4,7 @@ require Rails.root.join("domain/models/available_date")
 
 module Yokohama
   class FilterAvailableDatesJob < ApplicationJob
-    queue_as :default
+    queue_as :yokohama
 
     def perform(identifier, park_name, dates)
       available_dates = dates.map { |date| AvailableDate.new(date) }

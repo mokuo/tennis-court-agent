@@ -4,7 +4,7 @@ require Rails.root.join("domain/models/yokohama/reservation_frame")
 
 module Yokohama
   class ReservationFrameSelectionPage < BasePage
-    class MissingSelectButtonError < StandardError; end
+    class NotLoggedInError < StandardError; end
 
     def initialize
       check_logged_in!
@@ -59,7 +59,7 @@ module Yokohama
     private
 
     def check_logged_in!
-      raise MissingSelectButtonError unless logged_in?
+      raise NotLoggedInError unless logged_in?
     end
 
     def unavailable?(text)

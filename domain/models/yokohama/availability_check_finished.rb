@@ -11,6 +11,10 @@ module Yokohama
       )
     end
 
+    def children_finished?(_domain_events)
+      true
+    end
+
     private
 
     def subscribers

@@ -17,6 +17,6 @@ class NotificationJob < ApplicationJob
   end
 
   def notification_service
-    NotifiactionService.new
+    NotificationService.new
   end
 end

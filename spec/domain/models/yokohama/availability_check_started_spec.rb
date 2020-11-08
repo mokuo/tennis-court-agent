@@ -23,13 +23,13 @@ RSpec.describe Yokohama::AvailabilityCheckStarted do
         [
           domain_event,
           Yokohama::AvailableDatesFound.new(
-            park_name: "公園１",
+            park_name: "公園２",
             availability_check_identifier: identifier,
             published_at: now,
             available_dates: []
           ),
           Yokohama::AvailableDatesFound.new(
-            park_name: "公園２",
+            park_name: "公園１",
             availability_check_identifier: identifier,
             published_at: now,
             available_dates: []

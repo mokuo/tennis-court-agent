@@ -26,7 +26,7 @@ module Yokohama
         e.availability_check_identifier == availability_check_identifier &&
           e.name == "Yokohama::AvailableDatesFound"
       end
-      park_names == children.map(&:park_name)
+      park_names.sort == children.map(&:park_name).sort # 順不同で比較
     end
 
     private

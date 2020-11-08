@@ -29,6 +29,8 @@ module Yokohama
     end
 
     def children_finished?(domain_events)
+      return true if available_dates.blank?
+
       domain_events.any? do |e|
         availability_check_identifier == e.availability_check_identifier &&
           e.name == "Yokohama::AvailableDatesFiltered" &&

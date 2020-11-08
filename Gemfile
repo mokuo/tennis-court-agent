@@ -65,6 +65,7 @@ end
 
 group :test do
   gem "rspec_junit_formatter"
+  gem "rspec-parameterized"
   gem "rspec-retry"
 end
 

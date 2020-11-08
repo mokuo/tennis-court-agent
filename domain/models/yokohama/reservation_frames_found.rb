@@ -30,11 +30,9 @@ module Yokohama
     end
 
     def children_finished?(domain_events)
-      children = domain_events.find_all do |e|
-        e.availability_check_identifier == availability_check_identifier &&
-          e.name == "Yokohama::ReservationStatusChecked"
-      end
-      reservation_frames.size == children.size
+      return true if reservation_frames.blank?
+
+      reservation_frames.all? { |rf| child_finished?(rf, domain_events) }
     end
 
     private
@@ -48,6 +46,14 @@ module Yokohama
           )
         end
       ]
+    end
+
+    def child_finished?(reservation_frame, domain_events)
+      domain_events.any? do |e|
+        e.availability_check_identifier == availability_check_identifier &&
+          e.name == "Yokohama::ReservationStatusChecked" &&
+          e.reservation_frame.eql_frame?(reservation_frame)
+      end
     end
   end
 end

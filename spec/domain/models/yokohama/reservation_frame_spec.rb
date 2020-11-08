@@ -63,63 +63,82 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
     end
   end
 
+  describe "#eql_frame?" do
+    subject(:eql?) { reservation_frame.eql_frame?(other_reservation_frame) }
+
+    let!(:reservation_frame) do
+      described_class.new(
+        park_name: "公園１",
+        tennis_court_name: "テニスコート１",
+        start_date_time: Time.zone.local(2020, 8, 19, 15),
+        end_date_time: Time.zone.local(2020, 8, 19, 17),
+        now: nil
+      )
+    end
+    let!(:other_reservation_frame) do
+      described_class.new(
+        {
+          park_name: park_name,
+          tennis_court_name: tennis_court_name,
+          start_date_time: start_date_time,
+          end_date_time: end_date_time,
+          now: true
+        }
+      )
+    end
+
+    where(:park_name, :tennis_court_name, :start_date_time, :end_date_time, :result) do
+      [
+        ["公園１", "テニスコート１", Time.zone.local(2020, 8, 19, 15), Time.zone.local(2020, 8, 19, 17), true],
+        ["公園２", "テニスコート１", Time.zone.local(2020, 8, 19, 15), Time.zone.local(2020, 8, 19, 17), false],
+        ["公園１", "テニスコート２", Time.zone.local(2020, 8, 19, 15), Time.zone.local(2020, 8, 19, 17), false],
+        ["公園１", "テニスコート１", Time.zone.local(2020, 8, 19, 13), Time.zone.local(2020, 8, 19, 17), false],
+        ["公園１", "テニスコート１", Time.zone.local(2020, 8, 19, 15), Time.zone.local(2020, 8, 19, 19), false]
+      ]
+    end
+
+    with_them do
+      it { is_expected.to be result }
+    end
+  end
+
   describe "eql?" do
     subject(:eql?) { reservation_frame.eql?(other_reservation_frame) }
 
     let!(:reservation_frame) do
       described_class.new(
-        { tennis_court_name: "テニスコート１",
-          start_date_time: Time.zone.local(2020, 8, 19, 15),
-          end_date_time: Time.zone.local(2020, 8, 19, 17) }
+        park_name: "公園１",
+        tennis_court_name: "テニスコート１",
+        start_date_time: Time.zone.local(2020, 8, 19, 15),
+        end_date_time: Time.zone.local(2020, 8, 19, 17),
+        now: true
+      )
+    end
+    let!(:other_reservation_frame) do
+      described_class.new(
+        {
+          park_name: park_name,
+          tennis_court_name: tennis_court_name,
+          start_date_time: start_date_time,
+          end_date_time: end_date_time,
+          now: now
+        }
       )
     end
 
-    context "全ての値が等しい時" do
-      let(:other_reservation_frame) do
-        described_class.new(
-          { tennis_court_name: "テニスコート１",
-            start_date_time: Time.zone.local(2020, 8, 19, 15),
-            end_date_time: Time.zone.local(2020, 8, 19, 17) }
-        )
-      end
-
-      it { is_expected.to be true }
+    where(:park_name, :tennis_court_name, :start_date_time, :end_date_time, :now, :result) do
+      [
+        ["公園１", "テニスコート１", Time.zone.local(2020, 8, 19, 15), Time.zone.local(2020, 8, 19, 17), true, true],
+        ["公園２", "テニスコート１", Time.zone.local(2020, 8, 19, 15), Time.zone.local(2020, 8, 19, 17), true, false],
+        ["公園１", "テニスコート２", Time.zone.local(2020, 8, 19, 15), Time.zone.local(2020, 8, 19, 17), true, false],
+        ["公園１", "テニスコート１", Time.zone.local(2020, 8, 19, 13), Time.zone.local(2020, 8, 19, 17), true, false],
+        ["公園１", "テニスコート１", Time.zone.local(2020, 8, 19, 15), Time.zone.local(2020, 8, 19, 19), true, false],
+        ["公園１", "テニスコート１", Time.zone.local(2020, 8, 19, 15), Time.zone.local(2020, 8, 19, 17), false, false]
+      ]
     end
 
-    context "テニスコート名が違う時" do
-      let(:other_reservation_frame) do
-        described_class.new(
-          { tennis_court_name: "テニスコート２",
-            start_date_time: Time.zone.local(2020, 8, 19, 15),
-            end_date_time: Time.zone.local(2020, 8, 19, 17) }
-        )
-      end
-
-      it { is_expected.to be false }
-    end
-
-    context "開始時刻が違う時" do
-      let(:other_reservation_frame) do
-        described_class.new(
-          { tennis_court_name: "テニスコート１",
-            start_date_time: Time.zone.local(2020, 8, 19, 13),
-            end_date_time: Time.zone.local(2020, 8, 19, 17) }
-        )
-      end
-
-      it { is_expected.to be false }
-    end
-
-    context "終了時刻が違う時" do
-      let(:other_reservation_frame) do
-        described_class.new(
-          { tennis_court_name: "テニスコート１",
-            start_date_time: Time.zone.local(2020, 8, 19, 15),
-            end_date_time: Time.zone.local(2020, 8, 19, 19) }
-        )
-      end
-
-      it { is_expected.to be false }
+    with_them do
+      it { is_expected.to be result }
     end
   end
 

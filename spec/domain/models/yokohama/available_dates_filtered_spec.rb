@@ -31,6 +31,7 @@ RSpec.describe Yokohama::AvailableDatesFiltered do
           Yokohama::ReservationFramesFound.new(
             availability_check_identifier: identifier,
             available_date: AvailableDate.new(Date.current),
+            park_name: "公園１",
             reservation_frames: [
               Yokohama::ReservationFrame.new(
                 park_name: "公園１",
@@ -45,6 +46,7 @@ RSpec.describe Yokohama::AvailableDatesFiltered do
           Yokohama::ReservationFramesFound.new(
             availability_check_identifier: identifier,
             available_date: AvailableDate.new(Date.tomorrow),
+            park_name: "公園１",
             reservation_frames: [
               Yokohama::ReservationFrame.new(
                 park_name: "公園１",
@@ -79,6 +81,7 @@ RSpec.describe Yokohama::AvailableDatesFiltered do
           domain_event,
           Yokohama::ReservationFramesFound.new(
             availability_check_identifier: identifier,
+            park_name: "公園１",
             available_date: AvailableDate.new(Date.current),
             reservation_frames: [
               Yokohama::ReservationFrame.new(

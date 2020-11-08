@@ -4,10 +4,11 @@ require Rails.root.join("domain/models/availability_check_identifier")
 require Rails.root.join("domain/models/yokohama/reservation_frame")
 
 class MockService
-  attr_reader :identifier, :reservation_frame
+  attr_reader :identifier, :park_name, :reservation_frame
 
-  def reservation_status(identifier, reservation_frame)
+  def reservation_status(identifier, park_name, reservation_frame)
     @identifier = identifier
+    @park_name = park_name
     @reservation_frame = reservation_frame
   end
 end
@@ -56,9 +57,9 @@ RSpec.describe Yokohama::ReservationStatusJob, type: :job do
       mock_service = MockService.new
       job = described_class.new
       allow(job).to receive(:service).and_return(mock_service)
-      job.perform(identifier, reservation_frame.to_hash)
+      job.perform(identifier, "公園１", reservation_frame.to_hash)
 
-      expect(mock_service.identifier).to eq identifier
+      expect(mock_service).to have_attributes(identifier: identifier, park_name: "公園１")
       expect(mock_service.reservation_frame.eql?(reservation_frame)).to be true
     end
   end

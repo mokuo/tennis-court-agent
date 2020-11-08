@@ -52,17 +52,19 @@ class YokohamaService
     reservation_frames = @scraping_service.reservation_frames(park_name, available_date.to_date)
     event = Yokohama::ReservationFramesFound.new(
       availability_check_identifier: identifier,
+      park_name: park_name,
       available_date: available_date,
       reservation_frames: reservation_frames
     )
     event.publish!
   end
 
-  def reservation_status(identifier, reservation_frame)
-    now = @scraping_service.reservation_status(reservation_frame)
+  def reservation_status(identifier, park_name, reservation_frame)
+    now = @scraping_service.reservation_status(park_name, reservation_frame)
     reservation_frame.now = now
     event = Yokohama::ReservationStatusChecked.new(
       availability_check_identifier: identifier,
+      park_name: park_name,
       reservation_frame: reservation_frame
     )
     event.publish!

@@ -5,9 +5,11 @@ require Rails.root.join("domain/models/available_date")
 
 module Yokohama
   class ReservationFramesFound < DomainEvent
+    attribute :park_name, :string
     attribute :available_date
     attribute :reservation_frames
 
+    validates :park_name, presence: true
     validates :available_date, presence: true
     # HACK: 空配列だとバリデーションエラーになるので、一旦バリデーションをかけない
     # validates :reservation_frames, presence: true
@@ -24,6 +26,7 @@ module Yokohama
       new(
         availability_check_identifier: hash[:availability_check_identifier],
         published_at: hash[:published_at],
+        park_name: hash[:park_name],
         available_date: AvailableDate.new(hash[:available_date]),
         reservation_frames: hash[:reservation_frames].map { |r| ReservationFrame.from_hash(r.symbolize_keys) }
       )
@@ -42,6 +45,7 @@ module Yokohama
         lambda do |e|
           ReservationStatusJob.dispatch_jobs(
             e.availability_check_identifier,
+            e.park_name,
             e.reservation_frames
           )
         end

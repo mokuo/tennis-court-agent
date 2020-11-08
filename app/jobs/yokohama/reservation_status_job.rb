@@ -6,15 +6,15 @@ module Yokohama
   class ReservationStatusJob < ApplicationJob
     queue_as :yokohama
 
-    def self.dispatch_jobs(identifier, reservation_frames)
+    def self.dispatch_jobs(identifier, park_name, reservation_frames)
       reservation_frames.each do |reservation_frame|
-        perform_later(identifier, reservation_frame.to_hash)
+        perform_later(identifier, park_name, reservation_frame.to_hash)
       end
     end
 
-    def perform(identifier, reservation_frame_hash)
+    def perform(identifier, park_name, reservation_frame_hash)
       reservation_frame = Yokohama::ReservationFrame.from_hash(reservation_frame_hash)
-      service.reservation_status(identifier, reservation_frame)
+      service.reservation_status(identifier, park_name, reservation_frame)
     end
 
     private

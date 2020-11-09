@@ -4,7 +4,7 @@ require Rails.root.join("domain/models/yokohama/reservation_frame")
 
 module Yokohama
   class ReservationFrameSelectionPage < BasePage
-    class MissingSelectButtonError < StandardError; end
+    class NotLoggedInError < StandardError; end
 
     def initialize
       check_logged_in!
@@ -59,11 +59,13 @@ module Yokohama
     private
 
     def check_logged_in!
-      raise MissingSelectButtonError unless logged_in?
+      raise NotLoggedInError unless logged_in?
     end
 
     def unavailable?(text)
-      %w[予約済 ×].include?(text)
+      # 空き枠が翌日の場合は、予約ボタンも表示されない => 空文字になる
+      # 予約ボタンがある枠は、半角スペースが入ってくる
+      ["予約済", "×", ""].include?(text)
     end
 
     def tennis_court_tr_elements

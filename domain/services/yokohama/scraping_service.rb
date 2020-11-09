@@ -24,8 +24,8 @@ module Yokohama
       end
     end
 
-    def reservation_status(reservation_frame)
-      result_page = date_selection_page_with_login(reservation_frame.park_name)
+    def reservation_status(park_name, reservation_frame)
+      result_page = date_selection_page_with_login(park_name)
                     .click_date(reservation_frame.date)
                     .click_reservation_frame(reservation_frame)
       !result_page.error_page?

@@ -6,7 +6,8 @@ module Yokohama
   class AvailabilityCheckStarted < DomainEvent
     attribute :park_names
 
-    validates :park_names, presence: true
+    # HACK: 空配列だとバリデーションエラーになるので、一旦バリデーションをかけない
+    # validates :park_names, presence: true
 
     def to_hash
       super.merge(park_names: park_names)
@@ -25,14 +26,14 @@ module Yokohama
         e.availability_check_identifier == availability_check_identifier &&
           e.name == "Yokohama::AvailableDatesFound"
       end
-      park_names == children.map(&:park_name)
+      park_names.sort == children.map(&:park_name).sort # 順不同で比較
     end
 
     private
 
     def subscribers
       [
-        ->(e) { AvailableDatesJob.dispatch_jobs(e.identifier, e.park_names) }
+        ->(e) { AvailableDatesJob.dispatch_jobs(e.availability_check_identifier, e.park_names) }
       ]
     end
   end

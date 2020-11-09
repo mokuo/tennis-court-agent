@@ -14,7 +14,7 @@ gem "puma", "~> 5.0"
 # Use SCSS for stylesheets
 gem "sass-rails", ">= 6"
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem "webpacker", "~> 5.2"
+# gem "webpacker", "~> 5.2"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder", "~> 2.10"
 # Use Redis adapter to run Action Cable in production
@@ -35,6 +35,7 @@ gem "webdrivers", "~> 4.0"
 
 gem "active_hash"
 gem "sidekiq"
+gem "sidekiq-limit_fetch"
 gem "slack-ruby-client"
 
 group :development, :test do
@@ -64,6 +65,7 @@ end
 
 group :test do
   gem "rspec_junit_formatter"
+  gem "rspec-parameterized"
   gem "rspec-retry"
 end
 

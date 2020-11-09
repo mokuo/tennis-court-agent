@@ -6,6 +6,8 @@ Rails.root
 
 module Yokohama
   class ReservationFramesJob < ApplicationJob
+    queue_as :yokohama
+
     def self.dispatch_jobs(identifier, park_name, dates)
       dates.each { |date| perform_later(identifier, park_name, date) }
     end

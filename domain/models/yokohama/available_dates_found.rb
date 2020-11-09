@@ -9,7 +9,8 @@ module Yokohama
     attribute :available_dates
 
     validates :park_name, presence: true
-    validates :available_dates, presence: true
+    # HACK: 空配列だとバリデーションエラーになるので、一旦バリデーションをかけない
+    # validates :available_dates, presence: true
 
     def to_hash
       super.merge(
@@ -28,6 +29,8 @@ module Yokohama
     end
 
     def children_finished?(domain_events)
+      return true if available_dates.blank?
+
       domain_events.any? do |e|
         availability_check_identifier == e.availability_check_identifier &&
           e.name == "Yokohama::AvailableDatesFiltered" &&

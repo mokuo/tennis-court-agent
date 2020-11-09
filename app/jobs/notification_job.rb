@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/services/notification_service")
+
 class NotificationJob < ApplicationJob
   queue_as :notification
 
@@ -15,6 +17,6 @@ class NotificationJob < ApplicationJob
   end
 
   def notification_service
-    NotifiactionService.new
+    NotificationService.new
   end
 end

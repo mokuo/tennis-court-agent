@@ -2,6 +2,8 @@
 
 require Rails.root.join("domain/services/yokohama/scraping_service")
 require Rails.root.join("domain/models/available_date")
+require Rails.root.join("domain/models/availability_check_identifier")
+require Rails.root.join("domain/models/yokohama/availability_check_started")
 require Rails.root.join("domain/models/yokohama/available_dates_found")
 require Rails.root.join("domain/models/yokohama/available_dates_filtered")
 require Rails.root.join("domain/models/yokohama/reservation_frames_found")
@@ -11,6 +13,19 @@ require Rails.root.join("domain/models/yokohama/availability_check_finished")
 class YokohamaService
   def initialize(scraping_service = Yokohama::ScrapingService.new)
     @scraping_service = scraping_service
+  end
+
+  def start_availability_check
+    park_names = %w[富岡西公園 三ツ沢公園 新杉田公園]
+
+    identifier = AvailabilityCheckIdentifier.build
+    AvailabilityCheck.create!(identifier: identifier)
+
+    event = Yokohama::AvailabilityCheckStarted.new(
+      availability_check_identifier: identifier,
+      park_names: park_names
+    )
+    event.publish!
   end
 
   def available_dates(identifier, park_name)
@@ -37,17 +52,19 @@ class YokohamaService
     reservation_frames = @scraping_service.reservation_frames(park_name, available_date.to_date)
     event = Yokohama::ReservationFramesFound.new(
       availability_check_identifier: identifier,
+      park_name: park_name,
       available_date: available_date,
       reservation_frames: reservation_frames
     )
     event.publish!
   end
 
-  def reservation_status(identifier, reservation_frame)
-    now = @scraping_service.reservation_status(reservation_frame)
+  def reservation_status(identifier, park_name, reservation_frame)
+    now = @scraping_service.reservation_status(park_name, reservation_frame)
     reservation_frame.now = now
     event = Yokohama::ReservationStatusChecked.new(
       availability_check_identifier: identifier,
+      park_name: park_name,
       reservation_frame: reservation_frame
     )
     event.publish!

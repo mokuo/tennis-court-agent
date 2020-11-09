@@ -30,7 +30,7 @@ RSpec.describe Yokohama::ScrapingService do
   end
 
   describe "#reservation_status" do
-    subject(:reservation_status) { described_class.new.reservation_status(reservation_frame) }
+    subject(:reservation_status) { described_class.new.reservation_status("三ツ沢公園", reservation_frame) }
 
     let!(:available_dates) { described_class.new.available_dates("三ツ沢公園") }
     let!(:reservation_frames) do

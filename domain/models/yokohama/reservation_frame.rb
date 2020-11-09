@@ -54,11 +54,15 @@ module Yokohama
       start_date_time.to_date
     end
 
-    def eql?(other)
+    def eql_frame?(other)
       park_name == other.park_name &&
         tennis_court_name == other.tennis_court_name &&
         start_date_time.to_s == other.start_date_time.to_s &&
-        end_date_time.to_s == other.end_date_time.to_s &&
+        end_date_time.to_s == other.end_date_time.to_s
+    end
+
+    def eql?(other)
+      eql_frame?(other) &&
         now == other.now
     end
 

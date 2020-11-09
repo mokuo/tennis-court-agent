@@ -35,9 +35,9 @@ RSpec.describe Yokohama::ReservationStatusJob, type: :job do
     end
 
     it "ジョブをキューに入れる" do
-      described_class.dispatch_jobs(identifier, [reservation_frame_1, reservation_frame_2])
-      expect(described_class).to have_been_enqueued.with(identifier, reservation_frame_1.to_hash).once
-      expect(described_class).to have_been_enqueued.with(identifier, reservation_frame_2.to_hash).once
+      described_class.dispatch_jobs(identifier, "公園１", [reservation_frame_1, reservation_frame_2])
+      expect(described_class).to have_been_enqueued.with(identifier, "公園１", reservation_frame_1.to_hash).once
+      expect(described_class).to have_been_enqueued.with(identifier, "公園１", reservation_frame_2.to_hash).once
     end
   end
 

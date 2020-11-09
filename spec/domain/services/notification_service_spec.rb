@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require Rails.root.join("domain/services/notification_service")
+require Rails.root.join("domain/models/availability_check_identifier")
 require Rails.root.join("domain/models/yokohama/reservation_frame")
 
 class ClientMock
@@ -13,6 +14,7 @@ end
 
 RSpec.describe NotificationService do
   describe "#send_availabilities" do
+    let!(:identifier) { AvailabilityCheckIdentifier.build }
     let!(:reservation_frame_1) do
       Yokohama::ReservationFrame.new(
         {
@@ -45,11 +47,43 @@ RSpec.describe NotificationService do
       MSG
     end
 
-    it "テニスコートの空いている予約枠を通知する" do
-      client_mock = ClientMock.new
-      notification_service = described_class.new(client_mock)
-      notification_service.send_availabilities("横浜市", reservation_frames)
-      expect(client_mock.sent_message).to eq expected_message
+    context "正常系" do
+      it "Notification を保存する" do
+        client_mock = ClientMock.new
+        notification_service = described_class.new(client_mock)
+        expect do
+          notification_service.send_availabilities(identifier, "横浜市", reservation_frames)
+        end.to change(Notification, :count).from(0).to(1)
+      end
+
+      it "テニスコートの空いている予約枠を通知する" do
+        client_mock = ClientMock.new
+        notification_service = described_class.new(client_mock)
+        notification_service.send_availabilities(identifier, "横浜市", reservation_frames)
+        expect(client_mock.sent_message).to eq expected_message
+      end
+    end
+
+    context "通知済みの時" do
+      before do
+        Notification.create!(availability_check_identifier: identifier)
+      end
+
+      it "ログを吐く" do
+        expect(Rails.logger).to receive(:info)
+          .with("#<ActiveRecord::RecordNotUnique: Mysql2::Error: Duplicate entry '#{identifier}' for key 'index_notifications_on_availability_check_identifier'>") # rubocop:disable Layout/LineLength
+
+        client_mock = ClientMock.new
+        notification_service = described_class.new(client_mock)
+        notification_service.send_availabilities(identifier, "横浜市", reservation_frames)
+      end
+
+      it "通知しない" do
+        client_mock = ClientMock.new
+        notification_service = described_class.new(client_mock)
+        notification_service.send_availabilities(identifier, "横浜市", reservation_frames)
+        expect(client_mock.sent_message).to be_nil
+      end
     end
   end
 end

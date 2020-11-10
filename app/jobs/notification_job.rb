@@ -7,7 +7,7 @@ class NotificationJob < ApplicationJob
 
   def perform(identifier)
     reservation_frames = query_service.reservation_frames(identifier)
-    notification_service.send_availabilities("横浜市", reservation_frames)
+    notification_service.send_availabilities(identifier, "横浜市", reservation_frames)
   end
 
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_09_001723) do
+ActiveRecord::Schema.define(version: 2020_11_09_103653) do
 
   create_table "availability_checks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "identifier", null: false
@@ -26,6 +26,13 @@ ActiveRecord::Schema.define(version: 2020_10_09_001723) do
     t.json "contents"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "availability_check_identifier", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["availability_check_identifier"], name: "index_notifications_on_availability_check_identifier", unique: true
   end
 
 end

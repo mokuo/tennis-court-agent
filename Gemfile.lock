@@ -137,7 +137,7 @@ GEM
     jaro_winkler (1.5.4)
     jbuilder (2.10.1)
       activesupport (>= 5.0.0)
-    listen (3.2.1)
+    listen (3.3.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     loofah (2.7.0)
@@ -381,7 +381,7 @@ DEPENDENCIES
   faker
   guard-rspec
   jbuilder (~> 2.10)
-  listen (~> 3.2)
+  listen (~> 3.3)
   mysql2 (>= 0.4.4)
   pry-byebug
   pry-rails

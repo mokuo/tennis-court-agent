@@ -71,7 +71,7 @@ RSpec.describe NotificationService do
 
       it "ログを吐く" do
         expect(Rails.logger).to receive(:info)
-          .with("#<ActiveRecord::RecordNotUnique: Mysql2::Error: Duplicate entry '#{identifier}' for key 'index_notifications_on_availability_check_identifier'>") # rubocop:disable Layout/LineLength
+          .with("#<ActiveRecord::RecordNotUnique: Mysql2::Error: Duplicate entry '#{identifier}' for key 'notifications.index_notifications_on_availability_check_identifier'>") # rubocop:disable Layout/LineLength
 
         client_mock = ClientMock.new
         notification_service = described_class.new(client_mock)

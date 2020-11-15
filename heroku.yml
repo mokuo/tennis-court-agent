@@ -1,0 +1,8 @@
+setup:
+  addons:
+    - plan: heroku-redisch
+build:
+  docker:
+    sidekiq: Dockerfile
+run:
+  sidekiq: bundle exec sidekiq -e production

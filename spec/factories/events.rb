@@ -5,9 +5,9 @@
 # Table name: events
 #
 #  id                            :bigint           not null, primary key
-#  availability_check_identifier :string(255)      not null
+#  availability_check_identifier :string           not null
 #  contents                      :json
-#  name                          :string(255)      not null
+#  name                          :string           not null
 #  published_at                  :datetime         not null
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null

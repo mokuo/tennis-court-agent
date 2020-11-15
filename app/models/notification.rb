@@ -5,7 +5,7 @@
 # Table name: notifications
 #
 #  id                            :bigint           not null, primary key
-#  availability_check_identifier :string(255)      not null
+#  availability_check_identifier :string           not null
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #

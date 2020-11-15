@@ -5,7 +5,7 @@
 # Table name: availability_checks
 #
 #  id         :bigint           not null, primary key
-#  identifier :string(255)      not null
+#  identifier :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

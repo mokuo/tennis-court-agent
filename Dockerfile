@@ -5,6 +5,9 @@ RUN apk add --no-cache \
     # For build nokogiri.
     #   ref: https://nokogiri.org/tutorials/installing_nokogiri.html#ruby-on-alpine-linux-docker
     build-base \
+    # Chrome
+    chromium \
+    chromium-chromedriver \
     # For pg gem.
     postgresql \
     postgresql-dev \

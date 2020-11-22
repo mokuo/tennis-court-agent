@@ -32,7 +32,7 @@ gem "bootsnap", ">= 1.4.2", require: false
 # Capybara
 gem "capybara"
 gem "selenium-webdriver"
-gem "webdrivers", "~> 4.0"
+# gem "webdrivers", "~> 4.0" # ローカル向け
 
 gem "active_hash"
 gem "sidekiq"

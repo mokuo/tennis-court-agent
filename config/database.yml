@@ -49,6 +49,9 @@ test:
 #
 production:
   <<: *default
-  database: tennis_court_agent_production
-  username: tennis_court_agent
-  password: <%= ENV['TENNIS_COURT_AGENT_DATABASE_PASSWORD'] %>
+  # database: tennis_court_agent_production
+  # username: tennis_court_agent
+  # password: <%= ENV['TENNIS_COURT_AGENT_DATABASE_PASSWORD'] %>
+
+  # Heroku 向け
+  url: <%= ENV['DATABASE_URL'] %>

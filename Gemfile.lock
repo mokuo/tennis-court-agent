@@ -112,6 +112,7 @@ GEM
     faraday_middleware (1.0.0)
       faraday (~> 1.0)
     ffi (1.13.1)
+    foreman (0.87.2)
     formatador (0.2.5)
     gli (2.19.2)
     globalid (0.4.2)
@@ -375,6 +376,7 @@ DEPENDENCIES
   capybara
   factory_bot_rails
   faker
+  foreman
   guard-rspec
   jbuilder (~> 2.10)
   listen (~> 3.2)

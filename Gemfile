@@ -35,6 +35,7 @@ gem "selenium-webdriver"
 # gem "webdrivers", "~> 4.0" # ローカル向け
 
 gem "active_hash"
+gem "foreman"
 gem "sidekiq"
 gem "sidekiq-limit_fetch"
 gem "slack-ruby-client"

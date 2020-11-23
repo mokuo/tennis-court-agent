@@ -1,19 +1,17 @@
 version: "3.8"
 services:
-  sidekiq: &sidekiq
+  app:
     build: .
     environment:
       DB_HOST: db
       REDIS_URL: redis://redis:6379
     volumes:
       - .:/usr/src/app:delegated
+      - /usr/src/app/tmp/cache # ref: https://uraway.hatenablog.com/entry/2019/11/14/130316
     depends_on:
       - redis
       - db
-    command: ["bundle", "exec", "sidekiq"]
-  web:
-    <<: *sidekiq
-    command: ["bin/rails", "s", "-b", "0.0.0.0"]
+    command: ["bundle", "exec", "foreman", "start", "-f", "Procfile.dev"]
     ports:
       - "3000:3000"
   redis:

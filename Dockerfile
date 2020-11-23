@@ -8,6 +8,8 @@ RUN apk add --no-cache \
     # Chrome
     chromium \
     chromium-chromedriver \
+    # ref: https://qiita.com/at-946/items/a7dbac4a46802d7b5376
+    less \
     # For pg gem.
     postgresql \
     postgresql-dev \

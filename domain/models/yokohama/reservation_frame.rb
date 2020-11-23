@@ -71,7 +71,8 @@ module Yokohama
     end
 
     def to_human
-      "#{park_name} #{tennis_court_name} #{date_time_to_human} #{now_to_human}"
+      # NOTE: 予約サイトのテニスコート名に公園名が含まれているため
+      "#{tennis_court_name_to_human} #{date_time_to_human} #{now_to_human}"
     end
 
     def to_hash
@@ -96,6 +97,11 @@ module Yokohama
     end
 
     private
+
+    def tennis_court_name_to_human
+      # NOTE: 改行が入っている
+      tennis_court_name.gsub(/\s/, " ")
+    end
 
     def date_time_to_human
       "#{date_to_human} #{time_to_human}"

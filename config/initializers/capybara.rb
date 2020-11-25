@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+# NOTE: ローカルで動かす場合も必要
+if ENV['CI'].present?
+  Capybara.default_driver = :selenium_chrome_headless
+  return
+end
+
 # NOTE: alpine のコンテナの中で `which chromedriver` してパスを特定した
 ::Selenium::WebDriver::Chrome::Service.driver_path = "/usr/bin/chromedriver"
 
@@ -17,6 +23,3 @@ Capybara.register_driver :my_selenium_chrome_headless do |app|
 end
 
 Capybara.default_driver = :my_selenium_chrome_headless
-
-# ローカル向け
-# Capybara.default_driver = :selenium_chrome_headless

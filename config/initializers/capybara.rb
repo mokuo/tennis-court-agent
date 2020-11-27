@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # NOTE: ローカルで動かす場合も必要
-if ENV['CI'].present?
+if ENV["CI"].present?
   Capybara.default_driver = :selenium_chrome_headless
   return
 end

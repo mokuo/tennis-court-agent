@@ -20,7 +20,3 @@ WORKDIR /usr/src/app
 COPY Gemfile Gemfile.lock ./
 
 RUN bundle config set path "vendor/bundle" && bundle install
-
-COPY . .
-
-CMD ["bundle", "exec", "sidekiq"]

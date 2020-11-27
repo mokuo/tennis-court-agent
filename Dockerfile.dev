@@ -1,0 +1,26 @@
+FROM ruby:2.7.2-alpine
+
+RUN apk add --no-cache \
+    # For build nokogiri.
+    #   ref: https://nokogiri.org/tutorials/installing_nokogiri.html#ruby-on-alpine-linux-docker
+    build-base \
+    # Chrome
+    chromium \
+    chromium-chromedriver \
+    # ref: https://qiita.com/at-946/items/a7dbac4a46802d7b5376
+    less \
+    # For pg gem.
+    postgresql \
+    postgresql-dev \
+    # For tzinfo gem.
+    tzdata
+
+WORKDIR /usr/src/app
+
+COPY Gemfile Gemfile.lock ./
+
+RUN bundle config set path "vendor/bundle" && bundle install
+
+COPY . .
+
+CMD ["bundle", "exec", "sidekiq"]

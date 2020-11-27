@@ -1,13 +1,16 @@
 version: "3.8"
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     environment:
       DB_HOST: db
       REDIS_URL: redis://redis:6379
     volumes:
       - .:/usr/src/app:delegated
       - /usr/src/app/tmp/cache # ref: https://uraway.hatenablog.com/entry/2019/11/14/130316
+      - bundle-data:/usr/src/app/vendor/bundle
     depends_on:
       - redis
       - db
@@ -21,3 +24,6 @@ services:
     environment:
       POSTGRES_USER: tennis_court_agent
       POSTGRES_PASSWORD: tennis_court_agent
+volumes:
+  bundle-data:
+    driver: local

@@ -18,6 +18,8 @@ class NotificationService
   attr_reader :client
 
   def build_message(organization_name, reservation_frames)
+    return "#{organization_name}のテニスコートの空き予約枠はありませんでした。" if reservation_frames.blank?
+
     msg = "#{organization_name}のテニスコートの空き状況です。\n\n"
 
     rfs = sort_reservation_frames(reservation_frames)

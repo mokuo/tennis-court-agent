@@ -22,6 +22,14 @@ class TestDomainEvent < DomainEvent
     super.merge(some_attribute: some_attribute)
   end
 
+  def self.from_hash(hash)
+    new(
+      availability_check_identifier: hash[:availability_check_identifier],
+      published_at: hash[:published_at],
+      some_attribute: hash[:some_attribute]
+    )
+  end
+
   private
 
   def subscribers
@@ -61,9 +69,9 @@ RSpec.describe Event, type: :model do
           some_attribute: "hoge",
           availability_check_identifier: identifier,
           published_at: time.iso8601(3)
-        }.stringify_keys,
-        published_at: time.floor
+        }.stringify_keys
       )
+      expect(event.published_at.floor).to eq time.floor
     end
   end
 

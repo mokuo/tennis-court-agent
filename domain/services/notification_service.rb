@@ -30,7 +30,6 @@ class NotificationService
 
   def sort_reservation_frames(reservation_frames)
     rfs = reservation_frames.sort_by(&:start_date_time)
-    rfs = rfs.sort_by(&:tennis_court_name)
-    rfs.sort_by(&:park_name)
+    rfs.sort_by(&:tennis_court_name)
   end
 end

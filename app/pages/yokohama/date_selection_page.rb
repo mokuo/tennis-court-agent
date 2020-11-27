@@ -14,14 +14,15 @@ module Yokohama
     end
 
     def click_next_month
-      click_button("翌月")
+      # NOTE: `click_button("翌月")` だと `Capybara::ElementNotFound` が頻発する
+      find("img[alt='翌月']").click
       self.class.new
     end
 
     def click_date(date)
       if (month + 1) == date.month
-        click_next_month
-        return click_date(date)
+        next_month_page = click_next_month
+        return next_month_page.click_date(date)
       end
 
       find("input[value='#{date.day}']").click

@@ -189,7 +189,7 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
       let(:reservation_frame) do
         described_class.new(
           { park_name: "公園１",
-            tennis_court_name: "テニスコート１",
+            tennis_court_name: "公園１\nテニスコート１",
             start_date_time: Time.zone.local(2020, 8, 22, 15),
             end_date_time: Time.zone.local(2020, 8, 22, 17),
             now: true }
@@ -203,7 +203,7 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
       let(:reservation_frame) do
         described_class.new(
           { park_name: "公園１",
-            tennis_court_name: "テニスコート１",
+            tennis_court_name: "公園１\nテニスコート１",
             start_date_time: Time.zone.local(2020, 8, 22, 15),
             end_date_time: Time.zone.local(2020, 8, 22, 17),
             now: false }

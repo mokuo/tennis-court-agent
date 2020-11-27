@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      DB_HOST: db
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - .:/usr/src/app:delegated
+      - /usr/src/app/tmp/cache # ref: https://uraway.hatenablog.com/entry/2019/11/14/130316
+      - bundle-data:/usr/src/app/vendor/bundle
+    depends_on:
+      - redis
+      - db
+    command: ["bundle", "exec", "foreman", "start", "-f", "Procfile.dev"]
+    ports:
+      - "3000:3000"
+  redis:
+    image: redis:alpine
+  db: # ref: https://docs.docker.com/compose/rails/
+    image: postgres:13.1-alpine
+    environment:
+      POSTGRES_USER: tennis_court_agent
+      POSTGRES_PASSWORD: tennis_court_agent
+volumes:
+  bundle-data:
+    driver: local

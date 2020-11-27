@@ -10,12 +10,12 @@
 #   https://dev.mysql.com/doc/refman/5.7/en/password-hashing.html
 #
 default: &default
-  adapter: mysql2
-  encoding: utf8mb4
+  adapter: postgresql
+  encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password:
-  host: localhost
+  username: tennis_court_agent
+  password: tennis_court_agent
+  host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
 
 development:
   <<: *default
@@ -49,6 +49,9 @@ test:
 #
 production:
   <<: *default
-  database: tennis_court_agent_production
-  username: tennis_court_agent
-  password: <%= ENV['TENNIS_COURT_AGENT_DATABASE_PASSWORD'] %>
+  # database: tennis_court_agent_production
+  # username: tennis_court_agent
+  # password: <%= ENV['TENNIS_COURT_AGENT_DATABASE_PASSWORD'] %>
+
+  # Heroku 向け
+  url: <%= ENV['DATABASE_URL'] %>

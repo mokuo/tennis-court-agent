@@ -12,14 +12,17 @@
 
 ActiveRecord::Schema.define(version: 2020_11_09_103653) do
 
-  create_table "availability_checks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "availability_checks", force: :cascade do |t|
     t.string "identifier", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["identifier"], name: "index_availability_checks_on_identifier", unique: true
   end
 
-  create_table "events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "events", force: :cascade do |t|
     t.string "availability_check_identifier", null: false
     t.string "name", null: false
     t.datetime "published_at", null: false
@@ -28,7 +31,7 @@ ActiveRecord::Schema.define(version: 2020_11_09_103653) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "notifications", force: :cascade do |t|
     t.string "availability_check_identifier", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

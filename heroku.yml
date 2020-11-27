@@ -1,0 +1,15 @@
+setup:
+  addons:
+    - plan: heroku-postgresql
+    - plan: heroku-redis
+  config:
+    RAILS_ENV: production
+build:
+  docker:
+    web: Dockerfile
+run:
+  web: bundle exec foreman start
+release:
+  image: web
+  command:
+    - bundle exec rails db:migrate

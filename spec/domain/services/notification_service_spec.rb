@@ -19,7 +19,7 @@ RSpec.describe NotificationService do
       Yokohama::ReservationFrame.new(
         {
           park_name: "公園名１",
-          tennis_court_name: "テニスコート２",
+          tennis_court_name: "公園名１ テニスコート２",
           start_date_time: Time.zone.local(2020, 8, 22, 13),
           end_date_time: Time.zone.local(2020, 8, 22, 15),
           now: false
@@ -30,7 +30,7 @@ RSpec.describe NotificationService do
       Yokohama::ReservationFrame.new(
         {
           park_name: "公園名１",
-          tennis_court_name: "テニスコート１",
+          tennis_court_name: "公園名１ テニスコート１",
           start_date_time: Time.zone.local(2020, 8, 22, 11),
           end_date_time: Time.zone.local(2020, 8, 22, 13),
           now: true
@@ -70,8 +70,12 @@ RSpec.describe NotificationService do
       end
 
       it "ログを吐く" do
-        expect(Rails.logger).to receive(:info)
-          .with("#<ActiveRecord::RecordNotUnique: Mysql2::Error: Duplicate entry '#{identifier}' for key 'notifications.index_notifications_on_availability_check_identifier'>") # rubocop:disable Layout/LineLength
+        error_message = <<~MSG
+          #<ActiveRecord::RecordNotUnique: PG::UniqueViolation: ERROR:  duplicate key value violates unique constraint "index_notifications_on_availability_check_identifier"
+          DETAIL:  Key (availability_check_identifier)=(#{identifier}) already exists.
+          >
+        MSG
+        expect(Rails.logger).to receive(:info).with(error_message.chomp)
 
         client_mock = ClientMock.new
         notification_service = described_class.new(client_mock)
@@ -93,7 +97,7 @@ RSpec.describe NotificationService do
         Yokohama::ReservationFrame.new(
           {
             park_name: "公園名１",
-            tennis_court_name: "テニスコート１",
+            tennis_court_name: "公園名１ テニスコート１",
             start_date_time: Time.zone.local(2020, 8, 22, 13),
             end_date_time: Time.zone.local(2020, 8, 22, 15),
             now: true
@@ -104,7 +108,7 @@ RSpec.describe NotificationService do
         Yokohama::ReservationFrame.new(
           {
             park_name: "公園名２",
-            tennis_court_name: "テニスコート１",
+            tennis_court_name: "公園名２ テニスコート１",
             start_date_time: Time.zone.local(2020, 8, 22, 11),
             end_date_time: Time.zone.local(2020, 8, 22, 13),
             now: true
@@ -115,7 +119,7 @@ RSpec.describe NotificationService do
         Yokohama::ReservationFrame.new(
           {
             park_name: "公園名１",
-            tennis_court_name: "テニスコート２",
+            tennis_court_name: "公園名１ テニスコート２",
             start_date_time: Time.zone.local(2020, 8, 22, 11),
             end_date_time: Time.zone.local(2020, 8, 22, 13),
             now: true
@@ -126,7 +130,7 @@ RSpec.describe NotificationService do
         Yokohama::ReservationFrame.new(
           {
             park_name: "公園名１",
-            tennis_court_name: "テニスコート１",
+            tennis_court_name: "公園名１ テニスコート１",
             start_date_time: Time.zone.local(2020, 8, 22, 11),
             end_date_time: Time.zone.local(2020, 8, 22, 13),
             now: true

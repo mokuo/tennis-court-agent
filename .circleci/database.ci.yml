@@ -3,6 +3,6 @@ test:
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: tennis_court_agent
-  password:
+  password: tennis_court_agent
   host: 127.0.0.1
   database: tennis_court_agent_ci

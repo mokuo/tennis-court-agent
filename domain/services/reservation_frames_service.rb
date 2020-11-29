@@ -13,32 +13,51 @@ class ReservationFramesService
     "８" => 8,
     "９" => 9
   }.freeze
-  REGEX = /(?<non_number>\D+)(?<number>\d*)/.freeze
+  TENNIS_COURT_NAME_REGEX = /(?<non_number>\D+)(?<number>\d*)/.freeze
+
+  def initialize
+    @org_tennis_court_names = {}
+  end
 
   def sort(reservation_frames)
-    rfs = reservation_frames.sort_by(&:start_date_time)
-    # rfs.sort_by(&:tennis_court_name)
-    rfs = rfs.map do |rf|
-      rf.tennis_court_name = rf.tennis_court_name.gsub(/[０１２３４５６７８９]/) { |c| NUM_HASH[c] }
-      rf
+    rfs = tennis_court_name2hankaku_num(reservation_frames)
+    rfs = _sort(rfs)
+    reverse_tennis_court_name(rfs)
+  end
+
+  private
+
+  def tennis_court_name2hankaku_num(reservation_frames)
+    reservation_frames.map do |reservation_frame|
+      org_tennis_court_name = reservation_frame.tennis_court_name
+      reservation_frame.tennis_court_name = reservation_frame.tennis_court_name.gsub(/[０１２３４５６７８９]/) { |c| NUM_HASH[c] }
+      @org_tennis_court_names[reservation_frame.hash] = org_tennis_court_name
+
+      reservation_frame
     end
+  end
 
-    rfs = rfs.sort do |a, b|
-      a_match_data = a.tennis_court_name.match(REGEX)
-      b_match_data = b.tennis_court_name.match(REGEX)
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def _sort(reservation_frames)
+    reservation_frames.sort do |a, b|
+      a_match_data = a.tennis_court_name.match(TENNIS_COURT_NAME_REGEX)
+      b_match_data = b.tennis_court_name.match(TENNIS_COURT_NAME_REGEX)
 
-      if a_match_data[:non_number] != b_match_data[:non_number]
-        a_match_data[:non_number] <=> b_match_data[:non_number]
-      elsif a_match_data[:number].nil? || b_match_data[:number].nil?
-        a_match_data[:non_number] <=> b_match_data[:non_number]
+      if a.tennis_court_name == b.tennis_court_name
+        a.start_date_time <=> b.start_date_time
+      elsif a_match_data[:non_number] == b_match_data[:non_number]
+        a_match_data[:number].to_i <=> b_match_data[:number].to_i
       else
-        a_match_data[:number] <=> b_match_data[:number]
+        a_match_data[:non_number] <=> b_match_data[:non_number]
       end
     end
+  end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-    rfs.map do |rf|
-      rf.tennis_court_name = rf.tennis_court_name.gsub(/\d/) { |c| NUM_HASH.invert[c] }
-      rf
+  def reverse_tennis_court_name(reservation_frames)
+    reservation_frames.map do |reservation_frame|
+      reservation_frame.tennis_court_name = @org_tennis_court_names[reservation_frame.hash]
+      reservation_frame
     end
   end
 end

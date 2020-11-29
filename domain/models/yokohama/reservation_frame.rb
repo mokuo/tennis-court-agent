@@ -67,7 +67,7 @@ module Yokohama
     end
 
     def hash
-      [park_name, tennis_court_name, start_date_time, end_date_time].hash
+      [park_name, tennis_court_name, start_date_time, end_date_time, now].hash
     end
 
     def to_human

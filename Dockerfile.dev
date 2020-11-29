@@ -19,4 +19,4 @@ WORKDIR /usr/src/app
 
 COPY Gemfile Gemfile.lock ./
 
-RUN bundle config set path "vendor/bundle" && bundle install
+RUN bundle install

@@ -1,11 +1,11 @@
 {
+  // "solargraph.externalServer": {
+  //   "host": "localhost",
+  //   "port": 7658
+  // },
+  // "solargraph.transport": "external",
   "solargraph.useBundler": true,
   "solargraph.diagnostics": true,
   "solargraph.formatting": true,
-  "editor.formatOnSave": true,
-  "solargraph.externalServer": {
-    "host": "localhost",
-    "port": 7658
-  },
-  "solargraph.transport": "external"
+  "editor.formatOnSave": true
 }

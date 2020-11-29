@@ -15,6 +15,7 @@ end
 RSpec.describe NotificationService do
   describe "#send_availabilities" do
     let!(:identifier) { AvailabilityCheckIdentifier.build }
+
     context "正常系" do
       let!(:reservation_frame_1) do
         Yokohama::ReservationFrame.new(
@@ -120,73 +121,6 @@ RSpec.describe NotificationService do
         notification_service.send_availabilities(identifier, "横浜市", reservation_frames)
         expect(client_mock.sent_message).to be_nil
       end
-    end
-  end
-
-  describe "private" do
-    describe "#sort_reservation_frames" do
-      let!(:reservation_frame_1) do
-        Yokohama::ReservationFrame.new(
-          {
-            park_name: "公園名１",
-            tennis_court_name: "公園名１ テニスコート１",
-            start_date_time: Time.zone.local(2020, 8, 22, 13),
-            end_date_time: Time.zone.local(2020, 8, 22, 15),
-            now: true
-          }
-        )
-      end
-      let!(:reservation_frame_2) do
-        Yokohama::ReservationFrame.new(
-          {
-            park_name: "公園名２",
-            tennis_court_name: "公園名２ テニスコート１",
-            start_date_time: Time.zone.local(2020, 8, 22, 11),
-            end_date_time: Time.zone.local(2020, 8, 22, 13),
-            now: true
-          }
-        )
-      end
-      let!(:reservation_frame_3) do
-        Yokohama::ReservationFrame.new(
-          {
-            park_name: "公園名１",
-            tennis_court_name: "公園名１ テニスコート２",
-            start_date_time: Time.zone.local(2020, 8, 22, 11),
-            end_date_time: Time.zone.local(2020, 8, 22, 13),
-            now: true
-          }
-        )
-      end
-      let!(:reservation_frame_4) do
-        Yokohama::ReservationFrame.new(
-          {
-            park_name: "公園名１",
-            tennis_court_name: "公園名１ テニスコート１",
-            start_date_time: Time.zone.local(2020, 8, 22, 11),
-            end_date_time: Time.zone.local(2020, 8, 22, 13),
-            now: true
-          }
-        )
-      end
-      let!(:reservation_frames) do
-        [
-          reservation_frame_1,
-          reservation_frame_2,
-          reservation_frame_3,
-          reservation_frame_4
-        ]
-      end
-
-      # rubocop:disable RSpec/MultipleExpectations
-      it "park_name, tennis_court_name, start_date_time の順に並び替える" do
-        result = described_class.new.send(:sort_reservation_frames, reservation_frames)
-        expect(result[0].eql?(reservation_frame_4)).to be true
-        expect(result[1].eql?(reservation_frame_1)).to be true
-        expect(result[2].eql?(reservation_frame_3)).to be true
-        expect(result[3].eql?(reservation_frame_2)).to be true
-      end
-      # rubocop:enable RSpec/MultipleExpectations
     end
   end
 end

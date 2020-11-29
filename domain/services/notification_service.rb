@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/services/reservation_frames_service")
+
 class NotificationService
   def initialize(client = SlackClient.new)
     @client = client
@@ -31,7 +33,6 @@ class NotificationService
   end
 
   def sort_reservation_frames(reservation_frames)
-    rfs = reservation_frames.sort_by(&:start_date_time)
-    rfs.sort_by(&:tennis_court_name)
+    ReservationFramesService.new.sort(reservation_frames)
   end
 end

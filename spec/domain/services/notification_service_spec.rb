@@ -20,8 +20,8 @@ RSpec.describe NotificationService do
       let!(:reservation_frame_1) do
         Yokohama::ReservationFrame.new(
           {
-            park_name: "公園名１",
-            tennis_court_name: "公園名１ テニスコート２",
+            park_name: "A公園",
+            tennis_court_name: "A公園 テニスコート２",
             start_date_time: Time.zone.local(2020, 8, 22, 13),
             end_date_time: Time.zone.local(2020, 8, 22, 15),
             now: false
@@ -31,8 +31,8 @@ RSpec.describe NotificationService do
       let!(:reservation_frame_2) do
         Yokohama::ReservationFrame.new(
           {
-            park_name: "公園名１",
-            tennis_court_name: "公園名１ テニスコート１",
+            park_name: "A公園",
+            tennis_court_name: "A公園 テニスコート１",
             start_date_time: Time.zone.local(2020, 8, 22, 11),
             end_date_time: Time.zone.local(2020, 8, 22, 13),
             now: true
@@ -44,8 +44,8 @@ RSpec.describe NotificationService do
         <<~MSG
           横浜市のテニスコートの空き状況です。
 
-          - 公園名１ テニスコート１ 2020/08/22（土） 11:00~13:00 今すぐ予約可能
-          - 公園名１ テニスコート２ 2020/08/22（土） 13:00~15:00 翌日７時に予約可能
+          - A公園 テニスコート１ 2020/08/22（土） 11:00~13:00 今すぐ予約可能
+          - A公園 テニスコート２ 2020/08/22（土） 13:00~15:00 翌日７時に予約可能
         MSG
       end
 

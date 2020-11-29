@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  app:
+  app: &app
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/usr/src/app:delegated
       - /usr/src/app/tmp/cache # ref: https://uraway.hatenablog.com/entry/2019/11/14/130316
-      - bundle-data:/usr/src/app/vendor/bundle
+      - bundle-data:/usr/local/bundle
     depends_on:
       - redis
       - db
@@ -24,6 +24,21 @@ services:
     environment:
       POSTGRES_USER: tennis_court_agent
       POSTGRES_PASSWORD: tennis_court_agent
+  spring:
+    <<: *app
+    command: ["bin/spring", "server"]
+    ports: []
+  # NOTE: External server だと formatting が効かない（Docker コンテナからローカルファイルを操作できない）
+  # solargraph:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.dev
+  #   command: ["bundle", "exec", "solargraph", "socket", "--host=0.0.0.0"]
+  #   volumes:
+  #     - .:/usr/src/app:delegated
+  #     - bundle-data:/usr/local/bundle
+  #   ports:
+  #     - "7658:7658"
 volumes:
   bundle-data:
     driver: local

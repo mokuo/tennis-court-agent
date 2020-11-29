@@ -1,16 +1,11 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/services/yokohama/scraping_service")
+
 RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
   let!(:park_name) { "三ツ沢公園" }
   let!(:available_dates) do
-    Yokohama::TopPage.open
-                     .login
-                     .click_check_availability
-                     .click_sports
-                     .click_tennis_court
-                     .click_park(park_name)
-                     .click_tennis_court
-                     .available_dates
+    Yokohama::ScrapingService.new.available_dates(park_name)
   end
 
   describe "#reservation_frames" do

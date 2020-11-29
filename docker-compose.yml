@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  app:
+  app: &app
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -24,6 +24,10 @@ services:
     environment:
       POSTGRES_USER: tennis_court_agent
       POSTGRES_PASSWORD: tennis_court_agent
+  spring:
+    <<: *app
+    command: ["bin/spring", "server"]
+    ports: []
   # NOTE: External server だと formatting が効かない（Docker コンテナからローカルファイルを操作できない）
   # solargraph:
   #   build:

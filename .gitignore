@@ -30,3 +30,6 @@
 
 # Additional ignore files.
 /vendor/bundle
+
+# Terraform
+/infra/.terraform

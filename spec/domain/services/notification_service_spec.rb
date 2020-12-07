@@ -123,4 +123,13 @@ RSpec.describe NotificationService do
       end
     end
   end
+
+  describe "#send_message" do
+    it "メッセージを送信する" do
+      client_mock = ClientMock.new
+      notification_service = described_class.new(client_mock)
+      notification_service.send_message("テストメッセージ")
+      expect(client_mock.sent_message).to eq "テストメッセージ"
+    end
+  end
 end

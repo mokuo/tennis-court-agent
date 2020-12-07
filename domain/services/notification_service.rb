@@ -15,6 +15,10 @@ class NotificationService
     Rails.logger.info(e.inspect)
   end
 
+  def send_message(message)
+    client.send(message)
+  end
+
   private
 
   attr_reader :client

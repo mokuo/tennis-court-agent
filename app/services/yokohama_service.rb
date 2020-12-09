@@ -77,6 +77,10 @@ class YokohamaService
     domain_events = events.map(&:to_domain_event)
     return unless domain_events.all? { |e| e.children_finished?(domain_events) }
 
+    # 悲観的ロック
+    availability_check = AvailabilityCheck.lock.find_by!(identifier: identifier)
+    return if availability_check.finished?
+
     event = Yokohama::AvailabilityCheckFinished.new(
       availability_check_identifier: identifier
     )

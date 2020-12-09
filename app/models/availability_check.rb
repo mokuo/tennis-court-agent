@@ -6,7 +6,7 @@
 #
 #  id         :bigint           not null, primary key
 #  identifier :string           not null
-#  state      :integer          default(0)
+#  state      :integer          default("started")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

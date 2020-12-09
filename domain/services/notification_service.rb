@@ -7,12 +7,9 @@ class NotificationService
     @client = client
   end
 
-  def send_availabilities(identifier, organization_name, reservation_frames)
-    Notification.create!(availability_check_identifier: identifier)
+  def send_availabilities(organization_name, reservation_frames)
     message = build_message(organization_name, reservation_frames)
     client.send(message)
-  rescue ActiveRecord::RecordNotUnique => e
-    Rails.logger.info(e.inspect)
   end
 
   def send_message(message)

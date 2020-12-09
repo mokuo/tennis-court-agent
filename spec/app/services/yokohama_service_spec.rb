@@ -303,6 +303,7 @@ RSpec.describe YokohamaService, type: :job do
           inspect_events
 
           expect(NotificationJob).to have_been_enqueued.with(identifier)
+          expect(CreateReservationFramesJob).to have_been_enqueued.with(identifier)
         end
       end
     end

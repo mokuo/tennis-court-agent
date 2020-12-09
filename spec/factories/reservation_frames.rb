@@ -10,18 +10,18 @@
 #  now                           :boolean          not null
 #  park_name                     :string           not null
 #  start_at                      :datetime         not null
-#  state                         :integer          default(0), not null
+#  state                         :integer          default("can_reserve"), not null
 #  tennis_court_name             :string           not null
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #
 FactoryBot.define do
   factory :reservation_frame do
-    park_name { "MyString" }
-    tennis_court_name { "MyString" }
-    start_at { "2020-12-08 12:33:36" }
-    end_at { "2020-12-08 12:33:36" }
-    now { false }
-    state { 1 }
+    park_name { |n| "park#{n}" }
+    tennis_court_name { |n| "tennis_court#{n}" }
+    start_at { Time.current }
+    end_at { Time.current }
+    now { [true, false].sample }
+    state { ReservationFrame.states.keys.sample }
   end
 end

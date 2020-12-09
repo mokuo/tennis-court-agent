@@ -17,5 +17,6 @@
 FactoryBot.define do
   factory :availability_check do
     identifier { AvailabilityCheckIdentifier.build }
+    state { AvailabilityCheck.states.keys.sample }
   end
 end

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ReservationFrame, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "has a valid factory" do
+    reservation_frame = build(:reservation_frame)
+    expect(reservation_frame).to be_valid
+  end
 end

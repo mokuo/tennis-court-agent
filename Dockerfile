@@ -10,17 +10,24 @@ RUN apk add --no-cache \
     chromium-chromedriver \
     # ref: https://qiita.com/at-946/items/a7dbac4a46802d7b5376
     less \
+    # For wabpacker
+    nodejs \
     # For pg gem.
     postgresql \
     postgresql-dev \
     # For tzinfo gem.
-    tzdata
+    tzdata \
+    yarn
 
 WORKDIR /usr/src/app
 
 COPY Gemfile Gemfile.lock ./
 
 RUN bundle install
+
+COPY package.json yarn.lock ./
+
+RUN yarn install
 
 COPY . .
 

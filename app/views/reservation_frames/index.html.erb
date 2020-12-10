@@ -1,2 +1,11 @@
-<h1>ReservationFrames#index</h1>
-<p>Find me in app/views/reservation_frames/index.html.erb</p>
+<div class="container">
+  <table class="table table-striped">
+    <tbody>
+      <% @reservation_frames.each do |rf| %>
+      <tr>
+        <td>rf.to_human</td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

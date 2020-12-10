@@ -15,6 +15,8 @@
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #
+Rails.root.join("domain/models/yokohama/reservation_frame")
+
 class ReservationFrame < ApplicationRecord
   enum state: { can_reserve: 0, will_reserve: 1, reserving: 2, reserved: 3 }
 
@@ -25,6 +27,16 @@ class ReservationFrame < ApplicationRecord
       park_name: reservation_frame.park_name,
       start_at: reservation_frame.start_date_time,
       tennis_court_name: reservation_frame.tennis_court_name
+    )
+  end
+
+  def to_domain_model
+    Yokohama::ReservationFrame.new(
+      park_name: park_name,
+      tennis_court_name: tennis_court_name,
+      start_date_time: start_at,
+      end_date_time: end_at,
+      now: now
     )
   end
 end

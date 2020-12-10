@@ -3,8 +3,9 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  get 'reservation_frames/index'
   mount Sidekiq::Web => "/sidekiq"
+
+  resources :reservation_frames, only: [:index]
 
   namespace :api, format: :json do
     resources :wakeup, only: [:create]

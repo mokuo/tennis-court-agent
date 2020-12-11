@@ -15,10 +15,13 @@
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #
+require Rails.root.join("domain/models/availability_check_identifier")
+
 FactoryBot.define do
   factory :reservation_frame do
-    park_name { |n| "park#{n}" }
-    tennis_court_name { |n| "tennis_court#{n}" }
+    availability_check_identifier { AvailabilityCheckIdentifier.build }
+    sequence(:park_name) { |n| "park#{n}" }
+    sequence(:tennis_court_name) { |n| "tennis_court#{n}" }
     start_at { Time.current }
     end_at { Time.current }
     now { [true, false].sample }

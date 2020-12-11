@@ -13,6 +13,8 @@ module Yokohama
     attribute :start_date_time, :time
     attribute :end_date_time, :time
     attribute :now, :boolean
+    attribute :state, :string
+    attribute :id, :integer
 
     validates :park_name, presence: true
     validates :tennis_court_name, presence: true
@@ -75,6 +77,15 @@ module Yokohama
       "#{tennis_court_name_to_human} #{date_time_to_human} #{now_to_human}"
     end
 
+    def tennis_court_name_to_human
+      # NOTE: 改行が入っている
+      tennis_court_name.gsub(/\s/, " ")
+    end
+
+    def date_time_to_human
+      "#{date_to_human} #{time_to_human}"
+    end
+
     def to_hash
       {
         park_name: park_name,
@@ -97,15 +108,6 @@ module Yokohama
     end
 
     private
-
-    def tennis_court_name_to_human
-      # NOTE: 改行が入っている
-      tennis_court_name.gsub(/\s/, " ")
-    end
-
-    def date_time_to_human
-      "#{date_to_human} #{time_to_human}"
-    end
 
     def date_to_human
       date.strftime("%Y/%m/%d（#{ja_wday[date.wday]}）")

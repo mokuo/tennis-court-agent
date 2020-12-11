@@ -1,11 +1,26 @@
-<div class="container">
-  <table class="table table-striped">
-    <tbody>
-      <% @reservation_frames.each do |rf| %>
-      <tr>
-        <td>rf.to_human</td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+<table class="table table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">自治体</th>
+      <th scope="col">公園</th>
+      <th scope="col">テニスコート</th>
+      <th scope="col">日時</th>
+      <th scope="col">#</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reservation_frames.each do |rf| %>
+    <tr>
+      <td><%= rf.organization_name_ja %></td>
+      <td><%= rf.park_name %></td>
+      <td><%= rf.tennis_court_name_to_human %></td>
+      <td><%= rf.date_time_to_human %></td>
+      <% #HACK: まだ横浜市だけなので、時間をハードコードしている %>
+      <td><button type="button" class="btn btn-raised btn-sm btn-danger"><%= rf.now ? "今すぐ予約する" : "翌朝7時に予約する" %></button></td>
+      <td>
+        <%= button_to("予約する", reservate_reservation_frame_url(rf.id), method: :post) %>>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

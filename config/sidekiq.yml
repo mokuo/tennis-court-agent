@@ -4,8 +4,10 @@
   - yokohama
   - notification
   - default
+  - reservation
 :limits:
   persist_event: 1
   yokohama: 1
   notification: 1
   default: 1
+  reservation: 1

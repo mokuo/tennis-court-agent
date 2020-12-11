@@ -18,7 +18,7 @@ require Rails.root.join("domain/models/availability_check_identifier")
 FactoryBot.define do
   factory :event do
     availability_check_identifier { AvailabilityCheckIdentifier.build }
-    contents { |n| { some_attribute: "hoge#{n}" } }
+    sequence(:contents) { |n| { some_attribute: "hoge#{n}" } }
     sequence(:name) { |n| "event#{n}" }
     published_at { Time.current }
   end

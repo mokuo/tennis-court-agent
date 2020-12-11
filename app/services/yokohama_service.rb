@@ -87,10 +87,10 @@ class YokohamaService
     event.publish!
   end
 
-  def reserve(park_name, reservation_frame)
+  def reserve(reservation_frame)
     @notification_service.send_message("`#{reservation_frame.to_human}`の予約を開始します")
 
-    if @scraping_service.reserve(park_name, reservation_frame)
+    if @scraping_service.reserve(reservation_frame)
       @notification_service.send_message("`#{reservation_frame.to_human}`の予約に成功しました！")
     else
       @notification_service.send_message("`#{reservation_frame.to_human}`の予約に失敗しました。")

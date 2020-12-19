@@ -17,10 +17,17 @@ RSpec.describe CreateReservationFramesJob, type: :job do
       )
     end
     let!(:job) { described_class.new }
+    let!(:yesterday_reservation_frame) { create(:reservation_frame) }
 
     before do
       allow(job).to receive(:query_service).and_return(query_service_mock)
       allow(query_service_mock).to receive(:reservation_frames).with(identifier).and_return([reservation_frame])
+    end
+
+    it "前回収集した予約枠が削除されていること" do
+      job.perform(identifier)
+
+      expect(ReservationFrame.find_by(id: yesterday_reservation_frame.id)).to be nil
     end
 
     # rubocop:disable RSpec/MultipleExpectations

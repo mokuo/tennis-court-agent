@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.7.8 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "tennis-court-agent" #Must be unique in Heroku
+          heroku_email: "tennis10988.yk@gmail.com"
+          usedocker: true
+          docker_build_args: |
+            RAILS_ENV
+            RAILS_MASTER_KEY
+        env:
+          RAILS_ENV: production
+          RAILS_SERVE_STATIC_FILES: true
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}

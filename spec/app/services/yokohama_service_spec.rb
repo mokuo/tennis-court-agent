@@ -283,8 +283,12 @@ RSpec.describe YokohamaService, type: :job do
       end
 
       context "まだ完了確認済みではない時" do
-        before do
-          AvailabilityCheck.create!(identifier: identifier)
+        let!(:availability_check) { AvailabilityCheck.create!(identifier: identifier, state: :started) }
+
+        it "状態を完了済みにする" do
+          inspect_events
+
+          expect(availability_check.reload.state).to eq "finished"
         end
 
         it "ドメインイベントを発行し、永続化する" do
@@ -310,6 +314,7 @@ RSpec.describe YokohamaService, type: :job do
 
     context "全イベントが完了していない時" do
       let!(:identifier) { AvailabilityCheckIdentifier.build }
+      let!(:availability_check) { AvailabilityCheck.create!(identifier: identifier, state: :started) }
 
       before do
         availability_check_started = Yokohama::AvailabilityCheckStarted.new(
@@ -366,6 +371,12 @@ RSpec.describe YokohamaService, type: :job do
         Event.persist!(available_dates_filtered.to_hash)
         Event.persist!(reservation_frames_found.to_hash)
         Event.persist!(reservation_status_checked.to_hash)
+      end
+
+      it "状態を更新しない" do
+        inspect_events
+
+        expect(availability_check.reload.state).to eq "started"
       end
 
       it "ドメインイベントを発行しない" do

@@ -85,6 +85,7 @@ class YokohamaService
       availability_check_identifier: identifier
     )
     event.publish!
+    availability_check.update!(state: :finished)
   end
 
   def reserve(reservation_frame)

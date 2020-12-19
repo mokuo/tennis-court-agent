@@ -58,6 +58,7 @@ RSpec.describe Event, type: :model do
 
     before { travel_to(time) }
 
+    # rubocop:disable RSpec/ExampleLength
     it "DomainEvent を永続化する" do
       described_class.persist!(domain_event.to_hash)
       event = described_class.last
@@ -73,6 +74,7 @@ RSpec.describe Event, type: :model do
       )
       expect(event.published_at.floor).to eq time.floor
     end
+    # rubocop:enable RSpec/ExampleLength
   end
 
   describe "#to_domain_event" do

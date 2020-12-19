@@ -4,6 +4,7 @@ setup:
     - plan: heroku-redis
   config:
     RAILS_ENV: production
+    RAILS_SERVE_STATIC_FILES: true
 build:
   docker:
     web: Dockerfile

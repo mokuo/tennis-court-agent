@@ -18,7 +18,6 @@ jobs:
           usedocker: true
           dontuseforce: true
           docker_build_args: |
-            RAILS_ENV
             RAILS_MASTER_KEY
         env:
           RAILS_ENV: production

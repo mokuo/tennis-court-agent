@@ -272,27 +272,49 @@ RSpec.describe YokohamaService, type: :job do
         Event.persist!(reservation_status_checked.to_hash)
       end
 
-      it "ドメインイベントを発行し、永続化する" do
-        now = Time.current
-        travel_to(now)
-        inspect_events
+      context "既に完了確認済みのとき" do
+        before do
+          AvailabilityCheck.create!(identifier: identifier, state: :finished)
+        end
 
-        expect(PersistEventJob).to have_been_enqueued.with(
-          name: "Yokohama::AvailabilityCheckFinished",
-          availability_check_identifier: identifier,
-          published_at: now
-        )
+        it "ドメインイベントを発行せず return する" do
+          expect(PersistEventJob).not_to have_been_enqueued
+        end
       end
 
-      it "次のジョブがキューに入る" do
-        inspect_events
+      context "まだ完了確認済みではない時" do
+        let!(:availability_check) { AvailabilityCheck.create!(identifier: identifier, state: :started) }
 
-        expect(NotificationJob).to have_been_enqueued.with(identifier)
+        it "状態を完了済みにする" do
+          inspect_events
+
+          expect(availability_check.reload.state).to eq "finished"
+        end
+
+        it "ドメインイベントを発行し、永続化する" do
+          now = Time.current
+          travel_to(now)
+          inspect_events
+
+          expect(PersistEventJob).to have_been_enqueued.with(
+            name: "Yokohama::AvailabilityCheckFinished",
+            availability_check_identifier: identifier,
+            published_at: now
+          )
+        end
+
+        it "次のジョブがキューに入る" do
+          inspect_events
+
+          expect(NotificationJob).to have_been_enqueued.with(identifier)
+          expect(CreateReservationFramesJob).to have_been_enqueued.with(identifier)
+        end
       end
     end
 
     context "全イベントが完了していない時" do
       let!(:identifier) { AvailabilityCheckIdentifier.build }
+      let!(:availability_check) { AvailabilityCheck.create!(identifier: identifier, state: :started) }
 
       before do
         availability_check_started = Yokohama::AvailabilityCheckStarted.new(
@@ -351,11 +373,66 @@ RSpec.describe YokohamaService, type: :job do
         Event.persist!(reservation_status_checked.to_hash)
       end
 
+      it "状態を更新しない" do
+        inspect_events
+
+        expect(availability_check.reload.state).to eq "started"
+      end
+
       it "ドメインイベントを発行しない" do
         inspect_events
 
         expect(PersistEventJob).not_to have_been_enqueued
       end
+    end
+  end
+
+  describe "#reserve" do
+    let!(:mock_scraping_service) { instance_double("Yokohama::ScrapingService") }
+    let!(:mock_notification_service) { instance_double("NotificationService") }
+    let(:reservation_frame) do
+      Yokohama::ReservationFrame.new(
+        park_name: "A公園",
+        tennis_court_name: "A公園 テニスコート１",
+        start_date_time: Time.current,
+        end_date_time: Time.current.next_day
+      )
+    end
+
+    context "予約に成功する時" do
+      # rubocop:disable RSpec/MultipleExpectations
+      it "予約処理を行い、成功メッセージを通知する" do
+        allow(mock_scraping_service).to receive(:reserve).and_return(true)
+
+        expect(mock_scraping_service).to receive(:reserve).with(reservation_frame).once
+        expect(mock_notification_service).to receive(:send_message).with("`#{reservation_frame.to_human}`の予約を開始します")
+        expect(mock_notification_service).to receive(:send_message).with("`#{reservation_frame.to_human}`の予約に成功しました！")
+
+        service = described_class.new(mock_scraping_service, mock_notification_service)
+        result = service.reserve(reservation_frame)
+
+        # 成功・失敗を返す
+        expect(result).to be true
+      end
+      # rubocop:enable RSpec/MultipleExpectations
+    end
+
+    context "予約に失敗する時" do
+      # rubocop:disable RSpec/MultipleExpectations
+      it "予約処理を行い、失敗メッセージを通知する" do
+        allow(mock_scraping_service).to receive(:reserve).and_return(false)
+
+        expect(mock_scraping_service).to receive(:reserve).with(reservation_frame).once
+        expect(mock_notification_service).to receive(:send_message).with("`#{reservation_frame.to_human}`の予約を開始します")
+        expect(mock_notification_service).to receive(:send_message).with("`#{reservation_frame.to_human}`の予約に失敗しました。")
+
+        service = described_class.new(mock_scraping_service, mock_notification_service)
+        result = service.reserve(reservation_frame)
+
+        # 成功・失敗を返す
+        expect(result).to be false
+      end
+      # rubocop:enable RSpec/MultipleExpectations
     end
   end
 end

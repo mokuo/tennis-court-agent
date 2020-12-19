@@ -4,10 +4,9 @@ require Rails.root.join("domain/models/availability_check_identifier")
 require Rails.root.join("domain/models/yokohama/reservation_frame")
 
 class NotificationServiceMock
-  attr_reader :identifier, :organization_name, :reservation_frames
+  attr_reader :organization_name, :reservation_frames
 
-  def send_availabilities(identifier, organization_name, reservation_frames)
-    @identifier = identifier
+  def send_availabilities(organization_name, reservation_frames)
     @organization_name = organization_name
     @reservation_frames = reservation_frames
   end
@@ -40,7 +39,7 @@ RSpec.describe NotificationJob, type: :job do
 
       job.perform(identifier)
 
-      expect(notification_service_mock).to have_attributes(identifier: identifier, organization_name: "横浜市")
+      expect(notification_service_mock).to have_attributes(organization_name: "横浜市")
       expect(notification_service_mock.reservation_frames.first.eql?(reservation_frame)).to be true
     end
     # rubocop:enable RSpec/MultipleExpectations

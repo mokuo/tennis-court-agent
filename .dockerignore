@@ -23,3 +23,13 @@
 
 # Additional ignore files.
 /vendor/bundle
+
+# Terraform
+/infra/.terraform
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity

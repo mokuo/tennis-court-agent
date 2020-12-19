@@ -20,7 +20,8 @@ module Yokohama
     end
 
     def click_date(date)
-      if (month + 1) == date.month
+      # NOTE: `(month + 1) == date.month` だと12月でバグになる
+      if month == date.prev_month.month
         next_month_page = click_next_month
         return next_month_page.click_date(date)
       end

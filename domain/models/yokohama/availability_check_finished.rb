@@ -19,7 +19,8 @@ module Yokohama
 
     def subscribers
       [
-        ->(e) { NotificationJob.perform_later(e.availability_check_identifier) }
+        ->(e) { NotificationJob.perform_later(e.availability_check_identifier) },
+        ->(e) { CreateReservationFramesJob.perform_later(e.availability_check_identifier) }
       ]
     end
   end

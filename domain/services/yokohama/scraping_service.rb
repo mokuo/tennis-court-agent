@@ -31,6 +31,16 @@ module Yokohama
       !result_page.error_page?
     end
 
+    def reserve(reservation_frame)
+      date_selection_page_with_login(rservation_frame.park_name)
+        .click_date(reservation_frame.date)
+        .click_reservation_frame(reservation_frame)
+        .click_next
+        .click_next
+        .reserve
+        .success?
+    end
+
     private
 
     def date_selection_page(park_name)

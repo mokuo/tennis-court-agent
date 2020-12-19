@@ -4,7 +4,7 @@ version: 2.1 # Use 2.1 to enable using orbs and other features.
 # read more about orbs: https://circleci.com/docs/2.0/using-orbs/
 orbs:
   ruby: circleci/ruby@1.1.0
-  # node: circleci/node@2
+  node: circleci/node@2
 
 jobs:
   build: # our first job, named "build"
@@ -16,9 +16,9 @@ jobs:
       # use the node orb to install our packages
       # specifying that we use `yarn` and to cache dependencies with `yarn.lock`
       # learn more: https://circleci.com/docs/2.0/caching/
-      # - node/install-packages:
-      #     pkg-manager: yarn
-      #     cache-key: "yarn.lock"
+      - node/install-packages:
+          pkg-manager: yarn
+          cache-key: "yarn.lock"
 
   test: # our next job, called "test"
     # we run "parallel job containers" to enable speeding up our tests;
@@ -42,9 +42,9 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
-      # - node/install-packages:
-      #     pkg-manager: yarn
-      #     cache-key: "yarn.lock"
+      - node/install-packages:
+          pkg-manager: yarn
+          cache-key: "yarn.lock"
       # Here we make sure that the secondary container boots
       # up before we run operations on the database.
       - run:

@@ -13,6 +13,8 @@ module Yokohama
     attribute :start_date_time, :time
     attribute :end_date_time, :time
     attribute :now, :boolean
+    attribute :state, :string
+    attribute :id, :integer
 
     validates :park_name, presence: true
     validates :tennis_court_name, presence: true
@@ -75,29 +77,6 @@ module Yokohama
       "#{tennis_court_name_to_human} #{date_time_to_human} #{now_to_human}"
     end
 
-    def to_hash
-      {
-        park_name: park_name,
-        tennis_court_name: tennis_court_name,
-        start_date_time: start_date_time.to_s,
-        end_date_time: end_date_time.to_s,
-        now: now
-      }
-    end
-
-    def self.from_hash(hash)
-      hash = hash.symbolize_keys
-      new(
-        park_name: hash[:park_name],
-        tennis_court_name: hash[:tennis_court_name],
-        start_date_time: Time.zone.parse(hash[:start_date_time]),
-        end_date_time: Time.zone.parse(hash[:end_date_time]),
-        now: hash[:now]
-      )
-    end
-
-    private
-
     def tennis_court_name_to_human
       # NOTE: 改行が入っている
       tennis_court_name.gsub(/\s/, " ")
@@ -106,6 +85,38 @@ module Yokohama
     def date_time_to_human
       "#{date_to_human} #{time_to_human}"
     end
+
+    def to_hash
+      {
+        park_name: park_name,
+        tennis_court_name: tennis_court_name,
+        start_date_time: start_date_time.to_s,
+        end_date_time: end_date_time.to_s,
+        now: now,
+        state: state,
+        id: id
+      }
+    end
+
+    def self.from_hash(hash)
+      hash = hash.symbolize_keys
+
+      new(
+        park_name: hash[:park_name],
+        tennis_court_name: hash[:tennis_court_name],
+        start_date_time: Time.zone.parse(hash[:start_date_time]),
+        end_date_time: Time.zone.parse(hash[:end_date_time]),
+        now: hash[:now],
+        state: hash[:state],
+        id: hash[:id]
+      )
+    end
+
+    def opening_hour
+      7
+    end
+
+    private
 
     def date_to_human
       date.strftime("%Y/%m/%d（#{ja_wday[date.wday]}）")
@@ -116,7 +127,7 @@ module Yokohama
     end
 
     def now_to_human
-      now ? "今すぐ予約可能" : "翌日７時に予約可能"
+      now ? "今すぐ予約可能" : "翌日#{opening_hour}時に予約可能"
     end
 
     def ja_wday

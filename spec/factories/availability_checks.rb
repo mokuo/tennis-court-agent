@@ -6,6 +6,7 @@
 #
 #  id         :bigint           not null, primary key
 #  identifier :string           not null
+#  state      :integer          default("started")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -16,5 +17,6 @@
 FactoryBot.define do
   factory :availability_check do
     identifier { AvailabilityCheckIdentifier.build }
+    state { AvailabilityCheck.states.keys.sample }
   end
 end

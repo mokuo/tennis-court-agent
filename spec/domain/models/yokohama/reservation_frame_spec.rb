@@ -210,7 +210,7 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
         )
       end
 
-      it { is_expected.to eq "公園１ テニスコート１ 2020/08/22（土） 15:00~17:00 翌日７時に予約可能" }
+      it { is_expected.to eq "公園１ テニスコート１ 2020/08/22（土） 15:00~17:00 翌日7時に予約可能" }
     end
   end
 

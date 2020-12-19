@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>TennisCourtAgent</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%= javascript_pack_tag 'application' %>
-  </head>
+<head>
+  <title>Tennis Court Agent</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-  <body>
+  <%= stylesheet_pack_tag 'application', media: 'all' %>
+  <%= javascript_pack_tag 'application' %>
+</head>
+
+<body>
+  <ul class="nav nav-tabs nav-tca">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Tennis Court Agent</a>
+    </li>
+  </ul>
+  <div class="container">
+    <% flash.each do |name, msg| -%>
+    <%= content_tag :div, msg, class: "alert alert-#{name}" %>
+    <% end -%>
     <%= yield %>
-  </body>
+  </div>
+</body>
+
 </html>

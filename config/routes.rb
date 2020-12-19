@@ -4,7 +4,7 @@
 #
 #                                Prefix Verb   URI Pattern                                                                              Controller#Action
 #                           sidekiq_web        /sidekiq                                                                                 Sidekiq::Web
-#           reservate_reservation_frame POST   /reservation_frames/:id/reservate(.:format)                                              reservation_frames#reservate
+#             reserve_reservation_frame POST   /reservation_frames/:id/reserve(.:format)                                                reservation_frames#reserve
 #                    reservation_frames GET    /reservation_frames(.:format)                                                            reservation_frames#index
 #                      api_wakeup_index POST   /api/wakeup(.:format)                                                                    api/wakeup#create
 #         rails_postmark_inbound_emails POST   /rails/action_mailbox/postmark/inbound_emails(.:format)                                  action_mailbox/ingresses/postmark/inbound_emails#create
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => "/sidekiq"
 
   resources :reservation_frames, only: [:index] do
-    post :reservate, on: :member
+    post :reserve, on: :member
   end
 
   namespace :api, format: :json do

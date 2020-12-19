@@ -18,7 +18,7 @@
 require Rails.root.join("domain/models/yokohama/reservation_frame")
 
 class ReservationFrame < ApplicationRecord
-  enum state: { can_reserve: 0, will_reserve: 1, reserving: 2, reserved: 3 }
+  enum state: { can_reserve: 0, will_reserve: 1, reserving: 2, reserved: 3, failed: 9 }
 
   def self.from_domain_model(reservation_frame)
     new(

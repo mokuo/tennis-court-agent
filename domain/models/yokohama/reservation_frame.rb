@@ -92,18 +92,23 @@ module Yokohama
         tennis_court_name: tennis_court_name,
         start_date_time: start_date_time.to_s,
         end_date_time: end_date_time.to_s,
-        now: now
+        now: now,
+        state: state,
+        id: id
       }
     end
 
     def self.from_hash(hash)
       hash = hash.symbolize_keys
+
       new(
         park_name: hash[:park_name],
         tennis_court_name: hash[:tennis_court_name],
         start_date_time: Time.zone.parse(hash[:start_date_time]),
         end_date_time: Time.zone.parse(hash[:end_date_time]),
-        now: hash[:now]
+        now: hash[:now],
+        state: hash[:state],
+        id: hash[:id]
       )
     end
 

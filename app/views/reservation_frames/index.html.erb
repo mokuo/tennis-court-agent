@@ -5,7 +5,7 @@
       <th scope="col">公園</th>
       <th scope="col">テニスコート</th>
       <th scope="col">日時</th>
-      <th scope="col">#</th>
+      <th scope="col">予約</th>
     </tr>
   </thead>
   <tbody>
@@ -15,10 +15,21 @@
       <td><%= rf.park_name %></td>
       <td><%= rf.tennis_court_name_to_human %></td>
       <td><%= rf.date_time_to_human %></td>
-      <% #HACK: まだ横浜市だけなので、時間をハードコードしている %>
-      <td><button type="button" class="btn btn-raised btn-sm btn-danger"><%= rf.now ? "今すぐ予約する" : "翌朝7時に予約する" %></button></td>
       <td>
-        <%= button_to("予約する", reservate_reservation_frame_url(rf.id), method: :post) %>>
+        <% case rf.state %>
+        <% when "can_reserve" %>
+        <% #HACK: まだ横浜市だけなので、時間をハードコードしている %>
+        <%= button_to(rf.now ? "今すぐ予約する" : "翌朝7時に予約する", reserve_reservation_frame_url(rf.id), method: :post, class: "btn btn-raised btn-sm btn-danger") %>
+        <% when "will_reserve" %>
+        <% #HACK: まだ横浜市だけなので、時間をハードコードしている %>
+        翌朝7時に予約予定
+        <% when "reserving" %>
+        予約処理を実行中
+        <% when "reserved" %>
+        予約済み
+        <% when "failed" %>
+        予約失敗
+        <% end %>
       </td>
     </tr>
     <% end %>

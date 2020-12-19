@@ -18,11 +18,9 @@
       <td>
         <% case rf.state %>
         <% when "can_reserve" %>
-        <% #HACK: まだ横浜市だけなので、時間をハードコードしている %>
-        <%= button_to(rf.now ? "今すぐ予約する" : "翌朝7時に予約する", reserve_reservation_frame_url(rf.id), method: :post, class: "btn btn-raised btn-sm btn-danger") %>
+        <%= button_to(rf.now ? "今すぐ予約する" : "翌朝#{rf.opening_hour}時に予約する", reserve_reservation_frame_url(rf.id), method: :post, class: "btn btn-raised btn-sm btn-danger") %>
         <% when "will_reserve" %>
-        <% #HACK: まだ横浜市だけなので、時間をハードコードしている %>
-        翌朝7時に予約予定
+        <%= "翌朝#{rf.opening_hour}時に予約予定" %>
         <% when "reserving" %>
         予約処理を実行中
         <% when "reserved" %>

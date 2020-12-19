@@ -27,8 +27,7 @@ class ReservationFramesController < ApplicationController
   end
 
   def reserve_tomorrow_morning(reservation_frame)
-    # HACK: 横浜市なので、とりあえず翌朝7時で固定
-    ReservationJob.set(wait_until: Date.tomorrow.beginning_of_day + 7.hours)
+    ReservationJob.set(wait_until: Date.tomorrow.beginning_of_day + reservation_frame.opening_hour.hours)
                   .perform_later(reservation_frame.to_domain_model.to_hash)
     reservation_frame.update!(state: :will_reserve)
   end

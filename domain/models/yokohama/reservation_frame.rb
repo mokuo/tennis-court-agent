@@ -112,6 +112,10 @@ module Yokohama
       )
     end
 
+    def opening_hour
+      7
+    end
+
     private
 
     def date_to_human
@@ -123,7 +127,7 @@ module Yokohama
     end
 
     def now_to_human
-      now ? "今すぐ予約可能" : "翌日７時に予約可能"
+      now ? "今すぐ予約可能" : "翌日#{opening_hour}時に予約可能"
     end
 
     def ja_wday

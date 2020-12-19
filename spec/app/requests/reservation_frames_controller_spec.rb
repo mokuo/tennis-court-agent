@@ -28,10 +28,11 @@ RSpec.describe ReservationFramesController, type: :request do
       let!(:reservation_frame) { create(:reservation_frame, state: :can_reserve, now: false) }
 
       it "予約ジョブをキューイングする" do
+        rf = reservation_frame.to_domain_model
+
         expect { reserve }.to have_enqueued_job
-          .with(reservation_frame.to_domain_model.to_hash)
-          # HACK: 横浜市なので、とりあえず翌朝7時で固定
-          .at(Date.tomorrow.beginning_of_day + 7.hours)
+          .with(rf.to_hash)
+          .at(Date.tomorrow.beginning_of_day + rf.opening_hour.hours)
       end
 
       it "予約枠の状態を更新する" do

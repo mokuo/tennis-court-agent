@@ -33,5 +33,4 @@ RUN RAILS_ENV=production bundle exec rails assets:precompile && rm -rf node_modu
 
 COPY . .
 
-# ref: https://github.com/mperham/sidekiq/wiki/Advanced-Options#environment
-CMD ["bundle", "exec", "sidekiq", "-e", "production"]
+CMD ["bundle", "exec", "foreman", "start"]

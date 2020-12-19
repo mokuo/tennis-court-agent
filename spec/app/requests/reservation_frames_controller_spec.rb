@@ -24,24 +24,62 @@ RSpec.describe ReservationFramesController, type: :request do
   describe "POST /reservation_frames/:id/reserve" do
     subject(:reserve) { post "/reservation_frames/#{reservation_frame.id}/reserve" }
 
-    let!(:reservation_frame) { create(:reservation_frame, state: :can_reserve) }
+    context "翌朝に予約可能な場合" do
+      let!(:reservation_frame) { create(:reservation_frame, state: :can_reserve, now: false) }
 
-    it "予約ジョブをキューイングする" do
-      expect { reserve }.to have_enqueued_job
-        .with(reservation_frame.to_domain_model.to_hash)
-        .at(Date.tomorrow.beginning_of_day + 7.hours)
+      it "予約ジョブをキューイングする" do
+        expect { reserve }.to have_enqueued_job
+          .with(reservation_frame.to_domain_model.to_hash)
+          # HACK: 横浜市なので、とりあえず翌朝7時で固定
+          .at(Date.tomorrow.beginning_of_day + 7.hours)
+      end
+
+      it "予約枠の状態を更新する" do
+        reserve
+
+        expect(reservation_frame.reload.state).to eq "will_reserve"
+      end
+
+      it "flash メッセージを表示する" do
+        reserve
+
+        expect(flash[:success]).to include("予約処理を開始しました。")
+      end
+
+      it "予約枠一覧ページにリダイレクトする" do
+        reserve
+
+        expect(response).to redirect_to(reservation_frames_url)
+      end
     end
 
-    it "予約枠の状態を更新する" do
-      reserve
+    context "今すぐ予約可能な場合" do
+      let!(:reservation_frame) { create(:reservation_frame, state: :can_reserve, now: true) }
 
-      expect(reservation_frame.reload.state).to eq "will_reserve"
-    end
+      it "予約ジョブをキューイングする" do
+        expect { reserve }.to have_enqueued_job
+          .with(reservation_frame.to_domain_model.to_hash)
+          # ref: https://relishapp.com/rspec/rspec-rails/docs/job-specs/job-spec#specify-that-job-was-enqueued-with-no-wait
+          .at(:no_wait)
+      end
 
-    it "予約枠一覧ページにリダイレクトする" do
-      reserve
+      it "予約枠の状態を更新する" do
+        reserve
 
-      expect(response).to redirect_to(reservation_frames_url)
+        expect(reservation_frame.reload.state).to eq "reserving"
+      end
+
+      it "flash メッセージを表示する" do
+        reserve
+
+        expect(flash[:success]).to include("予約処理を開始しました。")
+      end
+
+      it "予約枠一覧ページにリダイレクトする" do
+        reserve
+
+        expect(response).to redirect_to(reservation_frames_url)
+      end
     end
   end
 end

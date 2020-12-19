@@ -9,11 +9,27 @@ class ReservationFramesController < ApplicationController
 
   def reserve
     reservation_frame = ReservationFrame.find(params[:id])
+    if reservation_frame.now
+      reserve_now(reservation_frame)
+    else
+      reserve_tomorrow_morning(reservation_frame)
+    end
+
+    flash[:success] = "予約処理を開始しました。"
+    redirect_to reservation_frames_url
+  end
+
+  private
+
+  def reserve_now(reservation_frame)
+    ReservationJob.perform_later(reservation_frame.to_domain_model.to_hash)
+    reservation_frame.update!(state: :reserving)
+  end
+
+  def reserve_tomorrow_morning(reservation_frame)
     # HACK: 横浜市なので、とりあえず翌朝7時で固定
     ReservationJob.set(wait_until: Date.tomorrow.beginning_of_day + 7.hours)
                   .perform_later(reservation_frame.to_domain_model.to_hash)
     reservation_frame.update!(state: :will_reserve)
-    flash[:success] = "予約処理を開始しました。"
-    redirect_to reservation_frames_url
   end
 end

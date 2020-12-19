@@ -47,14 +47,6 @@ RSpec.describe NotificationService do
         MSG
       end
 
-      it "Notification を保存する" do
-        client_mock = ClientMock.new
-        notification_service = described_class.new(client_mock)
-        expect do
-          notification_service.send_availabilities("横浜市", reservation_frames)
-        end.to change(Notification, :count).from(0).to(1)
-      end
-
       it "テニスコートの空いている予約枠を通知する" do
         client_mock = ClientMock.new
         notification_service = described_class.new(client_mock)
@@ -65,14 +57,6 @@ RSpec.describe NotificationService do
 
     context "空いている予約枠がない時" do
       let!(:expected_message) { "横浜市のテニスコートの空き予約枠はありませんでした。" }
-
-      it "Notification を保存する" do
-        client_mock = ClientMock.new
-        notification_service = described_class.new(client_mock)
-        expect do
-          notification_service.send_availabilities("横浜市", [])
-        end.to change(Notification, :count).from(0).to(1)
-      end
 
       it "空き枠がないことを通知する" do
         client_mock = ClientMock.new

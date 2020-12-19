@@ -22,13 +22,15 @@ class ReservationFramesController < ApplicationController
   private
 
   def reserve_now(reservation_frame)
-    ReservationJob.perform_later(reservation_frame.to_domain_model.to_hash)
+    rf = reservation_frame.to_domain_model
+    ReservationJob.perform_later(rf.to_hash)
     reservation_frame.update!(state: :reserving)
   end
 
   def reserve_tomorrow_morning(reservation_frame)
-    ReservationJob.set(wait_until: Date.tomorrow.beginning_of_day + reservation_frame.opening_hour.hours)
-                  .perform_later(reservation_frame.to_domain_model.to_hash)
+    rf = reservation_frame.to_domain_model
+    ReservationJob.set(wait_until: Date.tomorrow.beginning_of_day + rf.opening_hour.hours)
+                  .perform_later(rf.to_hash)
     reservation_frame.update!(state: :will_reserve)
   end
 end

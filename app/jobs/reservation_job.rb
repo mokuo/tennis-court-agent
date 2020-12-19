@@ -6,8 +6,15 @@ class ReservationJob < ApplicationJob
   queue_as :reservation
 
   def perform(reservation_frame_hash)
-    reservation_frame = Yokohama::ReservationFrame.from_hash(reservation_frame_hash)
-    service.reserve(reservation_frame)
+    rf = Yokohama::ReservationFrame.from_hash(reservation_frame_hash)
+    result = service.reserve(rf)
+
+    reservation_frame = ReservationFrame.find(rf.id)
+    if result
+      reservation_frame.update!(state: :reserved)
+    else
+      reservation_frame.update!(state: :failed)
+    end
   end
 
   private

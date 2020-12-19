@@ -90,10 +90,12 @@ class YokohamaService
   def reserve(reservation_frame)
     @notification_service.send_message("`#{reservation_frame.to_human}`の予約を開始します")
 
-    if @scraping_service.reserve(reservation_frame)
+    result = @scraping_service.reserve(reservation_frame)
+    if result
       @notification_service.send_message("`#{reservation_frame.to_human}`の予約に成功しました！")
     else
       @notification_service.send_message("`#{reservation_frame.to_human}`の予約に失敗しました。")
     end
+    result
   end
 end

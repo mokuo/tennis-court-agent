@@ -388,9 +388,9 @@ RSpec.describe YokohamaService, type: :job do
       )
     end
 
-    context "予約に成功した時" do
+    context "予約に成功する時" do
       # rubocop:disable RSpec/MultipleExpectations
-      it "成功メッセージを通知する" do
+      it "予約処理を行い、成功メッセージを通知する" do
         allow(mock_scraping_service).to receive(:reserve).and_return(true)
 
         expect(mock_scraping_service).to receive(:reserve).with(reservation_frame).once
@@ -398,14 +398,17 @@ RSpec.describe YokohamaService, type: :job do
         expect(mock_notification_service).to receive(:send_message).with("`#{reservation_frame.to_human}`の予約に成功しました！")
 
         service = described_class.new(mock_scraping_service, mock_notification_service)
-        service.reserve(reservation_frame)
+        result = service.reserve(reservation_frame)
+
+        # 成功・失敗を返す
+        expect(result).to be true
       end
       # rubocop:enable RSpec/MultipleExpectations
     end
 
-    context "予約に失敗した時" do
+    context "予約に失敗する時" do
       # rubocop:disable RSpec/MultipleExpectations
-      it "成功メッセージを通知する" do
+      it "予約処理を行い、失敗メッセージを通知する" do
         allow(mock_scraping_service).to receive(:reserve).and_return(false)
 
         expect(mock_scraping_service).to receive(:reserve).with(reservation_frame).once
@@ -413,7 +416,10 @@ RSpec.describe YokohamaService, type: :job do
         expect(mock_notification_service).to receive(:send_message).with("`#{reservation_frame.to_human}`の予約に失敗しました。")
 
         service = described_class.new(mock_scraping_service, mock_notification_service)
-        service.reserve(reservation_frame)
+        result = service.reserve(reservation_frame)
+
+        # 成功・失敗を返す
+        expect(result).to be false
       end
       # rubocop:enable RSpec/MultipleExpectations
     end

@@ -29,8 +29,8 @@ COPY package.json yarn.lock ./
 
 RUN yarn install
 
-RUN RAILS_ENV=production bundle exec rails assets:precompile && rm -rf node_modules/
-
 COPY . .
+
+RUN RAILS_ENV=production bundle exec rails assets:precompile && rm -rf node_modules/
 
 CMD ["bundle", "exec", "foreman", "start"]

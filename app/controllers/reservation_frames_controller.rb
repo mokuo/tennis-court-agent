@@ -5,6 +5,7 @@ require Rails.root.join("domain/models/yokohama/reservation_frame")
 class ReservationFramesController < ApplicationController
   def index
     @reservation_frames = ReservationFrame.all.map(&:to_domain_model)
+    @availability_check = AvailabilityCheck.finished.last
   end
 
   def reserve

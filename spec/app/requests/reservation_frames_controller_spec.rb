@@ -6,6 +6,7 @@ RSpec.describe ReservationFramesController, type: :request do
 
     let!(:reservation_frame_1) { create(:reservation_frame) }
     let!(:reservation_frame_2) { create(:reservation_frame) }
+    let!(:availability_check) { create(:availability_check, state: :finished) }
 
     it "予約枠一覧ページを表示する" do
       get_reservation_frames
@@ -18,6 +19,12 @@ RSpec.describe ReservationFramesController, type: :request do
 
       expect(response.body).to include(reservation_frame_1.to_domain_model.tennis_court_name_to_human)
       expect(response.body).to include(reservation_frame_2.to_domain_model.tennis_court_name_to_human)
+    end
+
+    it "空き状況の取得日時を表示すること" do
+      get_reservation_frames
+
+      expect(response.body).to include("#{availability_check.created_at.strftime('%Y-%m-%d %H:%M:%S')} 時点")
     end
   end
 

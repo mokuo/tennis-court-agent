@@ -1,35 +1,46 @@
-<table class="table table-hover">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">自治体</th>
-      <th scope="col">公園</th>
-      <th scope="col">テニスコート</th>
-      <th scope="col">日時</th>
-      <th scope="col">予約</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @reservation_frames.each do |rf| %>
-    <tr>
-      <td><%= rf.organization_name_ja %></td>
-      <td><%= rf.park_name %></td>
-      <td><%= rf.tennis_court_name_to_human %></td>
-      <td><%= rf.date_time_to_human %></td>
-      <td>
-        <% case rf.state %>
-        <% when "can_reserve" %>
-        <%= button_to(rf.now ? "今すぐ予約する" : "翌朝#{rf.opening_hour}時に予約する", reserve_reservation_frame_url(rf.id), method: :post, class: "btn btn-raised btn-sm btn-danger") %>
-        <% when "will_reserve" %>
-        <%= "翌朝#{rf.opening_hour}時に予約予定" %>
-        <% when "reserving" %>
-        予約処理を実行中
-        <% when "reserved" %>
-        予約済み
-        <% when "failed" %>
-        予約失敗
-        <% end %>
-      </td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+<nav class="navbar navbar-dark bg-dark navbar-tca">
+  <span class="navbar-brand mb-0 h1">Tennis Court Agent</span>
+  <span class="navbar-text">
+    <%= "#{@availability_check&.created_at.strftime("%Y-%m-%d %H:%M:%S")} 時点" %>
+  </span>
+</nav>
+<div class="container-fluid">
+  <% flash.each do |name, msg| -%>
+  <%= content_tag :div, msg, class: "alert alert-#{name}" %>
+  <% end -%>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">自治体</th>
+        <th scope="col">公園</th>
+        <th scope="col">テニスコート</th>
+        <th scope="col">日時</th>
+        <th scope="col">予約</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @reservation_frames.each do |rf| %>
+      <tr>
+        <td><%= rf.organization_name_ja %></td>
+        <td><%= rf.park_name %></td>
+        <td><%= rf.tennis_court_name_to_human %></td>
+        <td><%= rf.date_time_to_human %></td>
+        <td>
+          <% case rf.state %>
+          <% when "can_reserve" %>
+          <%= button_to(rf.now ? "今すぐ予約する" : "翌朝#{rf.opening_hour}時に予約する", reserve_reservation_frame_url(rf.id), method: :post, class: "btn btn-raised btn-sm btn-danger") %>
+          <% when "will_reserve" %>
+          <%= "翌朝#{rf.opening_hour}時に予約予定" %>
+          <% when "reserving" %>
+          予約処理を実行中
+          <% when "reserved" %>
+          予約済み
+          <% when "failed" %>
+          予約失敗
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

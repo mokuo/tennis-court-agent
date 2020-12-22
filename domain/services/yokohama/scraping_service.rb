@@ -32,7 +32,7 @@ module Yokohama
     end
 
     def reserve(reservation_frame)
-      date_selection_page_with_login(rservation_frame.park_name)
+      date_selection_page_with_login(reservation_frame.park_name)
         .click_date(reservation_frame.date)
         .click_reservation_frame(reservation_frame)
         .click_next

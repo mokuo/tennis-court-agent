@@ -6,18 +6,20 @@ RUN apk add --no-cache \
     #   ref: https://nokogiri.org/tutorials/installing_nokogiri.html#ruby-on-alpine-linux-docker
     build-base \
     # Chrome
-    chromium \
-    chromium-chromedriver \
+    chromium chromium-chromedriver \
     # ref: https://qiita.com/at-946/items/a7dbac4a46802d7b5376
     less \
     # For wabpacker
     nodejs \
     # For pg gem.
-    postgresql \
-    postgresql-dev \
+    postgresql postgresql-dev \
     # For tzinfo gem.
     tzdata \
-    yarn
+    # yarn
+    yarn \
+    # Japanese font
+    font-noto-cjk \
+    && fc-cache -f
 
 WORKDIR /usr/src/app
 

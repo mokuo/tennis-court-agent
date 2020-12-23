@@ -35,6 +35,7 @@ gem "selenium-webdriver"
 gem "webdrivers", "~> 4.0" # HACK: ローカルと CI で動かす場合に必要。optional にしたい
 
 gem "active_hash"
+gem "faraday"
 gem "foreman"
 gem "sidekiq"
 gem "sidekiq-limit_fetch"

@@ -2,15 +2,26 @@
 
 class SlackClient
   def initialize(channel: "#tennis-court", slack_client: Slack::Web::Client.new)
-    @slack_client = slack_client
+    @client = slack_client
     @channel = channel
   end
 
   def send(text)
-    slack_client.chat_postMessage(channel: channel, text: text)
+    client.chat_postMessage(channel: channel, text: text)
+  end
+
+  def upload_png(file_path:, title:, comment:)
+    client.files_upload(
+      channels: "#tennis-court",
+      as_user: true,
+      file: Faraday::UploadIO.new(file_path, "image/png"),
+      title: title,
+      filename: file_path,
+      initial_comment: comment
+    )
   end
 
   private
 
-  attr_reader :slack_client, :channel
+  attr_reader :client, :channel
 end

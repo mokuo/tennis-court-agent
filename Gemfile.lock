@@ -393,6 +393,7 @@ DEPENDENCIES
   capybara
   factory_bot_rails
   faker
+  faraday
   foreman
   guard-rspec
   jbuilder (~> 2.10)

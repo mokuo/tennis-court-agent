@@ -107,8 +107,9 @@ GEM
       railties (>= 5.0.0)
     faker (2.15.1)
       i18n (>= 1.6, < 2)
-    faraday (1.0.1)
+    faraday (1.2.0)
       multipart-post (>= 1.2, < 3)
+      ruby2_keywords
     faraday_middleware (1.0.0)
       faraday (~> 1.0)
     ffi (1.13.1)
@@ -288,6 +289,7 @@ GEM
       rubocop (~> 0.87)
       rubocop-ast (>= 0.7.1)
     ruby-progressbar (1.10.1)
+    ruby2_keywords (0.0.2)
     rubyzip (2.3.0)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)

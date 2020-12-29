@@ -39,7 +39,7 @@ RSpec.describe ReservationFramesController, type: :request do
 
         expect { reserve }.to have_enqueued_job
           .with(rf.to_hash)
-          .at(Date.tomorrow.beginning_of_day + rf.opening_hour.hours)
+          .at(Date.tomorrow.beginning_of_day + rf.opening_hour.hours - 1.minute)
       end
 
       it "予約枠の状態を更新する" do

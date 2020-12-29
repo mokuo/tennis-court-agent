@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require Rails.root.join("domain/models/available_date")
+require Rails.root.join("domain/services/yokohama/scraping_service")
 
 RSpec.describe Yokohama::DateSelectionPage, type: :feature do
   describe "#available_dates" do
@@ -12,10 +13,6 @@ RSpec.describe Yokohama::DateSelectionPage, type: :feature do
                        .click_park("三ツ沢公園")
                        .click_tennis_court
                        .available_dates
-    end
-
-    it "利用可能な日付を全て取得する" do
-      expect(available_dates.size).to be > 0
     end
 
     it "AvailableDate の配列を返す" do
@@ -36,14 +33,7 @@ RSpec.describe Yokohama::DateSelectionPage, type: :feature do
     end
 
     let!(:available_date) do
-      available_dates = Yokohama::TopPage.open
-                                         .login
-                                         .click_check_availability
-                                         .click_sports
-                                         .click_tennis_court
-                                         .click_park("三ツ沢公園")
-                                         .click_tennis_court
-                                         .available_dates
+      available_dates = Yokohama::ScrapingService.new.available_dates("三ツ沢公園")
       # NOTE: 最初の日付だと、前日のため予約できない場合が多い
       available_dates.last
     end

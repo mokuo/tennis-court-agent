@@ -30,8 +30,10 @@ class ReservationFramesController < ApplicationController
 
   def reserve_tomorrow_morning(reservation_frame)
     rf = reservation_frame.to_domain_model
-    ReservationJob.set(wait_until: Date.tomorrow.beginning_of_day + rf.opening_hour.hours)
-                  .perform_later(rf.to_hash)
+    # NOTE: 既に予約されているケースが続いたので、1分早めてみる
+    ReservationJob
+      .set(wait_until: Date.tomorrow.beginning_of_day + rf.opening_hour.hours - 1.minute)
+      .perform_later(rf.to_hash)
     reservation_frame.update!(state: :will_reserve)
   end
 end

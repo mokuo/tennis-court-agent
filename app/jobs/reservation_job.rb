@@ -2,18 +2,24 @@
 
 require "capybara/dsl"
 require Rails.root.join("domain/services/notification_service")
+require Rails.root.join("domain/models/yokohama/reservation_frame")
 
 class ReservationJob < ApplicationJob
   queue_as :reservation
+  sidekiq_options retry: false # ActiveJob のリトライ機構のみ利用する
+
+  delegate :send_message, to: :notification_service
 
   include Capybara::DSL
 
-  rescue_from(Capybara::ElementNotFound) do |e|
-    file_path = "tmp/capybara/error.png"
-    save_full_screenshot(file_path)
-    slack_client.upload_png(file_path: file_path, title: e.class, comment: e.message)
+  # NOTE: attempts 回のリトライに失敗したら、予約失敗とする
+  # ref: https://api.rubyonrails.org/classes/ActiveJob/Exceptions/ClassMethods.html#method-i-retry_on
+  retry_on Capybara::ElementNotFound, wait: :exponentially_longer, attempts: 7 do |job, error|
+    rf = ReservationFrame.find(job.arguments.first[:id])
+    rf.update!(state: :failed)
 
-    raise e
+    job.send_message("`#{rf.to_domain_model.to_human}` の予約に失敗しました。")
+    job.send_error_screenshot(error)
   end
 
   def perform(reservation_frame_hash)
@@ -28,14 +34,25 @@ class ReservationJob < ApplicationJob
     end
   end
 
+  def send_error_screenshot(error)
+    file_path = "tmp/capybara/error.png"
+    save_full_screenshot(file_path)
+    slack_client.upload_png(file_path: file_path, title: error.message, comment: error.class)
+  end
+
   private
 
   def service
     YokohamaService.new
   end
 
+  # HACK: NotificationService に移す
   def slack_client
     SlackClient.new
+  end
+
+  def notification_service
+    NotificationService.new
   end
 
   def save_full_screenshot(path)

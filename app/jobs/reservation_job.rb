@@ -22,17 +22,22 @@ class ReservationJob < ApplicationJob
     job.send_error_screenshot(error)
   end
 
-  def perform(reservation_frame_hash)
+  # rubocop:disable Metrics/MethodLength
+  def perform(reservation_frame_hash, num)
     rf = Yokohama::ReservationFrame.from_hash(reservation_frame_hash)
+    notification_service.send_message("`#{rf.to_human}`の予約を開始します。(#{num})")
     result = service.reserve(rf)
 
     reservation_frame = ReservationFrame.find(rf.id)
     if result
       reservation_frame.update!(state: :reserved)
+      notification_service.send_message("`#{rf.to_human}`の予約に成功しました！(#{num})")
     else
       reservation_frame.update!(state: :failed)
+      notification_service.send_message("`#{rf.to_human}`の予約に失敗しました。(#{num})")
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def send_error_screenshot(error)
     file_path = "tmp/capybara/error.png"

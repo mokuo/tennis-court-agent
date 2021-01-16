@@ -12,9 +12,9 @@ class ReservationJob < ApplicationJob
 
   include Capybara::DSL
 
-  # NOTE: attempts 回のリトライに失敗したら、予約失敗とする
+  # NOTE: 待ち時間なしでリトライ & attempts 回のリトライに失敗したら、予約失敗とする
   # ref: https://api.rubyonrails.org/classes/ActiveJob/Exceptions/ClassMethods.html#method-i-retry_on
-  retry_on Capybara::ElementNotFound, wait: :exponentially_longer, attempts: 7 do |job, error|
+  retry_on Capybara::ElementNotFound, wait: 0, attempts: 5 do |job, error|
     rf = ReservationFrame.find(job.arguments.first[:id])
     rf.update!(state: :failed)
 

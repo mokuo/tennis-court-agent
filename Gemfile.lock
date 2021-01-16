@@ -114,7 +114,7 @@ GEM
     faraday-net_http (1.0.1)
     faraday_middleware (1.0.0)
       faraday (~> 1.0)
-    ffi (1.13.1)
+    ffi (1.14.2)
     foreman (0.87.2)
     formatador (0.2.5)
     gli (2.19.2)
@@ -141,7 +141,7 @@ GEM
     jaro_winkler (1.5.4)
     jbuilder (2.10.1)
       activesupport (>= 5.0.0)
-    listen (3.3.3)
+    listen (3.4.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     loofah (2.7.0)
@@ -403,7 +403,7 @@ DEPENDENCIES
   foreman
   guard-rspec
   jbuilder (~> 2.10)
-  listen (~> 3.3)
+  listen (~> 3.4)
   pg
   pry-byebug
   pry-rails

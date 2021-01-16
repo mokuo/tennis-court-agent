@@ -3,7 +3,6 @@
 require Rails.root.join("domain/services/yokohama/scraping_service")
 require Rails.root.join("domain/models/available_date")
 require Rails.root.join("domain/models/availability_check_identifier")
-require Rails.root.join("domain/services/notification_service")
 require Rails.root.join("domain/models/yokohama/availability_check_started")
 require Rails.root.join("domain/models/yokohama/available_dates_found")
 require Rails.root.join("domain/models/yokohama/available_dates_filtered")
@@ -12,9 +11,8 @@ require Rails.root.join("domain/models/yokohama/reservation_status_checked")
 require Rails.root.join("domain/models/yokohama/availability_check_finished")
 
 class YokohamaService
-  def initialize(scraping_service = Yokohama::ScrapingService.new, notification_service = NotificationService.new)
+  def initialize(scraping_service = Yokohama::ScrapingService.new)
     @scraping_service = scraping_service
-    @notification_service = notification_service
   end
 
   def start_availability_check
@@ -89,14 +87,6 @@ class YokohamaService
   end
 
   def reserve(reservation_frame)
-    @notification_service.send_message("`#{reservation_frame.to_human}`の予約を開始します")
-
-    result = @scraping_service.reserve(reservation_frame)
-    if result
-      @notification_service.send_message("`#{reservation_frame.to_human}`の予約に成功しました！")
-    else
-      @notification_service.send_message("`#{reservation_frame.to_human}`の予約に失敗しました。")
-    end
-    result
+    @scraping_service.reserve(reservation_frame)
   end
 end

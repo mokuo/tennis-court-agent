@@ -12,9 +12,9 @@ class ReservationJob < ApplicationJob
 
   include Capybara::DSL
 
-  # NOTE: attempts 回のリトライに失敗したら、予約失敗とする
+  # NOTE: 待ち時間なしでリトライ & attempts 回のリトライに失敗したら、予約失敗とする
   # ref: https://api.rubyonrails.org/classes/ActiveJob/Exceptions/ClassMethods.html#method-i-retry_on
-  retry_on Capybara::ElementNotFound, wait: :exponentially_longer, attempts: 7 do |job, error|
+  retry_on Capybara::ElementNotFound, wait: 0, attempts: 5 do |job, error|
     rf = ReservationFrame.find(job.arguments.first[:id])
     rf.update!(state: :failed)
 
@@ -22,17 +22,22 @@ class ReservationJob < ApplicationJob
     job.send_error_screenshot(error)
   end
 
-  def perform(reservation_frame_hash)
+  # rubocop:disable Metrics/MethodLength
+  def perform(reservation_frame_hash, num)
     rf = Yokohama::ReservationFrame.from_hash(reservation_frame_hash)
+    notification_service.send_message("`#{rf.to_human}`の予約を開始します。(#{num})")
     result = service.reserve(rf)
 
     reservation_frame = ReservationFrame.find(rf.id)
     if result
       reservation_frame.update!(state: :reserved)
+      notification_service.send_message("`#{rf.to_human}`の予約に成功しました！(#{num})")
     else
       reservation_frame.update!(state: :failed)
+      notification_service.send_message("`#{rf.to_human}`の予約に失敗しました。(#{num})")
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def send_error_screenshot(error)
     file_path = "tmp/capybara/error.png"

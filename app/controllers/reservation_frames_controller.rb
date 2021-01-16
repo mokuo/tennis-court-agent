@@ -30,10 +30,17 @@ class ReservationFramesController < ApplicationController
 
   def reserve_tomorrow_morning(reservation_frame)
     rf = reservation_frame.to_domain_model
-    # NOTE: 既に予約されているケースが続いたので、1分早めてみる
-    ReservationJob
-      .set(wait_until: Date.tomorrow.beginning_of_day + rf.opening_hour.hours - 1.minute)
-      .perform_later(rf.to_hash)
+    # NOTE: ログを見ると、指定した時間の2, 3秒後にスタートしているので、その周辺に連続で実行されるようにする
+    start_time = Date.tomorrow.beginning_of_day + rf.opening_hour.hours - Constants::PARALLEL_RESERVATION_JOBS.seconds
+    Constants::PARALLEL_RESERVATION_JOBS.times do |n|
+      _reserve_tomorrow_morning(rf, start_time + n.seconds, n)
+    end
     reservation_frame.update!(state: :will_reserve)
+  end
+
+  def _reserve_tomorrow_morning(reservation_frame, wait_until, num)
+    ReservationJob
+      .set(wait_until: wait_until)
+      .perform_later(reservation_frame.to_hash, num)
   end
 end

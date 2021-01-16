@@ -389,7 +389,6 @@ RSpec.describe YokohamaService, type: :job do
 
   describe "#reserve" do
     let!(:mock_scraping_service) { instance_double("Yokohama::ScrapingService") }
-    let!(:mock_notification_service) { instance_double("NotificationService") }
     let(:reservation_frame) do
       Yokohama::ReservationFrame.new(
         park_name: "A公園",
@@ -400,39 +399,25 @@ RSpec.describe YokohamaService, type: :job do
     end
 
     context "予約に成功する時" do
-      # rubocop:disable RSpec/MultipleExpectations
-      it "予約処理を行い、成功メッセージを通知する" do
+      it "予約処理を行い、true を返す" do
         allow(mock_scraping_service).to receive(:reserve).and_return(true)
 
         expect(mock_scraping_service).to receive(:reserve).with(reservation_frame).once
-        expect(mock_notification_service).to receive(:send_message).with("`#{reservation_frame.to_human}`の予約を開始します")
-        expect(mock_notification_service).to receive(:send_message).with("`#{reservation_frame.to_human}`の予約に成功しました！")
 
-        service = described_class.new(mock_scraping_service, mock_notification_service)
-        result = service.reserve(reservation_frame)
-
-        # 成功・失敗を返す
-        expect(result).to be true
+        service = described_class.new(mock_scraping_service)
+        expect(service.reserve(reservation_frame)).to be true
       end
-      # rubocop:enable RSpec/MultipleExpectations
     end
 
     context "予約に失敗する時" do
-      # rubocop:disable RSpec/MultipleExpectations
-      it "予約処理を行い、失敗メッセージを通知する" do
+      it "予約処理を行い、false を返す" do
         allow(mock_scraping_service).to receive(:reserve).and_return(false)
 
         expect(mock_scraping_service).to receive(:reserve).with(reservation_frame).once
-        expect(mock_notification_service).to receive(:send_message).with("`#{reservation_frame.to_human}`の予約を開始します")
-        expect(mock_notification_service).to receive(:send_message).with("`#{reservation_frame.to_human}`の予約に失敗しました。")
 
-        service = described_class.new(mock_scraping_service, mock_notification_service)
-        result = service.reserve(reservation_frame)
-
-        # 成功・失敗を返す
-        expect(result).to be false
+        service = described_class.new(mock_scraping_service)
+        expect(service.reserve(reservation_frame)).to be false
       end
-      # rubocop:enable RSpec/MultipleExpectations
     end
   end
 end

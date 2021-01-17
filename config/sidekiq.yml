@@ -10,4 +10,4 @@
   yokohama: 1
   notification: 1
   default: 1
-  reservation: Constants::PARALLEL_RESERVATION_JOBS * 5 # 複数の予約枠を予約する可能性があるため
+  reservation: 5

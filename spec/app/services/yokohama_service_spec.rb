@@ -402,10 +402,10 @@ RSpec.describe YokohamaService, type: :job do
       it "予約処理を行い、true を返す" do
         allow(mock_scraping_service).to receive(:reserve).and_return(true)
 
-        expect(mock_scraping_service).to receive(:reserve).with(reservation_frame).once
+        expect(mock_scraping_service).to receive(:reserve).with(reservation_frame, waiting: false).once
 
         service = described_class.new(mock_scraping_service)
-        expect(service.reserve(reservation_frame)).to be true
+        expect(service.reserve(reservation_frame, waiting: false)).to be true
       end
     end
 
@@ -413,10 +413,10 @@ RSpec.describe YokohamaService, type: :job do
       it "予約処理を行い、false を返す" do
         allow(mock_scraping_service).to receive(:reserve).and_return(false)
 
-        expect(mock_scraping_service).to receive(:reserve).with(reservation_frame).once
+        expect(mock_scraping_service).to receive(:reserve).with(reservation_frame, waiting: false).once
 
         service = described_class.new(mock_scraping_service)
-        expect(service.reserve(reservation_frame)).to be false
+        expect(service.reserve(reservation_frame, waiting: false)).to be false
       end
     end
   end

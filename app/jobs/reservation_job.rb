@@ -23,18 +23,18 @@ class ReservationJob < ApplicationJob
   end
 
   # rubocop:disable Metrics/MethodLength
-  def perform(reservation_frame_hash, num)
+  def perform(reservation_frame_hash, waiting: false)
     rf = Yokohama::ReservationFrame.from_hash(reservation_frame_hash)
-    notification_service.send_message("`#{rf.to_human}`の予約を開始します。(#{num})")
-    result = service.reserve(rf)
+    notification_service.send_message("`#{rf.to_human}`の予約を開始します。")
+    result = service.reserve(rf, waiting: waiting)
 
     reservation_frame = ReservationFrame.find(rf.id)
     if result
       reservation_frame.update!(state: :reserved)
-      notification_service.send_message("`#{rf.to_human}`の予約に成功しました！(#{num})")
+      notification_service.send_message("`#{rf.to_human}`の予約に成功しました！")
     else
       reservation_frame.update!(state: :failed)
-      notification_service.send_message("`#{rf.to_human}`の予約に失敗しました。(#{num})")
+      notification_service.send_message("`#{rf.to_human}`の予約に失敗しました。")
     end
   end
   # rubocop:enable Metrics/MethodLength

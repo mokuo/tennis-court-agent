@@ -8,16 +8,18 @@ class YokohamaServiceMock
   def initialize(result)
     @result = result
     @reservation_frame = nil
+    @waiting = nil
   end
 
-  def reserve(reservation_frame)
+  def reserve(reservation_frame, waiting:)
     @reservation_frame = reservation_frame
+    @waiting = waiting
     result
   end
 end
 
 RSpec.describe ReservationJob, type: :job do
-  subject(:perform) { job.perform(rf.to_hash, 1) }
+  subject(:perform) { job.perform(rf.to_hash, waiting: false) }
 
   let!(:reservation_frame) { create(:reservation_frame) }
   let!(:rf) { reservation_frame.to_domain_model }
@@ -48,8 +50,8 @@ RSpec.describe ReservationJob, type: :job do
       end
 
       it "開始と成功の通知をする" do
-        expect(notification_service_mock).to receive(:send_message).with("`#{rf.to_human}`の予約を開始します。(1)")
-        expect(notification_service_mock).to receive(:send_message).with("`#{rf.to_human}`の予約に成功しました！(1)")
+        expect(notification_service_mock).to receive(:send_message).with("`#{rf.to_human}`の予約を開始します。")
+        expect(notification_service_mock).to receive(:send_message).with("`#{rf.to_human}`の予約に成功しました！")
         perform
       end
     end
@@ -72,8 +74,8 @@ RSpec.describe ReservationJob, type: :job do
       end
 
       it "開始と失敗の通知をする" do
-        expect(notification_service_mock).to receive(:send_message).with("`#{rf.to_human}`の予約を開始します。(1)")
-        expect(notification_service_mock).to receive(:send_message).with("`#{rf.to_human}`の予約に失敗しました。(1)")
+        expect(notification_service_mock).to receive(:send_message).with("`#{rf.to_human}`の予約を開始します。")
+        expect(notification_service_mock).to receive(:send_message).with("`#{rf.to_human}`の予約に失敗しました。")
         perform
       end
     end

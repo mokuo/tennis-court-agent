@@ -35,8 +35,10 @@ RSpec.describe ReservationFramesController, type: :request do
       let!(:reservation_frame) { create(:reservation_frame, state: :can_reserve, now: false) }
 
       it "予約ジョブを連続でキューイングする" do
-        # HACK: 複数のジョブを引数と時間まで指定してテストする方法がわからなかった
-        expect { reserve }.to have_enqueued_job.exactly(5)
+        rf = reservation_frame.to_domain_model
+        expect { reserve }.to have_enqueued_job
+          .with(rf.to_hash)
+          .at(Date.tomorrow.beginning_of_day + rf.opening_hour.hours - 5.seconds)
       end
 
       it "予約枠の状態を更新する" do

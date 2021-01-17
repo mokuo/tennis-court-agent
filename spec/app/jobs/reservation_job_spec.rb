@@ -8,16 +8,18 @@ class YokohamaServiceMock
   def initialize(result)
     @result = result
     @reservation_frame = nil
+    @waiting = nil
   end
 
-  def reserve(reservation_frame)
+  def reserve(reservation_frame, waiting:)
     @reservation_frame = reservation_frame
+    @waiting = waiting
     result
   end
 end
 
 RSpec.describe ReservationJob, type: :job do
-  subject(:perform) { job.perform(rf.to_hash) }
+  subject(:perform) { job.perform(rf.to_hash, waiting: false) }
 
   let!(:reservation_frame) { create(:reservation_frame) }
   let!(:rf) { reservation_frame.to_domain_model }

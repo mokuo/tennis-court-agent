@@ -23,10 +23,10 @@ class ReservationJob < ApplicationJob
   end
 
   # rubocop:disable Metrics/MethodLength
-  def perform(reservation_frame_hash)
+  def perform(reservation_frame_hash, waiting: false)
     rf = Yokohama::ReservationFrame.from_hash(reservation_frame_hash)
     notification_service.send_message("`#{rf.to_human}`の予約を開始します。")
-    result = service.reserve(rf)
+    result = service.reserve(rf, waiting: waiting)
 
     reservation_frame = ReservationFrame.find(rf.id)
     if result

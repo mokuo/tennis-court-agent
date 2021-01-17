@@ -86,7 +86,7 @@ class YokohamaService
     availability_check.update!(state: :finished)
   end
 
-  def reserve(reservation_frame)
-    @scraping_service.reserve(reservation_frame)
+  def reserve(reservation_frame, waiting: false)
+    @scraping_service.reserve(reservation_frame, waiting: waiting)
   end
 end

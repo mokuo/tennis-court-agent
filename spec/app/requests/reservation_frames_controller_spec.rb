@@ -34,10 +34,10 @@ RSpec.describe ReservationFramesController, type: :request do
     context "翌朝に予約可能な場合" do
       let!(:reservation_frame) { create(:reservation_frame, state: :can_reserve, now: false) }
 
-      it "予約ジョブを連続でキューイングする" do
+      it "予約ジョブをキューイングする" do
         rf = reservation_frame.to_domain_model
         expect { reserve }.to have_enqueued_job
-          .with(rf.to_hash)
+          .with(rf.to_hash, waiting: true)
           .at(Date.tomorrow.beginning_of_day + rf.opening_hour.hours - 5.seconds)
       end
 
@@ -65,7 +65,7 @@ RSpec.describe ReservationFramesController, type: :request do
 
       it "予約ジョブをキューイングする" do
         expect { reserve }.to have_enqueued_job
-          .with(reservation_frame.to_domain_model.to_hash)
+          .with(reservation_frame.to_domain_model.to_hash, waiting: false)
           # ref: https://relishapp.com/rspec/rspec-rails/docs/job-specs/job-spec#specify-that-job-was-enqueued-with-no-wait
           .at(:no_wait)
       end

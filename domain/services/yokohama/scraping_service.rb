@@ -2,6 +2,8 @@
 
 module Yokohama
   class ScrapingService
+    class InvalidWaitingSeconds < StandardError; end
+
     def available_dates(park_name)
       ds_page = date_selection_page(park_name)
       available_dates = ds_page.available_dates
@@ -31,9 +33,12 @@ module Yokohama
       !result_page.error_page?
     end
 
-    def reserve(reservation_frame)
-      date_selection_page_with_login(reservation_frame.park_name)
-        .click_date(reservation_frame.date)
+    def reserve(reservation_frame, waiting: false)
+      reservation_frame_selection_page = date_selection_page_with_login(reservation_frame.park_name)
+                                         .click_date(reservation_frame.date)
+      wait_for_opeing_hour(reservation_frame) if waiting
+
+      reservation_frame_selection_page
         .click_reservation_frame(reservation_frame)
         .click_next
         .click_next
@@ -60,6 +65,13 @@ module Yokohama
                        .click_tennis_court
                        .click_park(park_name)
                        .click_tennis_court
+    end
+
+    def wait_for_opeing_hour(reservation_frame)
+      wait_sec = Date.current.beginning_of_day + reservation_frame.opening_hour.hours - Time.current
+      raise InvalidWaitingSeconds if wait_sec > 30
+
+      sleep(wait_sec)
     end
   end
 end

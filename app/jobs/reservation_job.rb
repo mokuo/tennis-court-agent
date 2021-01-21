@@ -6,24 +6,22 @@ require Rails.root.join("domain/models/yokohama/reservation_frame")
 
 class ReservationJob < ApplicationJob
   queue_as :reservation
-  sidekiq_options retry: false # ActiveJob のリトライ機構のみ利用する
+  sidekiq_options retry: 5 # ref: https://github.com/mperham/sidekiq/wiki/Advanced-Options#workers
 
   delegate :send_message, to: :notification_service
 
   include Capybara::DSL
 
-  # NOTE: 待ち時間なしでリトライ & attempts 回のリトライに失敗したら、予約失敗とする
-  # ref: https://api.rubyonrails.org/classes/ActiveJob/Exceptions/ClassMethods.html#method-i-retry_on
-  retry_on Capybara::ElementNotFound, wait: 0, attempts: 5 do |job, error|
-    rf = ReservationFrame.find(job.arguments.first[:id])
-    rf.update!(state: :failed)
+  rescue_from(Capybara::ElementNotFound) do |exception|
+    ReservationJob.new.send_error_screenshot(exception)
 
-    job.send_message("`#{rf.to_domain_model.to_human}` の予約に失敗しました。")
-    job.send_error_screenshot(error)
+    raise exception
+    # TODO: reservation_frame の state を failed にしたい
   end
 
   # rubocop:disable Metrics/MethodLength
   def perform(reservation_frame_hash, waiting: false)
+    # HACK: ごっそり YokohamaService に移す？
     rf = Yokohama::ReservationFrame.from_hash(reservation_frame_hash)
     notification_service.send_message("`#{rf.to_human}`の予約を開始します。")
     result = service.reserve(rf, waiting: waiting)
@@ -39,8 +37,9 @@ class ReservationJob < ApplicationJob
   end
   # rubocop:enable Metrics/MethodLength
 
+  # HACK: NotificationService に移す
   def send_error_screenshot(error)
-    file_path = "tmp/capybara/error.png"
+    file_path = "tmp/capybara/error_#{SecureRandom.uuid}.png"
     save_full_screenshot(file_path)
     slack_client.upload_png(file_path: file_path, title: error.message, comment: error.class)
   end

@@ -141,6 +141,10 @@ GEM
     jaro_winkler (1.5.4)
     jbuilder (2.10.1)
       activesupport (>= 5.0.0)
+    kramdown (2.3.0)
+      rexml
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
     listen (3.4.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -152,7 +156,6 @@ GEM
       mini_mime (>= 0.1.1)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
-    maruku (0.7.3)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     method_source (1.0.0)
@@ -178,7 +181,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     parallel (1.20.1)
-    parser (2.7.2.0)
+    parser (3.0.0.0)
       ast (~> 2.4.1)
     pg (1.2.3)
     proc_to_ast (0.1.0)
@@ -274,24 +277,24 @@ GEM
     rspec-support (3.10.1)
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (0.93.1)
+    rubocop (1.8.1)
       parallel (~> 1.10)
-      parser (>= 2.7.1.5)
+      parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.8)
+      regexp_parser (>= 1.8, < 3.0)
       rexml
-      rubocop-ast (>= 0.6.0)
+      rubocop-ast (>= 1.2.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 2.0)
+      unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.4.0)
       parser (>= 2.7.1.5)
     rubocop-rails (2.9.1)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 0.90.0, < 2.0)
-    rubocop-rspec (1.44.1)
-      rubocop (~> 0.87)
-      rubocop-ast (>= 0.7.1)
+    rubocop-rspec (2.1.0)
+      rubocop (~> 1.0)
+      rubocop-ast (>= 1.1.0)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.4)
     rubyzip (2.3.0)
@@ -322,17 +325,17 @@ GEM
       gli
       hashie
       websocket-driver
-    solargraph (0.39.17)
+    solargraph (0.40.2)
       backport (~> 1.1)
       benchmark
       bundler (>= 1.17.2)
       e2mmap
       jaro_winkler (~> 1.5)
-      maruku (~> 0.7, >= 0.7.3)
-      nokogiri (~> 1.9, >= 1.9.1)
-      parser (~> 2.3)
+      kramdown (~> 2.3)
+      kramdown-parser-gfm (~> 1.1)
+      parser (~> 3.0)
       reverse_markdown (>= 1.0.5, < 3)
-      rubocop (~> 0.52)
+      rubocop (>= 0.52)
       thor (~> 1.0)
       tilt (~> 2.0)
       yard (~> 0.9, >= 0.9.24)
@@ -356,7 +359,7 @@ GEM
     tilt (2.0.10)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
-    unicode-display_width (1.7.0)
+    unicode-display_width (2.0.0)
     unparser (0.5.5)
       abstract_type (~> 0.0.7)
       adamantium (~> 0.2.0)
@@ -421,7 +424,7 @@ DEPENDENCIES
   sidekiq
   sidekiq-limit_fetch
   slack-ruby-client
-  solargraph (= 0.39.17)
+  solargraph (= 0.40.2)
   spring
   spring-commands-rspec
   spring-commands-rubocop

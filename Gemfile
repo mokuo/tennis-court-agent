@@ -32,7 +32,7 @@ gem "bootsnap", ">= 1.4.2", require: false
 # Capybara
 gem "capybara"
 gem "selenium-webdriver"
-gem "webdrivers", "~> 4.4" # HACK: ローカルと CI で動かす場合に必要。optional にしたい
+gem "webdrivers", "~> 4.5" # HACK: ローカルと CI で動かす場合に必要。optional にしたい
 
 gem "active_hash"
 gem "faraday"

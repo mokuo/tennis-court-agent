@@ -316,7 +316,7 @@ GEM
       redis (>= 4.2.0)
     sidekiq-limit_fetch (3.4.0)
       sidekiq (>= 4)
-    slack-ruby-client (0.15.1)
+    slack-ruby-client (0.16.0)
       faraday (>= 1.0)
       faraday_middleware
       gli

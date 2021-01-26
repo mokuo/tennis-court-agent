@@ -31,8 +31,9 @@ class ReservationFramesController < ApplicationController
   def reserve_tomorrow_morning(reservation_frame)
     rf = reservation_frame.to_domain_model
     # NOTE: ログを見ると、指定した時間の2, 3秒後にスタートしているので、その前に実行されるようにする
+    # => ログを見ると5秒前でもギリギリだったので、10秒前にしてみる
     ReservationJob
-      .set(wait_until: Date.tomorrow.beginning_of_day + rf.opening_hour.hours - 5.seconds)
+      .set(wait_until: Date.tomorrow.beginning_of_day + rf.opening_hour.hours - 10.seconds)
       .perform_later(rf.to_hash, waiting: true)
     reservation_frame.update!(state: :will_reserve)
   end

@@ -28,7 +28,7 @@ RSpec.describe ReservationJob, type: :job do
 
   describe "#perform" do
     before do
-      allow(job).to receive(:service).and_return(yokohama_service_mock)
+      allow(job).to receive(:yokohama_service).and_return(yokohama_service_mock)
       allow(job).to receive(:notification_service).and_return(notification_service_mock)
     end
 

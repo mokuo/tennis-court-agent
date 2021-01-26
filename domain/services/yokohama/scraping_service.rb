@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("domain/services/notification_service")
+
 module Yokohama
   class ScrapingService
     class InvalidWaitingSeconds < StandardError; end
@@ -71,7 +73,12 @@ module Yokohama
       wait_sec = Date.current.beginning_of_day + reservation_frame.opening_hour.hours - Time.current
       raise InvalidWaitingSeconds if wait_sec > 30
 
+      notification_service.send_screenshot("sleep(#{wait_sec})", reservation_frame.to_human)
       sleep(wait_sec)
+    end
+
+    def notification_service
+      NotificationService.new
     end
   end
 end

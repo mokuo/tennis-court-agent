@@ -139,7 +139,7 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     jaro_winkler (1.5.4)
-    jbuilder (2.10.1)
+    jbuilder (2.11.2)
       activesupport (>= 5.0.0)
     listen (3.4.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -195,7 +195,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.6)
-    puma (5.1.1)
+    puma (5.2.0)
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
@@ -316,7 +316,7 @@ GEM
       redis (>= 4.2.0)
     sidekiq-limit_fetch (3.4.0)
       sidekiq (>= 4)
-    slack-ruby-client (0.15.1)
+    slack-ruby-client (0.16.0)
       faraday (>= 1.0)
       faraday_middleware
       gli
@@ -402,12 +402,12 @@ DEPENDENCIES
   faraday
   foreman
   guard-rspec
-  jbuilder (~> 2.10)
+  jbuilder (~> 2.11)
   listen (~> 3.4)
   pg
   pry-byebug
   pry-rails
-  puma (~> 5.1)
+  puma (~> 5.2)
   rails (~> 6.0.3)
   rails-controller-testing
   rspec-parameterized

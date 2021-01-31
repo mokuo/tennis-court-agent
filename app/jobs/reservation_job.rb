@@ -10,7 +10,14 @@ class ReservationJob < ApplicationJob
   delegate :send_message, to: :notification_service
 
   rescue_from(StandardError) do |exception|
-    notification_service.send_screenshot(exception.message, exception.class)
+    begin
+      # NOTE: ここでエラーになると、元のエラーがわからなくなるので、rescue しておく
+      notification_service.send_screenshot(exception.message, exception.class)
+    rescue StandardError => e
+      # HACK: backtrace はテキストファイルをアップロードした方が良さそう
+      notification_service.send_message(e.inspect)
+      notification_service.send_message(e.backtrace)
+    end
 
     raise exception
     # TODO: reservation_frame の state を failed にしたい

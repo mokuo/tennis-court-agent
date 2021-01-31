@@ -70,11 +70,15 @@ module Yokohama
     end
 
     def wait_for_opeing_hour(reservation_frame)
-      wait_sec = Date.current.beginning_of_day + reservation_frame.opening_hour.hours - Time.current
-      raise InvalidWaitingSeconds if wait_sec > 30
+      opening_time = Date.current.beginning_of_day + reservation_frame.opening_hour.hours
+      wait_sec = opening_time - Time.current
+      raise InvalidWaitingSeconds if wait_sec > 120
 
       notification_service.send_screenshot("sleep(#{wait_sec})", reservation_frame.to_human)
-      sleep(wait_sec)
+
+      loop do # NOTE: 開始時間になったら loop を抜ける
+        break if Time.current >= opening_time
+      end
     end
 
     def notification_service

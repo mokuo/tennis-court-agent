@@ -5,6 +5,7 @@ require Rails.root.join("domain/models/yokohama/reservation_frame")
 module Yokohama
   class ReservationFrameSelectionPage < BasePage
     class NotLoggedInError < StandardError; end
+    class NoReservationFrameSelected < StandardError; end
 
     def initialize
       check_logged_in!
@@ -44,8 +45,11 @@ module Yokohama
       self.class.new
     end
 
-    def click_next
-      # TODO: 予約枠が選択されていることをチェック！
+    def click_next(reservation_frame)
+      tennis_court_tr_element = find_tennis_court_tr_element(reservation_frame.tennis_court_name)
+      # NOTE: 予約枠が選択されたことを確認しないと「空枠が指定されていません。」エラーになる
+      raise NoReservationFrameSelected unless reservation_frame_selected?(tennis_court_tr_element)
+
       click_button("次へ")
       Yokohama::ReservationConfirmationPage.new
     end
@@ -73,6 +77,10 @@ module Yokohama
       result = table_row_elements.drop(1) # テーブルのヘッダーを取り除く
       result.pop # 空行を取り除く
       result
+    end
+
+    def reservation_frame_selected?(tennis_court_tr_element)
+      tennis_court_tr_element.has_selector?("td.waku_sentaku input")
     end
   end
 end

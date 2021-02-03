@@ -42,7 +42,7 @@ module Yokohama
 
       reservation_frame_selection_page
         .click_reservation_frame(reservation_frame)
-        .click_next
+        .click_next(reservation_frame)
         .click_next
         .reserve
         .success?

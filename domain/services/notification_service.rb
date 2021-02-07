@@ -19,7 +19,7 @@ class NotificationService
     client.send(message)
   end
 
-  def send_screenshot(title, comment)
+  def send_screenshot(title, comment = "コメントなし")
     file_path = "tmp/capybara/#{SecureRandom.uuid}.png"
     save_full_screenshot(file_path)
     client.upload_png(file_path: file_path, title: title, comment: comment)

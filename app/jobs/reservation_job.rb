@@ -23,23 +23,10 @@ class ReservationJob < ApplicationJob
     # TODO: reservation_frame の state を failed にしたい
   end
 
-  # rubocop:disable Metrics/MethodLength
   def perform(reservation_frame_hash, waiting: false)
-    # HACK: ごっそり YokohamaService に移す？
     rf = Yokohama::ReservationFrame.from_hash(reservation_frame_hash)
-    notification_service.send_message("`#{rf.to_human}`の予約を開始します。")
-    result = yokohama_service.reserve(rf, waiting: waiting)
-
-    reservation_frame = ReservationFrame.find(rf.id)
-    if result
-      reservation_frame.update!(state: :reserved)
-      notification_service.send_message("`#{rf.to_human}`の予約に成功しました！")
-    else
-      reservation_frame.update!(state: :failed)
-      notification_service.send_message("`#{rf.to_human}`の予約に失敗しました。")
-    end
+    yokohama_service.reserve(rf, waiting: waiting)
   end
-  # rubocop:enable Metrics/MethodLength
 
   private
 

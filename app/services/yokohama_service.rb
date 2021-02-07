@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require Rails.root.join("domain/services/yokohama/scraping_service")
+require Rails.root.join("domain/services/notification_service")
 require Rails.root.join("domain/models/available_date")
 require Rails.root.join("domain/models/availability_check_identifier")
 require Rails.root.join("domain/models/yokohama/availability_check_started")
@@ -11,8 +12,9 @@ require Rails.root.join("domain/models/yokohama/reservation_status_checked")
 require Rails.root.join("domain/models/yokohama/availability_check_finished")
 
 class YokohamaService
-  def initialize(scraping_service = Yokohama::ScrapingService.new)
+  def initialize(scraping_service = Yokohama::ScrapingService.new, notification_service = NotificationService.new)
     @scraping_service = scraping_service
+    @notification_service = notification_service
   end
 
   def start_availability_check
@@ -29,7 +31,7 @@ class YokohamaService
   end
 
   def available_dates(identifier, park_name)
-    available_dates = @scraping_service.available_dates(park_name)
+    available_dates = scraping_service.available_dates(park_name)
     event = Yokohama::AvailableDatesFound.new(
       availability_check_identifier: identifier,
       park_name: park_name,
@@ -49,7 +51,7 @@ class YokohamaService
   end
 
   def reservation_frames(identifier, park_name, available_date)
-    reservation_frames = @scraping_service.reservation_frames(park_name, available_date.to_date)
+    reservation_frames = scraping_service.reservation_frames(park_name, available_date.to_date)
     event = Yokohama::ReservationFramesFound.new(
       availability_check_identifier: identifier,
       park_name: park_name,
@@ -60,7 +62,7 @@ class YokohamaService
   end
 
   def reservation_status(identifier, park_name, reservation_frame)
-    now = @scraping_service.reservation_status(park_name, reservation_frame)
+    now = scraping_service.reservation_status(park_name, reservation_frame)
     reservation_frame.now = now
     event = Yokohama::ReservationStatusChecked.new(
       availability_check_identifier: identifier,
@@ -87,6 +89,20 @@ class YokohamaService
   end
 
   def reserve(reservation_frame, waiting: false)
-    @scraping_service.reserve(reservation_frame, waiting: waiting)
+    notification_service.send_message("`#{reservation_frame.to_human}` の予約を開始します。")
+    is_success = scraping_service.reserve(reservation_frame, waiting: waiting)
+
+    rf = ReservationFrame.find(reservation_frame.id)
+    if is_success
+      rf.update!(state: :reserved)
+      notification_service.send_message("`#{reservation_frame.to_human}` の予約に成功しました！")
+    else
+      rf.update!(state: :failed)
+      notification_service.send_screenshot("`#{reservation_frame.to_human}` の予約に失敗しました。")
+    end
   end
+
+  private
+
+  attr_reader :scraping_service, :notification_service
 end

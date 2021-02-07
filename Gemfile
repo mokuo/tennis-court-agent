@@ -63,7 +63,7 @@ group :development do
   gem "pry-rails"
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
-  gem "solargraph", "0.39.17" # https://github.com/castwide/solargraph/issues/406 が解決するまで固定
+  gem "solargraph", "0.40.3" # https://github.com/castwide/solargraph/issues/406 が解決するまで固定
 end
 
 group :test do

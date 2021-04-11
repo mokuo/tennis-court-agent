@@ -111,7 +111,8 @@ RSpec.describe Yokohama::ReservationFrameSelectionPage, type: :feature do
       if selected_reservation_frame_selection_page.error_page?
         expect(page).to have_content("選択した枠はキャンセル枠のため、現在予約できません。")
       else
-        expect(selected_reservation_frame_selection_page.click_next).to be_a(Yokohama::ReservationConfirmationPage)
+        expect(selected_reservation_frame_selection_page.click_next(reservation_frame))
+          .to be_a(Yokohama::ReservationConfirmationPage)
       end
     end
     # rubocop:enable

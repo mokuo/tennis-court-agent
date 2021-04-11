@@ -21,7 +21,7 @@ module Yokohama
         click_button("ログイン")
         # HACK: 更新手続きが済んだら sleep を削除する
         #       更新手続きの案内で、別ウィンドウが開いてしまう。ウィンドウを閉じる処理を書いても上手くいかず、sleep で凌ぐ。
-        sleep 0.5
+        sleep 1
       end
 
       self.class.new

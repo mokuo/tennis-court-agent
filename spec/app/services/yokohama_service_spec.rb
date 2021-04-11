@@ -31,7 +31,7 @@ RSpec.describe YokohamaService, type: :job do
           availability_check_identifier: identifier,
           name: "Yokohama::AvailabilityCheckStarted",
           park_names: %w[富岡西公園 三ツ沢公園 新杉田公園],
-          published_at: now
+          published_at: now.floor
         }
       )
     end
@@ -76,7 +76,7 @@ RSpec.describe YokohamaService, type: :job do
           park_name: "公園１",
           available_dates: [available_date.to_date],
           name: "Yokohama::AvailableDatesFound",
-          published_at: now
+          published_at: now.floor
         }
       )
     end
@@ -108,7 +108,7 @@ RSpec.describe YokohamaService, type: :job do
           park_name: "公園１",
           available_dates: [holiday],
           name: "Yokohama::AvailableDatesFiltered",
-          published_at: now
+          published_at: now.floor
         }
       )
     end
@@ -157,7 +157,7 @@ RSpec.describe YokohamaService, type: :job do
         available_date: date,
         reservation_frames: [reservation_frame.to_hash],
         name: "Yokohama::ReservationFramesFound",
-        published_at: now
+        published_at: now.floor
       )
     end
 
@@ -205,7 +205,7 @@ RSpec.describe YokohamaService, type: :job do
         reservation_frame: reservation_frame.to_hash,
         park_name: "公園１",
         name: "Yokohama::ReservationStatusChecked",
-        published_at: now
+        published_at: now.floor
       )
     end
 
@@ -300,7 +300,7 @@ RSpec.describe YokohamaService, type: :job do
           expect(PersistEventJob).to have_been_enqueued.with(
             name: "Yokohama::AvailabilityCheckFinished",
             availability_check_identifier: identifier,
-            published_at: now
+            published_at: now.floor
           )
         end
 

@@ -41,7 +41,7 @@ RSpec.describe Yokohama::Mobile::TennisCourtSelectionPage, type: :feature do
                                .click_sports
                                .click_park("三ツ沢公園")
                                .click_tennis_court
-                               .select_tennis_court("テニスコート２")
+                               .select_tennis_court("三ツ沢公園", "三ツ沢公園\nテニスコート２")
     end
 
     it "テニスコートが選択されること" do

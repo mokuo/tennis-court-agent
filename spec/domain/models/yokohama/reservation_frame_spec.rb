@@ -226,4 +226,19 @@ RSpec.describe Yokohama::ReservationFrame, type: :model do
       expect(rebuild_reservation_frame.eql?(reservation_frame)).to be true
     end
   end
+
+  describe "#plain_tennis_court_name" do
+    subject(:plain_tennis_court_name) { reservation_frame.plain_tennis_court_name }
+
+    let!(:reservation_frame) do
+      described_class.new(
+        park_name: "公園A",
+        tennis_court_name: "公園A\nテニスコート1"
+      )
+    end
+
+    it "公園名を除いたテニスコート名を返す" do
+      expect(plain_tennis_court_name).to eq "テニスコート1"
+    end
+  end
 end

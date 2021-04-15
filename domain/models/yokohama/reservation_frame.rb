@@ -116,6 +116,11 @@ module Yokohama
       7
     end
 
+    # NOTE: テニスコート名に公園名が入っているので、取り除く
+    def plain_tennis_court_name
+      tennis_court_name.gsub(/^#{park_name}\n/, "")
+    end
+
     private
 
     def date_to_human

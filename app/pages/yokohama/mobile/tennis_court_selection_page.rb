@@ -11,8 +11,8 @@ module Yokohama
         self.class.new
       end
 
-      def select_tennis_court(tennis_court_name)
-        select(tennis_court_name, from: "sltSISETU")
+      def select_tennis_court(reservation_frame)
+        select(reservation_frame.plain_tennis_court_name, from: "sltSISETU")
 
         self.class.new
       end
@@ -20,7 +20,7 @@ module Yokohama
       def click_next
         click_button("次へ")
 
-        ReservationFrameSelectionPage.new
+        DateSelectionPage.new
       end
 
       private

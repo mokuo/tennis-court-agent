@@ -11,8 +11,8 @@ module Yokohama
         self.class.new
       end
 
-      def select_tennis_court(reservation_frame)
-        select(reservation_frame.plain_tennis_court_name, from: "sltSISETU")
+      def select_tennis_court(plain_tennis_court_name)
+        select(plain_tennis_court_name, from: "sltSISETU")
 
         self.class.new
       end

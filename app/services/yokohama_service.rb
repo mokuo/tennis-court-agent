@@ -90,7 +90,8 @@ class YokohamaService
 
   def reserve(reservation_frame, waiting: false)
     notification_service.send_message("`#{reservation_frame.to_human}` の予約を開始します。")
-    is_success = scraping_service.reserve(reservation_frame, waiting: waiting)
+    # is_success = scraping_service.reserve(reservation_frame, waiting: waiting)
+    is_success = scraping_service.reserve_mobile(reservation_frame, waiting: waiting)
 
     rf = ReservationFrame.find(reservation_frame.id)
     if is_success

@@ -4,7 +4,8 @@ module Yokohama
   module Mobile
     class MessagePage < BasePage
       def click_next
-        click_button("次へ")
+        find("input[value='次へ']").click
+        Yokohama::Mobile::ReservationPage.new
       end
     end
   end

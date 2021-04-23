@@ -51,17 +51,16 @@ ReservationJob の `rescue_from(StandardError)`
 
 ```ruby
 require Rails.root.join("domain/models/yokohama/reservation_frame")
-start_date_time = Time.zone.local(2020, 8, 22, 15).to_s
-end_date_time = Time.zone.local(2020, 8, 22, 15).to_s
 
-hash = {
+rf = Yokohama::ReservationFrame.new(
   park_name: "三ツ沢公園",
-  tennis_court_name: "公園１\nテニスコート１",
-  start_date_time: start_date_time,
-  end_date_time: end_date_time,
-  now: false,
+  tennis_court_name: "三ツ沢公園\nテニスコート１",
+  start_date_time: Time.zone.local(2021, 5, 27, 15),
+  end_date_time: Time.zone.local(2021, 5, 27, 17),
+  now: true,
   state: "will_reserve",
   id: 1
-}
-ReservationJob.perform_now(hash)
+)
+
+ReservationJob.perform_now(rf.to_hash)
 ```

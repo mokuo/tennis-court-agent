@@ -12,7 +12,7 @@ RSpec.describe Yokohama::Mobile::ReservationFrameSelectionPage, type: :feature d
         .click_park(park_name)
         .click_tennis_court
         .select_date(available_date.to_date)
-        .select_tennis_court(reservation_frame)
+        .select_tennis_court(reservation_frame.plain_tennis_court_name)
         .click_next
         .click_first_date
         .click_reservation_frame(reservation_frame)
@@ -52,7 +52,7 @@ RSpec.describe Yokohama::Mobile::ReservationFrameSelectionPage, type: :feature d
         .click_park(park_name)
         .click_tennis_court
         .select_date(available_date.to_date)
-        .select_tennis_court(reservation_frame)
+        .select_tennis_court(reservation_frame.plain_tennis_court_name)
         .click_next
         .click_first_date
         .click_reservation_frame(reservation_frame)

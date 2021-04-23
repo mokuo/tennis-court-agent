@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# HACK: disable コメント消す
+# rubocop:disable Metrics/ClassLength
+
 module Yokohama
   class ReservationFrame
     include ActiveModel::Model
@@ -140,3 +143,4 @@ module Yokohama
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

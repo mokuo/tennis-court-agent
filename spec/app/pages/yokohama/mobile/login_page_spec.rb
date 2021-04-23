@@ -31,12 +31,18 @@ RSpec.describe Yokohama::Mobile::LoginPage, type: :feature do
       reservation_frames.last
     end
 
-    it "メッセージページが表示されること" do
-      login
+    # rubocop:disable RSpec/MultipleExpectations
+    it "メッセージページかエラーページが表示されること" do
+      next_page = login
 
-      expect(page).to have_content "施設からの"
-      expect(page).to have_content "ﾒｯｾｰｼﾞ"
+      if next_page.error_page?
+        expect(page).to have_content("選択した枠はキャンセル枠のため、現在予約できません。")
+      else
+        expect(page).to have_content "施設からの"
+        expect(page).to have_content "ﾒｯｾｰｼﾞ"
+      end
     end
+    # rubocop:enable RSpec/MultipleExpectations
 
     it "メッセージページのオブジェクトを返すこと" do
       expect(login).to be_a(Yokohama::Mobile::MessagePage)

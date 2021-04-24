@@ -30,7 +30,7 @@ RSpec.describe YokohamaService, type: :job do
         {
           availability_check_identifier: identifier,
           name: "Yokohama::AvailabilityCheckStarted",
-          park_names: %w[富岡西公園 三ツ沢公園 新杉田公園],
+          park_names: %w[富岡西公園 三ツ沢公園 新杉田公園 新横浜公園],
           published_at: now.floor
         }
       )
@@ -392,24 +392,16 @@ RSpec.describe YokohamaService, type: :job do
     let!(:mock_scraping_service) { instance_double("Yokohama::ScrapingService") }
     let!(:notification_service) { instance_double("NotificationService") }
     let!(:yokohama_service) { described_class.new(mock_scraping_service, notification_service) }
-    # let(:reservation_frame) do
-    #   Yokohama::ReservationFrame.new(
-    #     park_name: "A公園",
-    #     tennis_court_name: "A公園 テニスコート１",
-    #     start_date_time: Time.current,
-    #     end_date_time: Time.current.next_day
-    #   )
-    # end
     let!(:reservation_frame) { create(:reservation_frame) }
     let!(:rf) { reservation_frame.to_domain_model }
 
     context "予約に成功する時" do
       # rubocop:disable RSpec/MultipleExpectations
       it "予約処理を行い、成功通知する" do
-        allow(mock_scraping_service).to receive(:reserve).and_return(true)
+        allow(mock_scraping_service).to receive(:reserve_mobile).and_return(true)
 
         expect(notification_service).to receive(:send_message).with("`#{rf.to_human}` の予約を開始します。").once
-        expect(mock_scraping_service).to receive(:reserve).with(rf, waiting: false).once
+        expect(mock_scraping_service).to receive(:reserve_mobile).with(rf, waiting: false).once
         expect(notification_service).to receive(:send_message).with("`#{rf.to_human}` の予約に成功しました！").once
 
         yokohama_service.reserve(rf, waiting: false)
@@ -420,10 +412,10 @@ RSpec.describe YokohamaService, type: :job do
     context "予約に失敗する時" do
       # rubocop:disable RSpec/MultipleExpectations
       it "予約処理を行い、失敗通知する" do
-        allow(mock_scraping_service).to receive(:reserve).and_return(false)
+        allow(mock_scraping_service).to receive(:reserve_mobile).and_return(false)
 
         expect(notification_service).to receive(:send_message).with("`#{rf.to_human}` の予約を開始します。").once
-        expect(mock_scraping_service).to receive(:reserve).with(rf, waiting: false).once
+        expect(mock_scraping_service).to receive(:reserve_mobile).with(rf, waiting: false).once
         expect(notification_service).to receive(:send_screenshot).with("`#{rf.to_human}` の予約に失敗しました。").once
 
         yokohama_service.reserve(rf, waiting: false)

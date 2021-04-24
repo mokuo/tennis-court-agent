@@ -18,7 +18,7 @@ class YokohamaService
   end
 
   def start_availability_check
-    park_names = %w[富岡西公園 三ツ沢公園 新杉田公園]
+    park_names = %w[富岡西公園 三ツ沢公園 新杉田公園 新横浜公園]
 
     identifier = AvailabilityCheckIdentifier.build
     AvailabilityCheck.create!(identifier: identifier)
@@ -90,7 +90,8 @@ class YokohamaService
 
   def reserve(reservation_frame, waiting: false)
     notification_service.send_message("`#{reservation_frame.to_human}` の予約を開始します。")
-    is_success = scraping_service.reserve(reservation_frame, waiting: waiting)
+    # is_success = scraping_service.reserve(reservation_frame, waiting: waiting)
+    is_success = scraping_service.reserve_mobile(reservation_frame, waiting: waiting)
 
     rf = ReservationFrame.find(reservation_frame.id)
     if is_success

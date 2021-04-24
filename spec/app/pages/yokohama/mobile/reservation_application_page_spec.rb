@@ -53,7 +53,7 @@ RSpec.describe Yokohama::Mobile::ReservationApplicationPage, type: :feature do
     end
 
     it "公園ページのオブジェクトを返すこと" do
-      expect(click_tennis_court).to be_a(Yokohama::Mobile::ParkPage)
+      expect(click_tennis_court).to be_a(Yokohama::Mobile::TennisCourtSelectionPage)
     end
   end
 end

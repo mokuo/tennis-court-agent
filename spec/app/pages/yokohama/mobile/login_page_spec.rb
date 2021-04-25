@@ -3,7 +3,7 @@
 require Rails.root.join("domain/services/yokohama/scraping_service")
 
 RSpec.describe Yokohama::Mobile::LoginPage, type: :feature do
-  describe "#login" do
+  describe "#fill_id,#fill_password,#click_login" do
     subject(:login) do
       Yokohama::Mobile::TopPage
         .open
@@ -17,7 +17,9 @@ RSpec.describe Yokohama::Mobile::LoginPage, type: :feature do
         .click_first_date
         .click_reservation_frame(reservation_frame)
         .click_login
-        .login
+        .fill_id
+        .fill_password
+        .click_login
     end
 
     let!(:park_name) { "三ツ沢公園" }

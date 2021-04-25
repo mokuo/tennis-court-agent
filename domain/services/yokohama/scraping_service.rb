@@ -49,13 +49,14 @@ module Yokohama
     end
 
     def reserve_mobile(reservation_frame, waiting: false)
-      mobile_message_page = mobile_message_page(reservation_frame)
+      mobile_login_page = mobile_login_page(reservation_frame)
       wait_for_opeing_hour(reservation_frame) if waiting
 
-      mobile_message_page.click_next
-                         .click_confirmation
-                         .click_rerservation
-                         .done?
+      mobile_login_page.click_login
+                       .click_next
+                       .click_confirmation
+                       .click_rerservation
+                       .done?
     end
 
     private
@@ -80,7 +81,7 @@ module Yokohama
     end
 
     # rubocop:disable Metrics/MethodLength
-    def mobile_message_page(reservation_frame)
+    def mobile_login_page(reservation_frame)
       Yokohama::Mobile::TopPage.open
                                .click_check_availability
                                .click_sports
@@ -92,7 +93,8 @@ module Yokohama
                                .click_first_date
                                .click_reservation_frame(reservation_frame)
                                .click_login
-                               .login
+                               .fill_id
+                               .fill_password
     end
     # rubocop:enable Metrics/MethodLength
 

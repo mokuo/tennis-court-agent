@@ -16,7 +16,6 @@ jobs:
           heroku_app_name: "tennis-court-agent" #Must be unique in Heroku
           heroku_email: "tennis10988.yk@gmail.com"
           usedocker: true
-          dontuseforce: true
           docker_build_args: |
             RAILS_MASTER_KEY
         env:

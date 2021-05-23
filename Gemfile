@@ -11,7 +11,7 @@ gem "rails", "~> 6.1.3"
 # gem "mysql2", ">= 0.4.4"
 gem "pg" # NOTE: Heroku 対応のため、PostgresQL を使用する
 # Use Puma as the app server
-gem "puma", "~> 5.2"
+gem "puma", "~> 5.3"
 # Use SCSS for stylesheets
 gem "sass-rails", ">= 6"
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker

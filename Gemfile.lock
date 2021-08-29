@@ -80,7 +80,7 @@ GEM
     benchmark (0.1.1)
     bindex (0.8.1)
     binding_ninja (0.2.3)
-    bootsnap (1.7.1)
+    bootsnap (1.8.1)
       msgpack (~> 1.0)
     builder (3.2.4)
     byebug (11.1.3)

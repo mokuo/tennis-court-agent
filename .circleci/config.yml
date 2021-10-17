@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Install Japanese Font
           command: |
-            sudo apt-get update
+            sudo apt-get update --allow-releaseinfo-change
             sudo apt-get install 'fonts-takao-*'
       # Run rspec in parallel
       - ruby/rspec-test

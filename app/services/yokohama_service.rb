@@ -18,7 +18,7 @@ class YokohamaService
   end
 
   def start_availability_check
-    park_names = %w[富岡西公園 三ツ沢公園 新杉田公園 新横浜公園]
+    park_names = %w[新横浜公園]
 
     identifier = AvailabilityCheckIdentifier.build
     AvailabilityCheck.create!(identifier: identifier)

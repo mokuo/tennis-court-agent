@@ -30,21 +30,17 @@ RSpec.describe YokohamaService, type: :job do
         {
           availability_check_identifier: identifier,
           name: "Yokohama::AvailabilityCheckStarted",
-          park_names: %w[富岡西公園 三ツ沢公園 新杉田公園 新横浜公園],
+          park_names: %w[新横浜公園],
           published_at: now.floor
         }
       )
     end
 
-    # rubocop:disable RSpec/MultipleExpectations
     it "次のジョブがキューに入る" do
       start_availability_check
 
-      expect(Yokohama::AvailableDatesJob).to have_been_enqueued.with(identifier, "富岡西公園").once
-      expect(Yokohama::AvailableDatesJob).to have_been_enqueued.with(identifier, "三ツ沢公園").once
-      expect(Yokohama::AvailableDatesJob).to have_been_enqueued.with(identifier, "新杉田公園").once
+      expect(Yokohama::AvailableDatesJob).to have_been_enqueued.with(identifier, "新横浜公園").once
     end
-    # rubocop:enable RSpec/MultipleExpectations
   end
 
   describe "#available_dates" do

@@ -7,7 +7,7 @@ module Yokohama
       def click_first_date
         # NOTE: find メソッドだとエラーになる
         #       #<Capybara::Ambiguous: Ambiguous match, found 3 elements matching visible css "font a">
-        first("font a").click
+        first("font").first("a").click
         ReservationFrameSelectionPage.new
       end
     end
